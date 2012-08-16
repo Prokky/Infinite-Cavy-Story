@@ -2,11 +2,11 @@ package main;
 
 import java.util.logging.Logger;
 
-public class Monster {
-	private static Logger log = Logger.getLogger(Monster.class.getName());
+public class AIComponent {
+	private static Logger log = Logger.getLogger(AIComponent.class.getName());
 	private Entity owner;
 
-	public Monster(Entity owner) {
+	public AIComponent(Entity owner) {
 		this.owner = owner;
 	}
 

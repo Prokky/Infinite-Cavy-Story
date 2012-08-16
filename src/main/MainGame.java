@@ -67,7 +67,7 @@ public class MainGame {
 		// and set a fighter component for it
 		player = new Entity(MapGenerator.MAP_WIDTH / 2,
 				MapGenerator.MAP_HEIGHT / 2, '@', "player", CSIColor.RED, true);
-		Fighter fighter_component = new Fighter(player, 30, 2, 5);
+		FighterComponent fighter_component = new FighterComponent(player, 30, 2, 5);
 		player.setFighterComponent(fighter_component);
 
 		// initial map generation

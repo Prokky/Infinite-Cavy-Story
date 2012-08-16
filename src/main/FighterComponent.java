@@ -2,16 +2,16 @@ package main;
 
 import java.util.logging.Logger;
 
-public class Fighter {
+public class FighterComponent {
 
-	private static Logger log = Logger.getLogger(Fighter.class.getName());
+	private static Logger log = Logger.getLogger(FighterComponent.class.getName());
 	private Entity owner;
 	private int max_hp;
 	private int hp;
 	private int defence;
 	private int power;
 
-	public Fighter(Entity owner, int hp, int defence, int power) {
+	public FighterComponent(Entity owner, int hp, int defence, int power) {
 		this.owner = owner;
 		this.max_hp = hp;
 		this.hp = hp;

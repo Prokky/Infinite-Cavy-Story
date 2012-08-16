@@ -23,7 +23,7 @@ public class MapGenerator {
 	private final static int ROOM_MAX_SIZE = 10;
 	private final static int ROOM_MIN_SIZE = 6;
 	private final static int MAX_ROOMS = 30;
-	private final static int MAX_ROOM_MONSTERS = 3;
+	private final static int MAX_ROOM_AIComponentS = 3;
 
 	private static Tile[][] map = MainGame.getInstance().getMap();
 	private static ConsoleSystemInterface csi = MainGame.getCSI();
@@ -132,27 +132,27 @@ public class MapGenerator {
 
 	public void placeObjects(Rect room) {
 		Random rand = new Random();
-		int num_monsters = rand.nextInt(MAX_ROOM_MONSTERS);
-		for (int i = 0; i < num_monsters; i++) {
+		int num_AIComponents = rand.nextInt(MAX_ROOM_AIComponentS);
+		for (int i = 0; i < num_AIComponents; i++) {
 			int x = rand.nextInt(room.getX2() - room.getX1()) + room.getX1();
 			int y = rand.nextInt(room.getY2() - room.getY1()) + room.getY1();
 			if (!isBlocked(x, y))
 				if (rand.nextInt(100) < 80) {
-					Entity monster = new Entity(x, y, 'O', "orc",
+					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
-					Fighter fighter_component = new Fighter(monster, 10, 0, 3);
-					Monster ai_component = new Monster(monster);
-					monster.setFighterComponent(fighter_component);
-					monster.setAIComponent(ai_component);
-					objects.add(monster);
+					FighterComponent fighter_component = new FighterComponent(AIComponent, 10, 0, 3);
+					AIComponent ai_component = new AIComponent(AIComponent);
+					AIComponent.setFighterComponent(fighter_component);
+					AIComponent.setAIComponent(ai_component);
+					objects.add(AIComponent);
 				} else {
-					Entity monster = new Entity(x, y, 'T', "troll",
+					Entity AIComponent = new Entity(x, y, 'T', "troll",
 							CSIColor.DARK_GREEN, true);
-					Fighter fighter_component = new Fighter(monster, 16, 1, 4);
-					Monster ai_component = new Monster(monster);
-					monster.setFighterComponent(fighter_component);
-					monster.setAIComponent(ai_component);
-					objects.add(monster);
+					FighterComponent fighter_component = new FighterComponent(AIComponent, 16, 1, 4);
+					AIComponent ai_component = new AIComponent(AIComponent);
+					AIComponent.setFighterComponent(fighter_component);
+					AIComponent.setAIComponent(ai_component);
+					objects.add(AIComponent);
 				}
 		}
 	}
