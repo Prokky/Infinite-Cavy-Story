@@ -22,6 +22,7 @@ public class MainGame {
 	private static Tile map[][] = new Tile[MapGenerator.MAP_WIDTH][MapGenerator.MAP_HEIGHT];
 	private ArrayList<String> game_msgs = new ArrayList<String>();
 	private boolean stop;
+	private boolean game_started;
 	private String gameState;
 	private String playerAction;
 	private Entity player;
@@ -82,10 +83,18 @@ public class MainGame {
 		// boolean stop for exiting the game
 		stop = false;
 
+		// game started boolean for start window
+		game_started = false;
 		// main game loop
 		while (!stop) {
 			// clearing the game screen
 			csi.cls();
+
+			// / SHOW START HELP WINDOW //
+			if (!game_started) {
+				showStartWindow();
+				handleKeys();
+			}
 			// printing GUI
 			printGUI();
 			// drawing the map
@@ -123,6 +132,17 @@ public class MainGame {
 			stop = true;
 			return "exit";
 		}
+
+		if (!game_started)
+			if (dir.code == CharKey.ENTER) {
+				game_started = true;
+				csi.cls();
+			}
+
+		// C is the key to clear the combat log
+		if (gameState.equals("playing"))
+			if (dir.code == CharKey.c || dir.code == CharKey.c)
+				game_msgs.clear();
 
 		// moving the player with ARROWS
 		if (gameState.equals("playing")) {
@@ -171,5 +191,25 @@ public class MainGame {
 		if (game_msgs.size() > 10)
 			game_msgs.remove(0);
 		game_msgs.add(message);
+	}
+
+	// //////////////////////////////////////
+	// // FUNCTION TO SHOW START WINDOW /////
+	// //////////////////////////////////////
+
+	public void showStartWindow() {
+		// clear all window
+		csi.cls();
+		csi.print(30, 5, "INFINITE CAVY STORY", CSIColor.AMETHYST);
+		csi.print(27, 6, "Old-school rogue-like game");
+
+		csi.print(20, 9, "Use arrows to move");
+		csi.print(20, 10, "Use arrows to the targets direction to attack");
+		csi.print(20, 11, "Press C to clear combat log");
+		csi.print(20, 12, "Press Q to quit");
+
+		csi.print(28, 17, "PRESS ENTER TO CONTINUE", CSIColor.GREEN_YELLOW);
+
+		csi.print(64, 24, "Created by Prokk");
 	}
 }
