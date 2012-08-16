@@ -156,6 +156,8 @@ public class MainGame {
 			} else if (dir.isRightArrow()
 					&& (player.getX() + 1 < MapGenerator.MAP_WIDTH)) {
 				MapGenerator.getInstance().playerMoveOrAttack(1, 0);
+			} else if (dir.code == CharKey.Z || dir.code == CharKey.z) {
+				MapGenerator.getInstance().nextLevel();
 			} else
 				return "didnt-take-turn";
 		}
@@ -206,7 +208,8 @@ public class MainGame {
 		csi.print(20, 9, "Use arrows to move");
 		csi.print(20, 10, "Use arrows to the targets direction to attack");
 		csi.print(20, 11, "Press C to clear combat log");
-		csi.print(20, 12, "Press Q to quit");
+		csi.print(20, 11, "Press Z to go to kext level while on stairs");
+		csi.print(20, 13, "Press Q to quit");
 
 		csi.print(28, 17, "PRESS ENTER TO CONTINUE", CSIColor.GREEN_YELLOW);
 

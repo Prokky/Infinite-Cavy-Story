@@ -3,6 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.Random;
 
+import sun.applet.Main;
+
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 
@@ -20,6 +22,8 @@ public class MapGenerator {
 
 	// ////////////////////////////////////////
 
+	private int dungeon_level = 1;
+	
 	// //// SIZE OF MAPS
 	public final static int MAP_WIDTH = 65;
 	public final static int MAP_HEIGHT = 25;
@@ -57,6 +61,8 @@ public class MapGenerator {
 
 		int num_rooms = 0;
 
+		int roomCenterX = 0;
+		int roomCenterY = 0;
 		for (int r = 0; r < MAX_ROOMS; r++) {
 			// randomizing room size
 			int w = rand.nextInt((ROOM_MAX_SIZE - ROOM_MIN_SIZE))
@@ -87,8 +93,8 @@ public class MapGenerator {
 				placeObjects(new_room); // create objects in room
 
 				// save room center for tunnel generating
-				int roomCenterX = new_room.getCenterX();
-				int roomCenterY = new_room.getCenterY();
+				roomCenterX = new_room.getCenterX();
+				roomCenterY = new_room.getCenterY();
 
 				if (num_rooms == 0) {
 					// set player in first room
@@ -118,8 +124,13 @@ public class MapGenerator {
 				// append new room to array
 				rooms[num_rooms] = new_room;
 				num_rooms++;
+
 			}
+
 		}
+		Entity stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs",
+				CSIColor.WHITE, false);
+		objects.add(stairs);
 	}
 
 	// // FUNCTION TO CREATE ROOM IN THE RECT
@@ -270,10 +281,21 @@ public class MapGenerator {
 				break;
 			}
 
-		if (target != null && !target.getName().equals("remains")) {
+		if (target != null && !target.getName().equals("remains")
+				&& !target.getName().equals("stairs")) {
 			player.getFighterComponent().attack(target);
 		} else {
 			MainGame.getInstance().getPlayer().move(dx, dy);
 		}
+	}
+
+	// / GO TO NEXT LEVEL FUNCTION
+	public void nextLevel() {
+		dungeon_level++;
+		MainGame.getInstance().newMessage(
+				"You proceed");
+		MainGame.getInstance().newMessage("to level" + dungeon_level);
+		generateMap();
+		drawMap();
 	}
 }
