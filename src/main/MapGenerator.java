@@ -180,15 +180,13 @@ public class MapGenerator {
 
 	public void drawMap() {
 		for (int x = 0; x < MAP_WIDTH; x++)
-			for (int y = 0; y < MAP_HEIGHT; y++) {
-				if (map[x][y].isBlockedSight())
+			for (int y = 0; y < MAP_HEIGHT; y++)
+				if (map[x][y].isBlockedSight()) {
 					if (map[x][y].wasVisited())
 						csi.print(x, y, '▓', CSIColor.DARK_GRAY);
+				} else if (map[x][y].wasVisited())
+					csi.print(x, y, '.', CSIColor.DARK_GRAY);
 
-				if (!map[x][y].isBlockedSight())
-					if (map[x][y].wasVisited())
-						csi.print(x, y, '.', CSIColor.DARK_GRAY);
-			}
 		// simple sight view
 		int pl_x_l = player.getX() - 6;
 		if (pl_x_l < 0)
@@ -209,14 +207,15 @@ public class MapGenerator {
 			j = 0;
 			for (int y = pl_y_t; y < pl_y_b; y++) {
 				is_light = (light_pattern[j][i] == 1);
-				if (is_light)
+				if (is_light) {
+					map[x][y].setVisited(true);
 					for (Entity object : objects)
 						if (object.getX() == x && object.getY() == y)
 							object.draw();
+				}
 				if (map[x][y].isBlockedSight())
 					if (is_light) {
 						csi.print(x, y, '▓', CSIColor.LIGHT_GRAY);
-						map[x][y].setVisited(true);
 					} else if (map[x][y].wasVisited())
 						csi.print(x, y, '▓', CSIColor.DARK_GRAY);
 

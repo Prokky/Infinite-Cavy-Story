@@ -61,6 +61,7 @@ public class MainGame {
 		gameState = "playing";
 		playerAction = "";
 		stop = false;
+		MapGenerator.getInstance().drawMap();
 		while (!stop) {
 			csi.cls();
 			printGUI();
