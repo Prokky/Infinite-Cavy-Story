@@ -226,7 +226,7 @@ public class MapGenerator {
 			for (int y = 0; y < MAP_HEIGHT; y++)
 				if (map[x][y].isBlockedSight()) {
 					if (map[x][y].wasVisited())
-						csi.print(x, y, '▓', CSIColor.DARK_GRAY); // walls
+						csi.print(x, y, '#', CSIColor.DARK_GRAY); // walls
 				} else if (map[x][y].wasVisited())
 					csi.print(x, y, '.', CSIColor.DARK_GRAY); // empty space
 
@@ -259,9 +259,9 @@ public class MapGenerator {
 				}
 				if (map[x][y].isBlockedSight())
 					if (is_light) {
-						csi.print(x, y, '▓', CSIColor.LIGHT_GRAY); // you see
+						csi.print(x, y, '#', CSIColor.LIGHT_GRAY); // you see
 					} else if (map[x][y].wasVisited())
-						csi.print(x, y, '▓', CSIColor.DARK_GRAY); // you saw
+						csi.print(x, y, '#', CSIColor.DARK_GRAY); // you saw
 				j++;
 			}
 			i++;
@@ -292,6 +292,7 @@ public class MapGenerator {
 	// / GO TO NEXT LEVEL FUNCTION
 	public void nextLevel() {
 		dungeon_level++;
+		objects.clear();
 		MainGame.getInstance().newMessage(
 				"You proceed");
 		MainGame.getInstance().newMessage("to level" + dungeon_level);
