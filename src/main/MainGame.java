@@ -1,8 +1,6 @@
 package main;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.logging.Logger;
 
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.CharKey;
@@ -11,7 +9,7 @@ import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 public class MainGame {
 	// ///// LOGGER ///////
-	private static Logger log = Logger.getLogger(MainGame.class.getName());
+	// private static Logger log = Logger.getLogger(MainGame.class.getName());
 
 	// ///// SINGLETONE INSTANCE ///////
 	private static MainGame instance;
@@ -67,7 +65,8 @@ public class MainGame {
 		// and set a fighter component for it
 		player = new Entity(MapGenerator.MAP_WIDTH / 2,
 				MapGenerator.MAP_HEIGHT / 2, '@', "player", CSIColor.RED, true);
-		FighterComponent fighter_component = new FighterComponent(player, 30, 2, 5);
+		FighterComponent fighter_component = new FighterComponent(player, 30,
+				2, 5);
 		player.setFighterComponent(fighter_component);
 
 		// initial map generation

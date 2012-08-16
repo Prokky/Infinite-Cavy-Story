@@ -1,7 +1,5 @@
 package main;
 
-import java.util.logging.Logger;
-
 import net.slashie.libjcsi.CSIColor;
 
 ////////////////////////////////////////////////////////////////////////
@@ -9,7 +7,7 @@ import net.slashie.libjcsi.CSIColor;
 ////////////////////////////////////////////////////////////////////////
 public class Entity {
 	// //// LOGGER INSTANCE //////
-	private static Logger log = Logger.getLogger(Entity.class.getName());
+	// private static Logger log = Logger.getLogger(Entity.class.getName());
 
 	// //// PRIVATE PARAMETERS //////
 	private int x, y; // position
