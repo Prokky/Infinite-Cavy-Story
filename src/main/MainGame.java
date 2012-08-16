@@ -10,30 +10,30 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
 import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 public class MainGame {
-	private static MainGame instance;
-
+	// ///// LOGGER ///////
 	private static Logger log = Logger.getLogger(MainGame.class.getName());
 
-	// # game objects
-	private Entity player;
+	// ///// SINGLETONE INSTANCE ///////
+	private static MainGame instance;
 
-	private static Tile map[][] = new Tile[MapGenerator.MAP_WIDTH][MapGenerator.MAP_HEIGHT];
-
+	// ///// CONSOLE INSTANCE ///////
 	private static ConsoleSystemInterface csi = new WSwingConsoleInterface(
 			"RogueLike", true);
 
+	// ///// GAME OBJECTS ///////
+	private static Tile map[][] = new Tile[MapGenerator.MAP_WIDTH][MapGenerator.MAP_HEIGHT];
+	private ArrayList<String> game_msgs = new ArrayList<String>();
 	private boolean stop;
 	private String gameState;
 	private String playerAction;
+	private Entity player;
 
+	// ///// SINGLETONE GETTER ///////
 	public static MainGame getInstance() {
 		return instance;
 	}
 
-	public void setGameState(String state) {
-		gameState = state;
-	}
-
+	// ///// GETTERS ///////
 	public Tile[][] getMap() {
 		return map;
 	}
@@ -46,54 +46,86 @@ public class MainGame {
 		return csi;
 	}
 
+	// ///////////////////////////////
+
+	// ///// SETTING GAME STATE FROM ANOTHER CLASS ///////
+	public void setGameState(String state) {
+		gameState = state;
+	}
+
+	// //////////////////////////////
+	// ///// INITIAL FUNCTION ///////
+	// //////////////////////////////
 	public static void main(String[] args) {
 		instance = new MainGame();
 		instance.run();
 	}
 
+	// ///// RUN INSTANCE ///////
 	public void run() {
+		// create new player entity
+		// and set a fighter component for it
 		player = new Entity(MapGenerator.MAP_WIDTH / 2,
 				MapGenerator.MAP_HEIGHT / 2, '@', "player", CSIColor.RED, true);
 		Fighter fighter_component = new Fighter(player, 30, 2, 5);
 		player.setFighterComponent(fighter_component);
 
+		// initial map generation
+		// and map drawing
 		MapGenerator.getInstance().generateMap();
+		MapGenerator.getInstance().drawMap();
+
+		// initial game state and player action
+		// set to default
 		gameState = "playing";
 		playerAction = "";
-		stop = false;
-		MapGenerator.getInstance().drawMap();
-		while (!stop) {
-			csi.cls();
-			printGUI();
-			// draw map
-			MapGenerator.getInstance().drawMap();
 
+		// boolean stop for exiting the game
+		stop = false;
+
+		// main game loop
+		while (!stop) {
+			// clearing the game screen
+			csi.cls();
+			// printing GUI
+			printGUI();
+			// drawing the map
+			MapGenerator.getInstance().drawMap();
+			// drawing the player
 			player.draw();
-			//
+			// refreshing the console output
 			csi.refresh();
+
+			// handling the player keys
 			playerAction = handleKeys();
 			if (playerAction.equals("exit"))
 				System.exit(0);
-			// #let monsters take their turn
+
+			// let monsters take their turn
 			if (gameState.equals("playing")
 					&& (!playerAction.equals("didnt-take-turn")))
 				for (Entity object : MapGenerator.getInstance().getObjects())
 					if (object != player)
 						if (object.getAIComponent() != null)
 							object.getAIComponent().takeTurn();
-
 		}
 		System.exit(0);
 	}
 
+	// /////////////////////////////////////////////
+	// ////// FUNCTION TO HANDLE KEY PRESSES ///////
+	// /////////////////////////////////////////////
 	public String handleKeys() {
+		// getch()
 		CharKey dir = csi.inkey();
 
+		// Q is the key for exit
 		if (dir.code == CharKey.Q || dir.code == CharKey.q) {
 			stop = true;
 			return "exit";
 		}
 
+		// moving the player with ARROWS
 		if (gameState.equals("playing")) {
 			if (dir.isUpArrow() && (player.getY() - 1 >= 0)) {
 				MapGenerator.getInstance().playerMoveOrAttack(0, -1);
@@ -111,12 +143,16 @@ public class MainGame {
 		return "";
 	}
 
-	private ArrayList<String> game_msgs = new ArrayList<String>();
-
+	// //////////////////////////////////////////////
+	// ///// FUNCTION TO PRINT USER INTERFACE ///////
+	// //////////////////////////////////////////////
 	private void printGUI() {
+		// printing player hp
 		csi.print(MapGenerator.MAP_WIDTH, 0, "HP"
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
+
+		// printing the combat log
 		int y = 1;
 		for (String text : game_msgs) {
 			if (text.contains("dies"))
@@ -125,13 +161,16 @@ public class MainGame {
 				csi.print(MapGenerator.MAP_WIDTH, y + 13, text, CSIColor.WHITE);
 			y++;
 		}
-
+		// ////////////////////////
 	}
 
+	// //////////////////////////////////////////////////////
+	// //// FUNCTION TO ADD NEW MESSAGES TO COMBAT LOG //////
+	// //////////////////////////////////////////////////////
 	public void newMessage(String message) {
+		// removing the messages from log if too much
 		if (game_msgs.size() > 10)
 			game_msgs.remove(0);
 		game_msgs.add(message);
-
 	}
 }
