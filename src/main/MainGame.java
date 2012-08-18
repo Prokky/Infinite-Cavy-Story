@@ -2,7 +2,6 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import main.components.FighterComponent;
 import net.slashie.libjcsi.CSIColor;
@@ -12,7 +11,7 @@ import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 public class MainGame {
 	// ///// LOGGER ///////
-	private static Logger log = Logger.getLogger(MainGame.class.getName());
+//	private static Logger log = Logger.getLogger(MainGame.class.getName());
 
 	// ///// SINGLETONE INSTANCE ///////
 	private static MainGame instance;
@@ -105,7 +104,8 @@ public class MainGame {
 				handleKeys();
 			}
 			// printing GUI
-			printGUI();
+			if (!inventoryShown)
+				printGUI();
 			// drawing the map
 
 			if (!inventoryShown)
@@ -137,7 +137,6 @@ public class MainGame {
 	public String handleKeys() {
 		// getch()
 		CharKey dir = csi.inkey();
-		log.info(dir + "");
 		// Q is the key for exit
 		if (dir.code == CharKey.Q || dir.code == CharKey.q) {
 			stop = true;
@@ -158,19 +157,55 @@ public class MainGame {
 		if (inventoryShown) {
 			if (dir.code == CharKey.I || dir.code == CharKey.i)
 				showInventory();
-			switch (dir.code){
-			case CharKey.F1: MainMap.getInstance().getInventory().get(0).getItemComponent().useItem(); break;
-			case CharKey.F2: MainMap.getInstance().getInventory().get(1).getItemComponent().useItem(); break;
-			case CharKey.F3: MainMap.getInstance().getInventory().get(2).getItemComponent().useItem(); break;
-			case CharKey.F4: MainMap.getInstance().getInventory().get(3).getItemComponent().useItem(); break;
-			case CharKey.F5: MainMap.getInstance().getInventory().get(4).getItemComponent().useItem(); break;
-			case CharKey.F6: MainMap.getInstance().getInventory().get(5).getItemComponent().useItem(); break;
-			case CharKey.F7: MainMap.getInstance().getInventory().get(6).getItemComponent().useItem(); break;
-			case CharKey.F8: MainMap.getInstance().getInventory().get(7).getItemComponent().useItem(); break;
-			case CharKey.F9: MainMap.getInstance().getInventory().get(8).getItemComponent().useItem(); break;
-			case CharKey.F10: MainMap.getInstance().getInventory().get(9).getItemComponent().useItem(); break;
-			case CharKey.F11: MainMap.getInstance().getInventory().get(10).getItemComponent().useItem(); break;
-			case CharKey.F12: MainMap.getInstance().getInventory().get(11).getItemComponent().useItem(); break;
+			switch (dir.code) {
+			case CharKey.F1:
+				MainMap.getInstance().getInventory().get(0).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F2:
+				MainMap.getInstance().getInventory().get(1).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F3:
+				MainMap.getInstance().getInventory().get(2).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F4:
+				MainMap.getInstance().getInventory().get(3).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F5:
+				MainMap.getInstance().getInventory().get(4).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F6:
+				MainMap.getInstance().getInventory().get(5).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F7:
+				MainMap.getInstance().getInventory().get(6).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F8:
+				MainMap.getInstance().getInventory().get(7).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F9:
+				MainMap.getInstance().getInventory().get(8).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F10:
+				MainMap.getInstance().getInventory().get(9).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F11:
+				MainMap.getInstance().getInventory().get(10).getItemComponent()
+						.useItem();
+				break;
+			case CharKey.F12:
+				MainMap.getInstance().getInventory().get(11).getItemComponent()
+						.useItem();
+				break;
 			}
 			return "didnt-take-turn";
 		}
@@ -207,7 +242,6 @@ public class MainGame {
 		csi.print(0, MainMap.MAP_HEIGHT, "HP"
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
-
 		// printing the combat log
 		int y = 0;
 		for (String text : game_msgs) {
@@ -272,7 +306,8 @@ public class MainGame {
 			} else {
 				for (int count = 0; count < MainMap.getInstance()
 						.getInventory().size(); count++) {
-					csi.print(30, 16 + i,"F"+ (i + 1)
+					csi.print(30, 16 + i, "F"
+							+ (i + 1)
 							+ ": "
 							+ MainMap.getInstance().getInventory().get(i)
 									.getName());

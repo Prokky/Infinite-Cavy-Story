@@ -81,6 +81,8 @@ public class FighterComponent {
 
 	public void healFor(int heal) {
 		this.hp += heal;
+		if (this.hp > this.max_hp)
+			this.hp = this.max_hp;
 		MainGame.getInstance().newMessage(
 				Helpers.capitalizeString(this.owner.getName())
 						+ " is healed for " + heal);
