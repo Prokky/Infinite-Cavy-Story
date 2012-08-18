@@ -1,4 +1,7 @@
-package main;
+package main.components;
+
+import main.Entity;
+import main.MainGame;
 
 public class AIComponent {
 	// // LOGGER INSTANCE ////

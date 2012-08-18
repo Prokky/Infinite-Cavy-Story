@@ -1,5 +1,7 @@
-package main;
+package main.components;
 
+import main.Entity;
+import main.MainGame;
 import main.helpers.Helpers;
 
 public class FighterComponent {
@@ -63,15 +65,24 @@ public class FighterComponent {
 		int damage = this.power - target.getFighterComponent().getDefence();
 		if (damage > 0) {
 			// hit gowz in!
-			MainGame.getInstance().newMessage(Helpers.capitalizeString(
-					this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName())
+			MainGame.getInstance().newMessage(
+					Helpers.capitalizeString(this.owner.getName()) + " hits "
+							+ Helpers.capitalizeString(target.getName())
 							+ " for " + damage + " damage");
 			target.getFighterComponent().takeDamage(damage);
 		} else {
 			// such much defence!
 			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName())
+					Helpers.capitalizeString(this.owner.getName()) + " hits "
+							+ Helpers.capitalizeString(target.getName())
 							+ " but it has no effect!");
 		}
+	}
+
+	public void healFor(int heal) {
+		this.hp += heal;
+		MainGame.getInstance().newMessage(
+				Helpers.capitalizeString(this.owner.getName())
+						+ " is healed for " + heal);
 	}
 }

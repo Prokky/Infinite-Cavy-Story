@@ -1,5 +1,8 @@
 package main;
 
+import main.components.AIComponent;
+import main.components.FighterComponent;
+import main.components.ItemComponent;
 import main.helpers.Helpers;
 import net.slashie.libjcsi.CSIColor;
 
@@ -18,6 +21,7 @@ public class Entity {
 	private boolean blocks; // blocks movement or not
 	private FighterComponent fighter; // fighter component
 	private AIComponent ai; // ai component
+	private ItemComponent item; //item component
 
 	// //// CREATE ENTITY WITH BOTH COMPONENTS /////
 	public Entity(int x, int y, char key, String name, CSIColor color,
@@ -87,6 +91,10 @@ public class Entity {
 	public AIComponent getAIComponent() {
 		return this.ai;
 	}
+	
+	public ItemComponent getItemComponent(){
+		return this.item;
+	}
 
 	// ////////////////////////
 
@@ -108,11 +116,14 @@ public class Entity {
 		this.ai = ai;
 	}
 
+	public void setItemComponent(ItemComponent item){
+		this.item = item;
+	}
 	// ////////////////////////
 
 	// // FUNCTION TO MOVE ENTITY /////
 	public void move(int dx, int dy) {
-		if (!MapGenerator.getInstance().isBlocked(this.x + dx, this.y + dy)) {
+		if (!MainMap.getInstance().isBlocked(this.x + dx, this.y + dy)) {
 			this.x += dx;
 			this.y += dy;
 		}

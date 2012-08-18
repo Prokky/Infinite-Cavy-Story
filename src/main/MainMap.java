@@ -3,20 +3,21 @@ package main;
 import java.util.ArrayList;
 import java.util.Random;
 
-import sun.applet.Main;
-
+import main.components.AIComponent;
+import main.components.FighterComponent;
+import main.components.ItemComponent;
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 
-public class MapGenerator {
+public class MainMap {
 	// // LOGGET INSTANCE /////
 	// private static Logger log =
-	// Logger.getLogger(MapGenerator.class.getName());
+	// Logger.getLogger(MainMap.class.getName());
 
 	// /// SINGLETONE INSTANCE AND GETTER /////
-	private static MapGenerator instance = new MapGenerator();
+	private static MainMap instance = new MainMap();
 
-	public static MapGenerator getInstance() {
+	public static MainMap getInstance() {
 		return instance;
 	}
 
@@ -33,6 +34,7 @@ public class MapGenerator {
 	private final static int ROOM_MIN_SIZE = 6;
 	private final static int MAX_ROOMS = 30;
 	private final static int MAX_ROOM_MONSTERS = 3;
+	private final static int MAX_ROOM_ITEMS = 2;
 
 	// // GETTING INSTANCES FROM MAINGAME CLASS
 	private static Tile[][] map = MainGame.getInstance().getMap();
@@ -44,6 +46,12 @@ public class MapGenerator {
 
 	public ArrayList<Entity> getObjects() {
 		return objects;
+	}
+
+	private ArrayList<Entity> inventory = new ArrayList<Entity>();
+
+	public ArrayList<Entity> getInventory() {
+		return inventory;
 	}
 
 	private Entity stairs;
@@ -166,6 +174,8 @@ public class MapGenerator {
 
 	// //// FUNCTION TO PLACE OBJECTS IN THE ROOM
 	public void placeObjects(Rect room) {
+
+		// / first placing monsters
 		Random rand = new Random();
 		int num_Monsters = rand.nextInt(MAX_ROOM_MONSTERS);
 		for (int i = 0; i < num_Monsters; i++) {
@@ -194,6 +204,23 @@ public class MapGenerator {
 					AIComponent.setAIComponent(ai_component);
 					objects.add(AIComponent);
 				}
+		}
+
+		// // now placing items
+		int num_items = rand.nextInt(MAX_ROOM_ITEMS);
+		for (int i = 0; i < num_items; i++) {
+			int x = rand.nextInt(room.getX2() - room.getX1() - 1)
+					+ room.getX1() + 1;
+			int y = rand.nextInt(room.getY2() - room.getY1() - 1)
+					+ room.getY1() + 1;
+			if (!isBlocked(x, y)) {
+				Entity item = new Entity(x, y, '!', "healing potion",
+						CSIColor.VIOLET, false);
+				ItemComponent itemComponent = new ItemComponent(item,
+						ItemComponent.HEALING_POTION);
+				item.setItemComponent(itemComponent);
+				objects.add(item);
+			}
 		}
 	}
 
@@ -283,12 +310,15 @@ public class MapGenerator {
 				break;
 			}
 
-		if (target != null && !target.getName().equals("remains")
-				&& !target.getName().equals("stairs")) {
-			player.getFighterComponent().attack(target);
-		} else {
-			MainGame.getInstance().getPlayer().move(dx, dy);
+		if (target != null) {
+			if (target.getName().equals("orc")
+					|| target.getName().equals("troll")) {
+				player.getFighterComponent().attack(target);
+				return;
+			}
 		}
+		MainGame.getInstance().getPlayer().move(dx, dy);
+
 	}
 
 	// / GO TO NEXT LEVEL FUNCTION
@@ -302,5 +332,18 @@ public class MapGenerator {
 			drawMap();
 		} else
 			return;
+	}
+
+	// /// GRAB ITEM UNDER YOUR FEET
+	public void grabItem() {
+		Entity object;
+		for (int i = 0; i < objects.size(); i++) {
+			object = objects.get(i);
+			if (object.getX() == player.getX()
+					&& object.getY() == player.getY()) {
+				if (object.getItemComponent() != null)
+					object.getItemComponent().pickUp();
+			}
+		}
 	}
 }
