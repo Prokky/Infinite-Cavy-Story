@@ -23,7 +23,7 @@ public class MapGenerator {
 	// ////////////////////////////////////////
 
 	private int dungeon_level = 1;
-	
+
 	// //// SIZE OF MAPS
 	public final static int MAP_WIDTH = 65;
 	public final static int MAP_HEIGHT = 25;
@@ -45,6 +45,8 @@ public class MapGenerator {
 	public ArrayList<Entity> getObjects() {
 		return objects;
 	}
+
+	private Entity stairs;
 
 	// ///////////////////////////////////
 
@@ -128,7 +130,7 @@ public class MapGenerator {
 			}
 
 		}
-		Entity stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs",
+		stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs",
 				CSIColor.WHITE, false);
 		objects.add(stairs);
 	}
@@ -291,12 +293,14 @@ public class MapGenerator {
 
 	// / GO TO NEXT LEVEL FUNCTION
 	public void nextLevel() {
-		dungeon_level++;
-		objects.clear();
-		MainGame.getInstance().newMessage(
-				"You proceed");
-		MainGame.getInstance().newMessage("to level" + dungeon_level);
-		generateMap();
-		drawMap();
+		if (stairs.getX() == player.getX() && stairs.getY() == player.getY()) {
+			dungeon_level++;
+			objects.clear();
+			MainGame.getInstance().newMessage("You proceed");
+			MainGame.getInstance().newMessage("to level" + dungeon_level);
+			generateMap();
+			drawMap();
+		} else
+			return;
 	}
 }
