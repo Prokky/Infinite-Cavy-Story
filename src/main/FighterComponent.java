@@ -1,5 +1,7 @@
 package main;
 
+import main.helpers.Helpers;
+
 public class FighterComponent {
 	// /// LOGGING INSTANCE ////
 	// private static Logger log =
@@ -61,16 +63,15 @@ public class FighterComponent {
 		int damage = this.power - target.getFighterComponent().getDefence();
 		if (damage > 0) {
 			// hit gowz in!
-			MainGame.getInstance().newMessage(
-					"--" + this.owner.getName() + " hits ");
-			MainGame.getInstance().newMessage(
-					target.getName() + " for " + damage);
+			MainGame.getInstance().newMessage(Helpers.capitalizeString(
+					this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName())
+							+ " for " + damage + " damage");
 			target.getFighterComponent().takeDamage(damage);
 		} else {
 			// such much defence!
 			MainGame.getInstance().newMessage(
-					"--" + this.owner.getName() + " hits ");
-			MainGame.getInstance().newMessage(" but it has no effect!");
+					Helpers.capitalizeString(this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName())
+							+ " but it has no effect!");
 		}
 	}
 }

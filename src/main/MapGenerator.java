@@ -25,8 +25,8 @@ public class MapGenerator {
 	private int dungeon_level = 1;
 
 	// //// SIZE OF MAPS
-	public final static int MAP_WIDTH = 65;
-	public final static int MAP_HEIGHT = 25;
+	public final static int MAP_WIDTH = 80;
+	public final static int MAP_HEIGHT = 40;
 
 	// ///// DUNGEON GENERATOR PARAMETERS
 	private final static int ROOM_MAX_SIZE = 10;
@@ -296,8 +296,8 @@ public class MapGenerator {
 		if (stairs.getX() == player.getX() && stairs.getY() == player.getY()) {
 			dungeon_level++;
 			objects.clear();
-			MainGame.getInstance().newMessage("You proceed");
-			MainGame.getInstance().newMessage("to level" + dungeon_level);
+			MainGame.getInstance().newMessage(
+					"You proceed to level " + dungeon_level);
 			generateMap();
 			drawMap();
 		} else

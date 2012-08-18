@@ -1,5 +1,6 @@
 package main;
 
+import main.helpers.Helpers;
 import net.slashie.libjcsi.CSIColor;
 
 ////////////////////////////////////////////////////////////////////////
@@ -161,7 +162,7 @@ public class Entity {
 			this.blocks = false;
 			this.fighter = null;
 			this.ai = null;
-			MainGame.getInstance().newMessage("--" + this.name + " dies");
+			MainGame.getInstance().newMessage(Helpers.capitalizeString(this.name) + " dies");
 			this.name = "remains";
 		}
 	}

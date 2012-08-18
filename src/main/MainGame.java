@@ -174,17 +174,17 @@ public class MainGame {
 	// //////////////////////////////////////////////
 	private void printGUI() {
 		// printing player hp
-		csi.print(MapGenerator.MAP_WIDTH, 0, "HP"
+		csi.print(0, MapGenerator.MAP_HEIGHT, "HP"
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
 
 		// printing the combat log
-		int y = 1;
+		int y = 0;
 		for (String text : game_msgs) {
 			if (text.contains("dies"))
-				csi.print(MapGenerator.MAP_WIDTH, y + 13, text, CSIColor.RED);
+				csi.print(20, y + MapGenerator.MAP_HEIGHT, text, CSIColor.RED);
 			else
-				csi.print(MapGenerator.MAP_WIDTH, y + 13, text, CSIColor.WHITE);
+				csi.print(20, y + MapGenerator.MAP_HEIGHT, text, CSIColor.WHITE);
 			y++;
 		}
 		// ////////////////////////
@@ -195,7 +195,7 @@ public class MainGame {
 	// //////////////////////////////////////////////////////
 	public void newMessage(String message) {
 		// removing the messages from log if too much
-		if (game_msgs.size() > 10)
+		if (game_msgs.size() > 4)
 			game_msgs.remove(0);
 		game_msgs.add(message);
 	}
