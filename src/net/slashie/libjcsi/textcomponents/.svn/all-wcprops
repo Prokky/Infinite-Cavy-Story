@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/93/trunk/src/net/slashie/libjcsi/textcomponents
+END
+TextComponent.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/93/trunk/src/net/slashie/libjcsi/textcomponents/TextComponent.java
+END
+TextInformBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/58/trunk/src/net/slashie/libjcsi/textcomponents/TextInformBox.java
+END
+DialogBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/68/trunk/src/net/slashie/libjcsi/textcomponents/DialogBox.java
+END
+ListItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/58/trunk/src/net/slashie/libjcsi/textcomponents/ListItem.java
+END
+BasicListItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/58/trunk/src/net/slashie/libjcsi/textcomponents/BasicListItem.java
+END
+MenuBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/88/trunk/src/net/slashie/libjcsi/textcomponents/MenuBox.java
+END
+TextBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/89/trunk/src/net/slashie/libjcsi/textcomponents/TextBox.java
+END
+MenuItem.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/80/trunk/src/net/slashie/libjcsi/textcomponents/MenuItem.java
+END
+ListBox.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/82/trunk/src/net/slashie/libjcsi/textcomponents/ListBox.java
+END

@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Properties;
 
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.CharKey;
@@ -15,8 +16,8 @@ public class MainGame {
 	private static MainGame instance;
 
 	// ///// CONSOLE INSTANCE ///////
-	private static ConsoleSystemInterface csi = new WSwingConsoleInterface(
-			"RogueLike", true);
+
+	private static ConsoleSystemInterface csi;
 
 	// ///// GAME OBJECTS ///////
 	private static Tile map[][] = new Tile[MapGenerator.MAP_WIDTH][MapGenerator.MAP_HEIGHT];
@@ -56,6 +57,10 @@ public class MainGame {
 	// ///// INITIAL FUNCTION ///////
 	// //////////////////////////////
 	public static void main(String[] args) {
+		Properties text = new Properties();
+		text.setProperty("fontSize", "15");
+		text.setProperty("font", "Lucida Console");
+		csi = new WSwingConsoleInterface("RogueLike", text);
 		instance = new MainGame();
 		instance.run();
 	}
