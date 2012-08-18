@@ -15,11 +15,13 @@ public class FighterComponent {
 	private int hp; // current hp
 	private int defence; // defence
 	private int power; // power
+	private int xp; // xp
 
 	// /// FIGHTER COMPONENT INITIATED WITH OWNER, HP, DEFENCE AND PAWA! ///////
-	public FighterComponent(Entity owner, int hp, int defence, int power) {
+	public FighterComponent(Entity owner, int hp, int xp, int defence, int power) {
 		this.owner = owner;
 		this.max_hp = hp;
+		this.xp = xp;
 		this.hp = hp;
 		this.defence = defence;
 		this.power = power;
@@ -42,11 +44,19 @@ public class FighterComponent {
 		return this.power;
 	}
 
+	public int getXP() {
+		return this.xp;
+	}
+
 	// /////////////////////
 
 	// //// SETTERS ////////
 	public void setHp(int hp) {
 		this.hp = hp;
+	}
+
+	public void setXP(int xp) {
+		this.xp = xp;
 	}
 
 	// /////////////////////
@@ -56,8 +66,17 @@ public class FighterComponent {
 		if (damage > 0)
 			this.hp -= damage;
 
-		if (this.hp <= 0)
+		if (this.hp <= 0) {
+			if (this.owner != MainGame.getInstance().getPlayer())
+				MainGame.getInstance().getPlayer().getFighterComponent()
+						.addXP(owner.getFighterComponent().getXP());
 			owner.deathFunction();
+		}
+	}
+
+	private void addXP(int xp2) {
+		this.xp += xp2;
+
 	}
 
 	// ATTACK ANOTHER ENTITY FUNCTION

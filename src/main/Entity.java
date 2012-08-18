@@ -22,6 +22,7 @@ public class Entity {
 	private FighterComponent fighter; // fighter component
 	private AIComponent ai; // ai component
 	private ItemComponent item; //item component
+	private int level = 1;
 
 	// //// CREATE ENTITY WITH BOTH COMPONENTS /////
 	public Entity(int x, int y, char key, String name, CSIColor color,
@@ -95,6 +96,10 @@ public class Entity {
 	public ItemComponent getItemComponent(){
 		return this.item;
 	}
+	
+	public int getLevel(){
+		return this.level;
+	}
 
 	// ////////////////////////
 
@@ -118,6 +123,10 @@ public class Entity {
 
 	public void setItemComponent(ItemComponent item){
 		this.item = item;
+	}
+	
+	public void incLevel(){
+		this.level++;
 	}
 	// ////////////////////////
 

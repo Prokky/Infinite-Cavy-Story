@@ -24,6 +24,9 @@ public class MainMap {
 	// ////////////////////////////////////////
 
 	private int dungeon_level = 1;
+	
+	private final static int LEVEL_UP_BASE = 200;
+	private final static int LEVEL_UP_FACTOR = 150;
 
 	// //// SIZE OF MAPS
 	public final static int MAP_WIDTH = 80;
@@ -189,7 +192,7 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 10, 0, 3);
+							AIComponent, 10, 35, 0, 3);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
@@ -198,7 +201,7 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'T', "troll",
 							CSIColor.DARK_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 16, 1, 4);
+							AIComponent, 16, 100, 1, 4);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
@@ -324,6 +327,8 @@ public class MainMap {
 	// / GO TO NEXT LEVEL FUNCTION
 	public void nextLevel() {
 		if (stairs.getX() == player.getX() && stairs.getY() == player.getY()) {
+			player.getFighterComponent().healFor(
+					player.getFighterComponent().getMaxHP() / 2);
 			dungeon_level++;
 			objects.clear();
 			MainGame.getInstance().newMessage(

@@ -11,7 +11,7 @@ import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 public class MainGame {
 	// ///// LOGGER ///////
-//	private static Logger log = Logger.getLogger(MainGame.class.getName());
+	// private static Logger log = Logger.getLogger(MainGame.class.getName());
 
 	// ///// SINGLETONE INSTANCE ///////
 	private static MainGame instance;
@@ -73,7 +73,7 @@ public class MainGame {
 		player = new Entity(MainMap.MAP_WIDTH / 2, MainMap.MAP_HEIGHT / 2, '@',
 				"player", CSIColor.RED, true);
 		FighterComponent fighter_component = new FighterComponent(player, 30,
-				2, 5);
+				0, 2, 5);
 		player.setFighterComponent(fighter_component);
 
 		// initial map generation
@@ -239,9 +239,14 @@ public class MainGame {
 	// //////////////////////////////////////////////
 	private void printGUI() {
 		// printing player hp
-		csi.print(0, MainMap.MAP_HEIGHT, "HP"
+		csi.print(0, MainMap.MAP_HEIGHT, "HP "
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
+
+		csi.print(0, MainMap.MAP_HEIGHT + 1, "LEVEL "
+				+ player.getLevel());
+		csi.print(0, MainMap.MAP_HEIGHT + 2, "XP "
+				+ player.getFighterComponent().getXP());
 		// printing the combat log
 		int y = 0;
 		for (String text : game_msgs) {
