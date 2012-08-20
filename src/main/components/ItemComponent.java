@@ -36,6 +36,10 @@ public class ItemComponent {
 			MainGame.getInstance().getPlayer().getFighterComponent().healFor(5);
 			break;
 		}
+		case MANA_POTION:{
+			MainGame.getInstance().getPlayer().getFighterComponent().addMana(10);
+			break;
+		}
 		case LIGHTNING: {
 			MainGame.getInstance().getPlayer().getFighterComponent()
 					.castLighning();

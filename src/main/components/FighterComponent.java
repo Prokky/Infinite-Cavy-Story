@@ -1,7 +1,5 @@
 package main.components;
 
-import java.awt.peer.LightweightPeer;
-
 import main.ConfusedMonster;
 import main.Entity;
 import main.MainGame;
@@ -157,6 +155,15 @@ public class FighterComponent {
 		MainGame.getInstance().newMessage(
 				Helpers.capitalizeString(this.owner.getName())
 						+ " is healed for " + heal);
+	}
+
+	public void addMana(int mana) {
+		this.mana += mana;
+		if (this.mana > this.maxmana)
+			this.mana = this.maxmana;
+		MainGame.getInstance().newMessage(
+				Helpers.capitalizeString(this.owner.getName()) + " gets "
+						+ mana + " mana");
 	}
 
 	public void castLighning() {
