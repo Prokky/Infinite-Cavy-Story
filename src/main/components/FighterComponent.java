@@ -2,6 +2,7 @@ package main.components;
 
 import java.awt.peer.LightweightPeer;
 
+import main.ConfusedMonster;
 import main.Entity;
 import main.MainGame;
 import main.MainMap;
@@ -190,5 +191,35 @@ public class FighterComponent {
 
 	public void castConfuse() {
 
+		Entity monster = MainMap.getInstance().getClosestMonster(
+				ItemComponent.CONFUSION_RANGE);
+		if (monster == null) {
+			MainGame.getInstance().newMessage(
+					"No enemy is close enough to confuse.");
+		} else {
+			if (MainGame.getInstance().getPlayer().getFighterComponent()
+					.getMana() >= ItemComponent.CONFUSION_MANA) {
+
+				AIComponent old_ai = monster.getAIComponent();
+				monster.setAIComponent(new ConfusedMonster(monster, old_ai,
+						ItemComponent.CONFUSION_TURNS));
+				monster.getAIComponent().setOwner(monster);
+				MainGame.getInstance().newMessage(
+						"The eyes of the "
+								+ Helpers.capitalizeString(monster.getName())
+								+ " look vacant, as he stumbles around!");
+				MainGame.getInstance()
+						.getPlayer()
+						.getFighterComponent()
+						.setMana(
+								MainGame.getInstance().getPlayer()
+										.getFighterComponent().getMana()
+										- ItemComponent.CONFUSION_MANA);
+
+			} else {
+				MainGame.getInstance().newMessage(
+						"Not enough mana to use Confusion");
+			}
+		}
 	}
 }

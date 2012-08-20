@@ -14,6 +14,10 @@ public class ItemComponent {
 	public final static int LIGHTNING_DAMAGE = 20;
 	public final static int LIGHTNING_RANGE = 5;
 	public final static int LIGHTNING_MANA = 5;
+	
+	public final static int CONFUSION_TURNS = 5;
+	public final static int CONFUSION_RANGE = 3;
+	public final static int CONFUSION_MANA = 10;
 
 	// /// COMPONENTS OWNER ////
 	private Entity owner;

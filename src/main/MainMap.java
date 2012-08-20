@@ -218,28 +218,28 @@ public class MainMap {
 					+ room.getY1() + 1;
 			if (!isBlocked(x, y)) {
 				int dice = rand.nextInt(100);
-				if (dice < 70) {
-					Entity item = new Entity(x, y, '!', "healing potion",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.HEALING_POTION);
-					item.setItemComponent(itemComponent);
-					objects.add(item);
-				} else if (dice > 70 && dice < 90) {
-					Entity item = new Entity(x, y, '!', "lightning scroll",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.LIGHTNING);
-					item.setItemComponent(itemComponent);
-					objects.add(item);
-				} else {
+//				if (dice < 70) {
+//					Entity item = new Entity(x, y, '!', "healing potion",
+//							CSIColor.VIOLET, false);
+//					ItemComponent itemComponent = new ItemComponent(item,
+//							ItemComponent.HEALING_POTION);
+//					item.setItemComponent(itemComponent);
+//					objects.add(item);
+//				} else if (dice > 70 && dice < 90) {
+//					Entity item = new Entity(x, y, '!', "lightning scroll",
+//							CSIColor.VIOLET, false);
+//					ItemComponent itemComponent = new ItemComponent(item,
+//							ItemComponent.LIGHTNING);
+//					item.setItemComponent(itemComponent);
+//					objects.add(item);
+//				} else {
 					Entity item = new Entity(x, y, '!', "confusion scroll",
 							CSIColor.VIOLET, false);
 					ItemComponent itemComponent = new ItemComponent(item,
 							ItemComponent.CONFUSION);
 					item.setItemComponent(itemComponent);
 					objects.add(item);
-				}
+//				}
 			}
 		}
 	}

@@ -28,4 +28,8 @@ public class AIComponent {
 			if (player.getFighterComponent().getHp() > 0)
 				owner.getFighterComponent().attack(player);
 	}
+
+	public void setOwner(Entity owner) {
+		this.owner = owner;
+	}
 }
