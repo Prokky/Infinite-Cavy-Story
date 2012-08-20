@@ -1,7 +1,10 @@
 package main.components;
 
+import java.awt.peer.LightweightPeer;
+
 import main.Entity;
 import main.MainGame;
+import main.MainMap;
 import main.helpers.Helpers;
 
 public class FighterComponent {
@@ -153,5 +156,39 @@ public class FighterComponent {
 		MainGame.getInstance().newMessage(
 				Helpers.capitalizeString(this.owner.getName())
 						+ " is healed for " + heal);
+	}
+
+	public void castLighning() {
+		Entity monster = MainMap.getInstance().getClosestMonster(
+				ItemComponent.LIGHTNING_RANGE);
+		if (monster == null) {
+			MainGame.getInstance().newMessage(
+					"No enemy is close enough to strike.");
+		} else {
+			if (MainGame.getInstance().getPlayer().getFighterComponent()
+					.getMana() >= ItemComponent.LIGHTNING_MANA) {
+				MainGame.getInstance().newMessage(
+						"A lightning strikes the "
+								+ Helpers.capitalizeString(monster.getName())
+								+ " for " + ItemComponent.LIGHTNING_DAMAGE
+								+ " damage");
+				monster.getFighterComponent().takeDamage(
+						ItemComponent.LIGHTNING_DAMAGE);
+				MainGame.getInstance()
+						.getPlayer()
+						.getFighterComponent()
+						.setMana(
+								MainGame.getInstance().getPlayer()
+										.getFighterComponent().getMana()
+										- ItemComponent.LIGHTNING_MANA);
+			} else {
+				MainGame.getInstance().newMessage(
+						"Not enough mana to use Lightning");
+			}
+		}
+	}
+
+	public void castConfuse() {
+
 	}
 }

@@ -7,6 +7,13 @@ import main.helpers.Helpers;
 
 public class ItemComponent {
 	public final static int HEALING_POTION = 1;
+	public final static int MANA_POTION = 2;
+	public final static int LIGHTNING = 3;
+	public final static int CONFUSION = 4;
+	
+	public final static int LIGHTNING_DAMAGE = 20;
+	public final static int LIGHTNING_RANGE = 5;
+	public final static int LIGHTNING_MANA = 5;
 
 	// /// COMPONENTS OWNER ////
 	private Entity owner;
@@ -21,9 +28,20 @@ public class ItemComponent {
 
 	public void useItem() {
 		switch (usage) {
-		case 1:
+		case HEALING_POTION: {
 			MainGame.getInstance().getPlayer().getFighterComponent().healFor(5);
 			break;
+		}
+		case LIGHTNING: {
+			MainGame.getInstance().getPlayer().getFighterComponent()
+					.castLighning();
+			break;
+		}
+		case CONFUSION: {
+			MainGame.getInstance().getPlayer().getFighterComponent()
+					.castConfuse();
+			break;
+		}
 		}
 		MainMap.getInstance().getInventory().remove(this.owner);
 	}
@@ -34,10 +52,9 @@ public class ItemComponent {
 		else {
 			MainMap.getInstance().getInventory().add(this.owner);
 			MainMap.getInstance().getObjects().remove(this.owner);
-			MainGame.getInstance()
-					.newMessage(
-							"You picked up "
-									+ Helpers.capitalizeString(owner.getName()));
+			MainGame.getInstance().newMessage(
+					"You picked up "
+							+ Helpers.capitalizeString(owner.getName()));
 		}
 	}
 }

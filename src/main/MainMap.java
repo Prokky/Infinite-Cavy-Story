@@ -217,12 +217,29 @@ public class MainMap {
 			int y = rand.nextInt(room.getY2() - room.getY1() - 1)
 					+ room.getY1() + 1;
 			if (!isBlocked(x, y)) {
-				Entity item = new Entity(x, y, '!', "healing potion",
-						CSIColor.VIOLET, false);
-				ItemComponent itemComponent = new ItemComponent(item,
-						ItemComponent.HEALING_POTION);
-				item.setItemComponent(itemComponent);
-				objects.add(item);
+				int dice = rand.nextInt(100);
+				if (dice < 70) {
+					Entity item = new Entity(x, y, '!', "healing potion",
+							CSIColor.VIOLET, false);
+					ItemComponent itemComponent = new ItemComponent(item,
+							ItemComponent.HEALING_POTION);
+					item.setItemComponent(itemComponent);
+					objects.add(item);
+				} else if (dice > 70 && dice < 90) {
+					Entity item = new Entity(x, y, '!', "lightning scroll",
+							CSIColor.VIOLET, false);
+					ItemComponent itemComponent = new ItemComponent(item,
+							ItemComponent.LIGHTNING);
+					item.setItemComponent(itemComponent);
+					objects.add(item);
+				} else {
+					Entity item = new Entity(x, y, '!', "confusion scroll",
+							CSIColor.VIOLET, false);
+					ItemComponent itemComponent = new ItemComponent(item,
+							ItemComponent.CONFUSION);
+					item.setItemComponent(itemComponent);
+					objects.add(item);
+				}
 			}
 		}
 	}
@@ -358,13 +375,35 @@ public class MainMap {
 
 	public void checkLevelUp() {
 		int levelUpXP = LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
-		if (player.getFighterComponent().getXP() >= levelUpXP){
+		if (player.getFighterComponent().getXP() >= levelUpXP) {
 			player.incLevel();
-			player.getFighterComponent().setXP(player.getFighterComponent().getXP() - levelUpXP);
-			MainGame.getInstance().newMessage("Your battle skills grow stronger! You reached level " + player.getLevel());
+			player.getFighterComponent().setXP(
+					player.getFighterComponent().getXP() - levelUpXP);
+			MainGame.getInstance().newMessage(
+					"Your battle skills grow stronger! You reached level "
+							+ player.getLevel());
 			MainGame.getInstance().showLevelupWindow();
-			player.getFighterComponent().setHp(player.getFighterComponent().getMaxHP());
-			player.getFighterComponent().setMana(player.getFighterComponent().getMaxMana());
+			player.getFighterComponent().setHp(
+					player.getFighterComponent().getMaxHP());
+			player.getFighterComponent().setMana(
+					player.getFighterComponent().getMaxMana());
 		}
+	}
+
+	public Entity getClosestMonster(int max_range) {
+		Entity closest = null;
+		int closest_dist = max_range + 1;
+
+		for (Entity object : objects) {
+			if (object.getFighterComponent() != null && object != player) {
+				int dist = (int) player.distanceTo(object);
+				if (dist < closest_dist) {
+					closest = object;
+					closest_dist = dist;
+				}
+			}
+		}
+
+		return closest;
 	}
 }
