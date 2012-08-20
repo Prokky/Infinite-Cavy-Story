@@ -99,7 +99,8 @@ public class MainGame {
 			if (!inventoryShown)
 				if (!characterShown)
 					if (!levelUp)
-						csi.cls();
+						if (!dropShown)
+							csi.cls();
 
 			// / SHOW START HELP WINDOW //
 			if (!game_started) {
@@ -112,7 +113,8 @@ public class MainGame {
 			if (!inventoryShown)
 				if (!characterShown)
 					if (!levelUp)
-						MainMap.getInstance().drawMap();
+						if (!dropShown)
+							MainMap.getInstance().drawMap();
 			// drawing the player
 			player.draw();
 			// refreshing the console output
@@ -164,6 +166,12 @@ public class MainGame {
 			if (characterShown) {
 				if (dir.code == CharKey.C || dir.code == CharKey.c)
 					showCharacterWindow();
+				return "didnt-take-turn";
+			}
+		if (game_started)
+			if (characterShown) {
+				if (dir.code == CharKey.d || dir.code == CharKey.D)
+					showDrop();
 				return "didnt-take-turn";
 			}
 		if (game_started)
@@ -238,6 +246,7 @@ public class MainGame {
 				case CharKey.F7:
 					MainMap.getInstance().getInventory().get(6)
 							.getItemComponent().useItem();
+					showInventory();
 					break;
 				case CharKey.F8:
 					MainMap.getInstance().getInventory().get(7)
@@ -268,6 +277,75 @@ public class MainGame {
 				return "didnt-take-turn";
 			}
 
+		if (game_started)
+			if (dropShown) {
+				if (dir.code == CharKey.d || dir.code == CharKey.D)
+					showDrop();
+				switch (dir.code) {
+				case CharKey.F1:
+					MainMap.getInstance().getInventory().get(0)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F2:
+					MainMap.getInstance().getInventory().get(1)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F3:
+					MainMap.getInstance().getInventory().get(2)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F4:
+					MainMap.getInstance().getInventory().get(3)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F5:
+					MainMap.getInstance().getInventory().get(4)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F6:
+					MainMap.getInstance().getInventory().get(5)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F7:
+					MainMap.getInstance().getInventory().get(6)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F8:
+					MainMap.getInstance().getInventory().get(7)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F9:
+					MainMap.getInstance().getInventory().get(8)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F10:
+					MainMap.getInstance().getInventory().get(9)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F11:
+					MainMap.getInstance().getInventory().get(10)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				case CharKey.F12:
+					MainMap.getInstance().getInventory().get(11)
+							.getItemComponent().dropItem();
+					showDrop();
+					break;
+				}
+				return "didnt-take-turn";
+			}
+
 		// moving the player with ARROWS
 		if (gameState.equals("playing")) {
 			if (dir.isUpArrow() && (player.getY() - 1 >= 0)) {
@@ -287,6 +365,9 @@ public class MainGame {
 				return "didnt-take-turn";
 			} else if (dir.code == CharKey.c || dir.code == CharKey.C) {
 				showCharacterWindow();
+				return "didnt-take-turn";
+			} else if (dir.code == CharKey.d || dir.code == CharKey.D) {
+				showDrop();
 				return "didnt-take-turn";
 			} else if (dir.code == CharKey.G || dir.code == CharKey.g) {
 				MainMap.getInstance().grabItem();
@@ -355,10 +436,11 @@ public class MainGame {
 		csi.print(20, 21, "Press Z to go to kext level while on stairs");
 		csi.print(20, 22, "Press G to grab item");
 		csi.print(20, 22, "Press I to open inventory");
-		csi.print(20, 23, "Press C to open your character window");
-		csi.print(20, 25, "Press Q to quit");
+		csi.print(20, 23, "Press D to open drop window");
+		csi.print(20, 24, "Press C to open your character window");
+		csi.print(20, 27, "Press Q to quit");
 
-		csi.print(28, 27, "PRESS ENTER TO CONTINUE", CSIColor.GREEN_YELLOW);
+		csi.print(28, 28, "PRESS ENTER TO CONTINUE", CSIColor.GREEN_YELLOW);
 
 		csi.print(64, 44, "Created by Prokk");
 	}
@@ -391,6 +473,34 @@ public class MainGame {
 		} else {
 			MainMap.getInstance().drawMap();
 			inventoryShown = false;
+		}
+	}
+
+	boolean dropShown = false;
+
+	public void showDrop() {
+		if (!dropShown) {
+			csi.print(30, 15, "====== DROP ITEMS ======");
+			int i = 0;
+			if (MainMap.getInstance().getInventory().isEmpty()) {
+				csi.print(30, 16, "Empty");
+				i++;
+			} else {
+				for (int count = 0; count < MainMap.getInstance()
+						.getInventory().size(); count++) {
+					csi.print(30, 16 + i, "F"
+							+ (i + 1)
+							+ ": "
+							+ MainMap.getInstance().getInventory().get(i)
+									.getName());
+					i++;
+				}
+			}
+			csi.print(30, 16 + i, "=======================");
+			dropShown = true;
+		} else {
+			MainMap.getInstance().drawMap();
+			dropShown = false;
 		}
 	}
 

@@ -65,4 +65,12 @@ public class ItemComponent {
 							+ Helpers.capitalizeString(owner.getName()));
 		}
 	}
+
+	public void dropItem() {
+		MainMap.getInstance().getObjects().add(this.owner);
+		MainMap.getInstance().getInventory().remove(this.owner);
+		this.owner.setX(MainGame.getInstance().getPlayer().getX());
+		this.owner.setY(MainGame.getInstance().getPlayer().getY());
+		MainGame.getInstance().newMessage("You dropped " + Helpers.capitalizeString(this.owner.getName()));
+	}
 }
