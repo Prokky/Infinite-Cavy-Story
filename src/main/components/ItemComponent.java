@@ -25,6 +25,7 @@ public class ItemComponent {
 			MainGame.getInstance().getPlayer().getFighterComponent().healFor(5);
 			break;
 		}
+		MainMap.getInstance().getInventory().remove(this.owner);
 	}
 
 	public void pickUp() {
