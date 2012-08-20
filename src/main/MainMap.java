@@ -24,7 +24,7 @@ public class MainMap {
 	// ////////////////////////////////////////
 
 	private int dungeon_level = 1;
-	
+
 	private final static int LEVEL_UP_BASE = 200;
 	private final static int LEVEL_UP_FACTOR = 150;
 
@@ -349,6 +349,22 @@ public class MainMap {
 				if (object.getItemComponent() != null)
 					object.getItemComponent().pickUp();
 			}
+		}
+	}
+
+	public int xpForLevelUp() {
+		return LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
+	}
+
+	public void checkLevelUp() {
+		int levelUpXP = LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
+		if (player.getFighterComponent().getXP() >= levelUpXP){
+			player.incLevel();
+			player.getFighterComponent().setXP(player.getFighterComponent().getXP() - levelUpXP);
+			MainGame.getInstance().newMessage("Your battle skills grow stronger! You reached level " + player.getLevel());
+			MainGame.getInstance().showLevelupWindow();
+			player.getFighterComponent().setHp(player.getFighterComponent().getMaxHP());
+			player.getFighterComponent().setMana(player.getFighterComponent().getMaxMana());
 		}
 	}
 }

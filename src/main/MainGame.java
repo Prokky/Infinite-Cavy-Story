@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import main.components.FighterComponent;
 import net.slashie.libjcsi.CSIColor;
@@ -11,7 +12,7 @@ import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 public class MainGame {
 	// ///// LOGGER ///////
-	// private static Logger log = Logger.getLogger(MainGame.class.getName());
+	private static Logger log = Logger.getLogger(MainGame.class.getName());
 
 	// ///// SINGLETONE INSTANCE ///////
 	private static MainGame instance;
@@ -96,7 +97,9 @@ public class MainGame {
 
 			// clearing the game screen
 			if (!inventoryShown)
-				csi.cls();
+				if (!characterShown)
+					if (!levelUp)
+						csi.cls();
 
 			// / SHOW START HELP WINDOW //
 			if (!game_started) {
@@ -104,16 +107,18 @@ public class MainGame {
 				handleKeys();
 			}
 			// printing GUI
-			if (!inventoryShown)
-				printGUI();
+			printGUI();
 			// drawing the map
-
 			if (!inventoryShown)
-				MainMap.getInstance().drawMap();
+				if (!characterShown)
+					if (!levelUp)
+						MainMap.getInstance().drawMap();
 			// drawing the player
 			player.draw();
 			// refreshing the console output
 			csi.refresh();
+
+			MainMap.getInstance().checkLevelUp();
 
 			// handling the player keys
 			playerAction = handleKeys();
@@ -151,64 +156,118 @@ public class MainGame {
 
 		// C is the key to clear the combat log
 		if (gameState.equals("playing"))
-			if (dir.code == CharKey.c || dir.code == CharKey.c)
+			if (dir.code == CharKey.l || dir.code == CharKey.L) {
 				game_msgs.clear();
-
-		if (inventoryShown) {
-			if (dir.code == CharKey.I || dir.code == CharKey.i)
-				showInventory();
-			switch (dir.code) {
-			case CharKey.F1:
-				MainMap.getInstance().getInventory().get(0).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F2:
-				MainMap.getInstance().getInventory().get(1).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F3:
-				MainMap.getInstance().getInventory().get(2).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F4:
-				MainMap.getInstance().getInventory().get(3).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F5:
-				MainMap.getInstance().getInventory().get(4).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F6:
-				MainMap.getInstance().getInventory().get(5).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F7:
-				MainMap.getInstance().getInventory().get(6).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F8:
-				MainMap.getInstance().getInventory().get(7).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F9:
-				MainMap.getInstance().getInventory().get(8).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F10:
-				MainMap.getInstance().getInventory().get(9).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F11:
-				MainMap.getInstance().getInventory().get(10).getItemComponent()
-						.useItem();
-				break;
-			case CharKey.F12:
-				MainMap.getInstance().getInventory().get(11).getItemComponent()
-						.useItem();
-				break;
+				return "didnt-take-turn";
 			}
-			return "didnt-take-turn";
-		}
+		if (game_started)
+			if (characterShown) {
+				if (dir.code == CharKey.C || dir.code == CharKey.c)
+					showCharacterWindow();
+				return "didnt-take-turn";
+			}
+		if (game_started)
+			if (levelUp) {
+				switch (dir.code) {
+				case CharKey.F1:
+					player.getFighterComponent().setMaxHp(
+							player.getFighterComponent().getMaxHP() + 30);
+					player.getFighterComponent().incConst(1);
+					player.getFighterComponent().setHp(
+							player.getFighterComponent().getMaxHP());
+					player.getFighterComponent().setMana(
+							player.getFighterComponent().getMaxMana());
+					showLevelupWindow();
+					break;
+				case CharKey.F2:
+					player.getFighterComponent().setMaxMana(
+							player.getFighterComponent().getMaxMana() + 20);
+					player.getFighterComponent().incIntellect(1);
+					player.getFighterComponent().setHp(
+							player.getFighterComponent().getMaxHP());
+					player.getFighterComponent().setMana(
+							player.getFighterComponent().getMaxMana());
+					showLevelupWindow();
+					break;
+				case CharKey.F3:
+					player.getFighterComponent().incPower(1);
+					showLevelupWindow();
+					break;
+				case CharKey.F4:
+					player.getFighterComponent().incDefence(1);
+					showLevelupWindow();
+					break;
+				}
+				return "didnt-take-turn";
+			}
+		if (game_started)
+			if (inventoryShown) {
+				if (dir.code == CharKey.I || dir.code == CharKey.i)
+					showInventory();
+				switch (dir.code) {
+				case CharKey.F1:
+					MainMap.getInstance().getInventory().get(0)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F2:
+					MainMap.getInstance().getInventory().get(1)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F3:
+					MainMap.getInstance().getInventory().get(2)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F4:
+					MainMap.getInstance().getInventory().get(3)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F5:
+					MainMap.getInstance().getInventory().get(4)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F6:
+					MainMap.getInstance().getInventory().get(5)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F7:
+					MainMap.getInstance().getInventory().get(6)
+							.getItemComponent().useItem();
+					break;
+				case CharKey.F8:
+					MainMap.getInstance().getInventory().get(7)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F9:
+					MainMap.getInstance().getInventory().get(8)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F10:
+					MainMap.getInstance().getInventory().get(9)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F11:
+					MainMap.getInstance().getInventory().get(10)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				case CharKey.F12:
+					MainMap.getInstance().getInventory().get(11)
+							.getItemComponent().useItem();
+					showInventory();
+					break;
+				}
+				return "didnt-take-turn";
+			}
+
 		// moving the player with ARROWS
 		if (gameState.equals("playing")) {
 			if (dir.isUpArrow() && (player.getY() - 1 >= 0)) {
@@ -226,6 +285,9 @@ public class MainGame {
 			} else if (dir.code == CharKey.I || dir.code == CharKey.i) {
 				showInventory();
 				return "didnt-take-turn";
+			} else if (dir.code == CharKey.c || dir.code == CharKey.C) {
+				showCharacterWindow();
+				return "didnt-take-turn";
 			} else if (dir.code == CharKey.G || dir.code == CharKey.g) {
 				MainMap.getInstance().grabItem();
 			} else
@@ -242,16 +304,20 @@ public class MainGame {
 		csi.print(0, MainMap.MAP_HEIGHT, "HP "
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
-
-		csi.print(0, MainMap.MAP_HEIGHT + 1, "LEVEL "
-				+ player.getLevel());
-		csi.print(0, MainMap.MAP_HEIGHT + 2, "XP "
-				+ player.getFighterComponent().getXP());
+		csi.print(0, MainMap.MAP_HEIGHT + 1, "MP "
+				+ player.getFighterComponent().getMana() + "/"
+				+ player.getFighterComponent().getMaxMana());
+		csi.print(0, MainMap.MAP_HEIGHT + 3, "LEVEL " + player.getLevel());
+		csi.print(0, MainMap.MAP_HEIGHT + 4, "XP "
+				+ player.getFighterComponent().getXP() + "/"
+				+ MainMap.getInstance().xpForLevelUp());
 		// printing the combat log
 		int y = 0;
 		for (String text : game_msgs) {
 			if (text.contains("dies"))
 				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.RED);
+			else if (text.contains("level"))
+				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.YELLOW);
 			else if (text.contains("pick"))
 				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.VIOLET);
 			else if (text.contains("healed"))
@@ -285,10 +351,11 @@ public class MainGame {
 
 		csi.print(20, 19, "Use arrows to move");
 		csi.print(20, 20, "Use arrows to the targets direction to attack");
-		csi.print(20, 21, "Press C to clear combat log");
+		csi.print(20, 21, "Press L to clear combat log");
 		csi.print(20, 21, "Press Z to go to kext level while on stairs");
 		csi.print(20, 22, "Press G to grab item");
 		csi.print(20, 22, "Press I to open inventory");
+		csi.print(20, 23, "Press C to open your character window");
 		csi.print(20, 25, "Press Q to quit");
 
 		csi.print(28, 27, "PRESS ENTER TO CONTINUE", CSIColor.GREEN_YELLOW);
@@ -325,5 +392,59 @@ public class MainGame {
 			MainMap.getInstance().drawMap();
 			inventoryShown = false;
 		}
+	}
+
+	// //////////////////////////
+	// //// SHOW CHARACTER //////
+	// //////////////////////////
+	boolean characterShown = false;
+
+	public void showCharacterWindow() {
+		if (!characterShown) {
+			csi.print(30, 15, "====== CHARACTER ======");
+			csi.print(30, 16, "LEVEL " + player.getLevel());
+			csi.print(42, 16, "XP " + player.getFighterComponent().getXP());
+
+			csi.print(30, 17, "HP " + player.getFighterComponent().getHp()
+					+ "/" + player.getFighterComponent().getMaxHP());
+			csi.print(42, 17, "MP " + player.getFighterComponent().getMana()
+					+ "/" + player.getFighterComponent().getMaxMana());
+
+			csi.print(30, 18, "CONST "
+					+ player.getFighterComponent().getConstitution());
+			csi.print(42, 18, "INT "
+					+ player.getFighterComponent().getIntellect());
+			csi.print(30, 19, "ATTACK "
+					+ player.getFighterComponent().getPower());
+			csi.print(42, 19, "DEF "
+					+ player.getFighterComponent().getDefence());
+			csi.print(30, 20, "=======================");
+			characterShown = true;
+		} else {
+			MainMap.getInstance().drawMap();
+			characterShown = false;
+		}
+	}
+
+	private boolean levelUp = false;
+
+	public void showLevelupWindow() {
+		if (!levelUp) {
+			csi.print(30, 15, "====== LEVEL UP ======");
+			csi.print(30, 16, "F1: INCREASE CONSTITUTION TO "
+					+ (player.getFighterComponent().getConstitution() + 1));
+			csi.print(30, 17, "F2: INCREASE INTELLECT TO "
+					+ (player.getFighterComponent().getIntellect() + 1));
+			csi.print(30, 18, "F3: INCREASE ATTACK TO "
+					+ (player.getFighterComponent().getPower() + 1));
+			csi.print(30, 19, "F4: INCREASE DEFENCE TO "
+					+ (player.getFighterComponent().getDefence() + 1));
+			levelUp = true;
+		} else {
+
+			MainMap.getInstance().drawMap();
+			levelUp = false;
+		}
+
 	}
 }

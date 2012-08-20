@@ -16,6 +16,10 @@ public class FighterComponent {
 	private int defence; // defence
 	private int power; // power
 	private int xp; // xp
+	private int intellect = 1; // intellect for player
+	private int constitution = 1; // const for player
+	private int maxmana = 20; // mana for player
+	private int mana = 20; // mana
 
 	// /// FIGHTER COMPONENT INITIATED WITH OWNER, HP, DEFENCE AND PAWA! ///////
 	public FighterComponent(Entity owner, int hp, int xp, int defence, int power) {
@@ -30,6 +34,14 @@ public class FighterComponent {
 	// //// GETTERS ////////
 	public int getMaxHP() {
 		return this.max_hp;
+	}
+
+	public int getMaxMana() {
+		return this.maxmana;
+	}
+
+	public int getMana() {
+		return this.mana;
 	}
 
 	public int getHp() {
@@ -48,6 +60,14 @@ public class FighterComponent {
 		return this.xp;
 	}
 
+	public int getConstitution() {
+		return this.constitution;
+	}
+
+	public int getIntellect() {
+		return this.intellect;
+	}
+
 	// /////////////////////
 
 	// //// SETTERS ////////
@@ -55,8 +75,36 @@ public class FighterComponent {
 		this.hp = hp;
 	}
 
+	public void setMana(int mana) {
+		this.mana = mana;
+	}
+
+	public void setMaxHp(int maxhp) {
+		this.max_hp = maxhp;
+	}
+
+	public void setMaxMana(int maxmana) {
+		this.maxmana = maxmana;
+	}
+
 	public void setXP(int xp) {
 		this.xp = xp;
+	}
+
+	public void incPower(int inc) {
+		this.power += inc;
+	}
+
+	public void incDefence(int inc) {
+		this.defence += inc;
+	}
+
+	public void incIntellect(int inc) {
+		this.intellect += inc;
+	}
+
+	public void incConst(int inc) {
+		this.constitution += inc;
 	}
 
 	// /////////////////////
