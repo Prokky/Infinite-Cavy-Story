@@ -177,7 +177,7 @@ public class MainGame {
 		if (game_started)
 			if (levelUp) {
 				switch (dir.code) {
-				case CharKey.F1:
+				case CharKey.N1:
 					player.getFighterComponent().setMaxHp(
 							player.getFighterComponent().getMaxHP() + 30);
 					player.getFighterComponent().incConst(1);
@@ -187,7 +187,7 @@ public class MainGame {
 							player.getFighterComponent().getMaxMana());
 					showLevelupWindow();
 					break;
-				case CharKey.F2:
+				case CharKey.N2:
 					player.getFighterComponent().setMaxMana(
 							player.getFighterComponent().getMaxMana() + 20);
 					player.getFighterComponent().incIntellect(1);
@@ -197,11 +197,11 @@ public class MainGame {
 							player.getFighterComponent().getMaxMana());
 					showLevelupWindow();
 					break;
-				case CharKey.F3:
+				case CharKey.N3:
 					player.getFighterComponent().incPower(1);
 					showLevelupWindow();
 					break;
-				case CharKey.F4:
+				case CharKey.N4:
 					player.getFighterComponent().incDefence(1);
 					showLevelupWindow();
 					break;
@@ -212,68 +212,12 @@ public class MainGame {
 			if (inventoryShown) {
 				if (dir.code == CharKey.I || dir.code == CharKey.i)
 					showInventory();
-				switch (dir.code) {
-				case CharKey.F1:
-					MainMap.getInstance().getInventory().get(0)
+				if (dir.code >= 118 && dir.code <= 126) {
+					MainMap.getInstance().getInventory().get(dir.code - 118)
 							.getItemComponent().useItem();
 					showInventory();
-					break;
-				case CharKey.F2:
-					MainMap.getInstance().getInventory().get(1)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F3:
-					MainMap.getInstance().getInventory().get(2)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F4:
-					MainMap.getInstance().getInventory().get(3)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F5:
-					MainMap.getInstance().getInventory().get(4)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F6:
-					MainMap.getInstance().getInventory().get(5)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F7:
-					MainMap.getInstance().getInventory().get(6)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F8:
-					MainMap.getInstance().getInventory().get(7)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F9:
-					MainMap.getInstance().getInventory().get(8)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F10:
-					MainMap.getInstance().getInventory().get(9)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F11:
-					MainMap.getInstance().getInventory().get(10)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
-				case CharKey.F12:
-					MainMap.getInstance().getInventory().get(11)
-							.getItemComponent().useItem();
-					showInventory();
-					break;
 				}
+
 				return "didnt-take-turn";
 			}
 
@@ -281,67 +225,10 @@ public class MainGame {
 			if (dropShown) {
 				if (dir.code == CharKey.d || dir.code == CharKey.D)
 					showDrop();
-				switch (dir.code) {
-				case CharKey.F1:
-					MainMap.getInstance().getInventory().get(0)
+				if (dir.code >= 118 && dir.code <= 126) {
+					MainMap.getInstance().getInventory().get(dir.code - 118)
 							.getItemComponent().dropItem();
 					showDrop();
-					break;
-				case CharKey.F2:
-					MainMap.getInstance().getInventory().get(1)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F3:
-					MainMap.getInstance().getInventory().get(2)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F4:
-					MainMap.getInstance().getInventory().get(3)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F5:
-					MainMap.getInstance().getInventory().get(4)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F6:
-					MainMap.getInstance().getInventory().get(5)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F7:
-					MainMap.getInstance().getInventory().get(6)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F8:
-					MainMap.getInstance().getInventory().get(7)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F9:
-					MainMap.getInstance().getInventory().get(8)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F10:
-					MainMap.getInstance().getInventory().get(9)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F11:
-					MainMap.getInstance().getInventory().get(10)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
-				case CharKey.F12:
-					MainMap.getInstance().getInventory().get(11)
-							.getItemComponent().dropItem();
-					showDrop();
-					break;
 				}
 				return "didnt-take-turn";
 			}
@@ -460,8 +347,7 @@ public class MainGame {
 			} else {
 				for (int count = 0; count < MainMap.getInstance()
 						.getInventory().size(); count++) {
-					csi.print(30, 16 + i, "F"
-							+ (i + 1)
+					csi.print(30, 16 + i, (i + 1)
 							+ ": "
 							+ MainMap.getInstance().getInventory().get(i)
 									.getName());
@@ -488,8 +374,7 @@ public class MainGame {
 			} else {
 				for (int count = 0; count < MainMap.getInstance()
 						.getInventory().size(); count++) {
-					csi.print(30, 16 + i, "F"
-							+ (i + 1)
+					csi.print(30, 16 + i, (i + 1)
 							+ ": "
 							+ MainMap.getInstance().getInventory().get(i)
 									.getName());
@@ -539,15 +424,16 @@ public class MainGame {
 	private boolean levelUp = false;
 
 	public void showLevelupWindow() {
+		printGUI();
 		if (!levelUp) {
 			csi.print(30, 15, "====== LEVEL UP ======");
-			csi.print(30, 16, "F1: INCREASE CONSTITUTION TO "
+			csi.print(30, 16, "1: INCREASE CONSTITUTION TO "
 					+ (player.getFighterComponent().getConstitution() + 1));
-			csi.print(30, 17, "F2: INCREASE INTELLECT TO "
+			csi.print(30, 17, "2: INCREASE INTELLECT TO "
 					+ (player.getFighterComponent().getIntellect() + 1));
-			csi.print(30, 18, "F3: INCREASE ATTACK TO "
+			csi.print(30, 18, "3: INCREASE ATTACK TO "
 					+ (player.getFighterComponent().getPower() + 1));
-			csi.print(30, 19, "F4: INCREASE DEFENCE TO "
+			csi.print(30, 19, "4: INCREASE DEFENCE TO "
 					+ (player.getFighterComponent().getDefence() + 1));
 			levelUp = true;
 		} else {

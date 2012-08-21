@@ -24,6 +24,10 @@ public class MainMap {
 	// ////////////////////////////////////////
 
 	private int dungeon_level = 1;
+	
+	public int getCurrentLevel(){
+		return dungeon_level;
+	}
 
 	private final static int LEVEL_UP_BASE = 200;
 	private final static int LEVEL_UP_FACTOR = 150;
@@ -192,7 +196,7 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 10, 35, 0, 3);
+							AIComponent, 8 + 2*dungeon_level, 30+ 5*dungeon_level, 0, 2 + dungeon_level);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
@@ -201,7 +205,7 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'T', "troll",
 							CSIColor.DARK_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 16, 100, 1, 4);
+							AIComponent, 12 + 3* dungeon_level, 100 + 10*dungeon_level, (int) (1 + dungeon_level*0.5f), 4+dungeon_level);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
