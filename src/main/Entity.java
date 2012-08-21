@@ -176,6 +176,7 @@ public class Entity {
 			MainGame.getInstance().setGameState("dead");
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
+			MainGame.getInstance().newMessage("YOU DIE, BWAAHAHHAAHHA!");
 		} else if ((name.equals("troll")) || (name.equals("orc"))) {
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;

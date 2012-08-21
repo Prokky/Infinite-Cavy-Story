@@ -213,8 +213,10 @@ public class MainGame {
 				if (dir.code == CharKey.I || dir.code == CharKey.i)
 					showInventory();
 				if (dir.code >= 118 && dir.code <= 126) {
-					MainMap.getInstance().getInventory().get(dir.code - 118)
-							.getItemComponent().useItem();
+					if (MainMap.getInstance().getInventory().size() > (dir.code - 118))
+						MainMap.getInstance().getInventory()
+								.get(dir.code - 118).getItemComponent()
+								.useItem();
 					showInventory();
 				}
 
@@ -226,8 +228,10 @@ public class MainGame {
 				if (dir.code == CharKey.d || dir.code == CharKey.D)
 					showDrop();
 				if (dir.code >= 118 && dir.code <= 126) {
-					MainMap.getInstance().getInventory().get(dir.code - 118)
-							.getItemComponent().dropItem();
+					if (MainMap.getInstance().getInventory().size() > (dir.code - 118))
+						MainMap.getInstance().getInventory()
+								.get(dir.code - 118).getItemComponent()
+								.dropItem();
 					showDrop();
 				}
 				return "didnt-take-turn";
