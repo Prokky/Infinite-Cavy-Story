@@ -61,7 +61,7 @@ public class MainGame {
 	public static void main(String[] args) {
 		Properties text = new Properties();
 		text.setProperty("fontSize", "15");
-		text.setProperty("font", "Lucida Console");
+		text.setProperty("font", "roguelike.ttf");
 		csi = new WSwingConsoleInterface("RogueLike", text);
 		instance = new MainGame();
 		instance.run();
