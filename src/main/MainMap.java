@@ -294,9 +294,9 @@ public class MainMap {
 				int map_y = y + camera_y;
 				if (map[map_x][map_y].isBlockedSight()) {
 					if (map[map_x][map_y].wasVisited())
-						csi.print(x, y, '#', CSIColor.DARK_GRAY); // walls
+						csi.print(x, y, '#', CSIColor.BISTRE); // walls
 				} else if (map[map_x][map_y].wasVisited())
-					csi.print(x, y, '.', CSIColor.DARK_GRAY); // empty space
+					csi.print(x, y, '.', CSIColor.DARK_BROWN); // empty space
 			}
 		// simple sight view
 		int pl_x_l = player.getX() - 6;
@@ -329,7 +329,7 @@ public class MainMap {
 						if ((map_x > 0) && (map_x < MainMap.CAMERA_WIDTH))
 							if ((map_y > 0) && (map_y < MainMap.CAMERA_HEIGHT))
 								csi.print(map_x, map_y, '#',
-										CSIColor.LIGHT_GRAY); // you see
+										CSIColor.BROWNER); // you see
 				}
 				j++;
 			}
