@@ -107,6 +107,8 @@ public class MainGame {
 				showStartWindow();
 				handleKeys();
 			}
+
+			MainMap.getInstance().moveCamera(player.getX(), player.getY());
 			// printing GUI
 			printGUI();
 			// drawing the map

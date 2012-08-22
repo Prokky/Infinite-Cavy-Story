@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.logging.Logger;
 
 import main.components.AIComponent;
 import main.components.FighterComponent;
@@ -11,8 +12,7 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
 
 public class MainMap {
 	// // LOGGET INSTANCE /////
-	// private static Logger log =
-	// Logger.getLogger(MainMap.class.getName());
+	private static Logger log = Logger.getLogger(MainMap.class.getName());
 
 	// /// SINGLETONE INSTANCE AND GETTER /////
 	private static MainMap instance = new MainMap();
@@ -24,8 +24,8 @@ public class MainMap {
 	// ////////////////////////////////////////
 
 	private int dungeon_level = 1;
-	
-	public int getCurrentLevel(){
+
+	public int getCurrentLevel() {
 		return dungeon_level;
 	}
 
@@ -33,13 +33,16 @@ public class MainMap {
 	private final static int LEVEL_UP_FACTOR = 150;
 
 	// //// SIZE OF MAPS
-	public final static int MAP_WIDTH = 80;
-	public final static int MAP_HEIGHT = 40;
+	public final static int MAP_WIDTH = 100;
+	public final static int MAP_HEIGHT = 100;
+
+	public final static int CAMERA_WIDTH = 80;
+	public final static int CAMERA_HEIGHT = 40;
 
 	// ///// DUNGEON GENERATOR PARAMETERS
-	private final static int ROOM_MAX_SIZE = 10;
+	private final static int ROOM_MAX_SIZE = 15;
 	private final static int ROOM_MIN_SIZE = 6;
-	private final static int MAX_ROOMS = 30;
+	private final static int MAX_ROOMS = 50;
 	private final static int MAX_ROOM_MONSTERS = 3;
 	private final static int MAX_ROOM_ITEMS = 2;
 
@@ -196,7 +199,8 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 8 + 2*dungeon_level, 30+ 5*dungeon_level, 0, 2 + dungeon_level);
+							AIComponent, 8 + 2 * dungeon_level,
+							30 + 5 * dungeon_level, 0, 2 + dungeon_level);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
@@ -205,7 +209,9 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'T', "troll",
 							CSIColor.DARK_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 12 + 3* dungeon_level, 100 + 10*dungeon_level, (int) (1 + dungeon_level*0.5f), 4+dungeon_level);
+							AIComponent, 12 + 3 * dungeon_level,
+							100 + 10 * dungeon_level,
+							(int) (1 + dungeon_level * 0.5f), 4 + dungeon_level);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
@@ -282,14 +288,16 @@ public class MainMap {
 	// //// DRAW ALL MAP FUNCTION /////
 	// ////////////////////////////////
 	public void drawMap() {
-		for (int x = 0; x < MAP_WIDTH; x++)
-			for (int y = 0; y < MAP_HEIGHT; y++)
-				if (map[x][y].isBlockedSight()) {
-					if (map[x][y].wasVisited())
+		for (int x = 0; x < CAMERA_WIDTH; x++)
+			for (int y = 0; y < CAMERA_HEIGHT; y++) {
+				int map_x = x + camera_x;
+				int map_y = y + camera_y;
+				if (map[map_x][map_y].isBlockedSight()) {
+					if (map[map_x][map_y].wasVisited())
 						csi.print(x, y, '#', CSIColor.DARK_GRAY); // walls
-				} else if (map[x][y].wasVisited())
+				} else if (map[map_x][map_y].wasVisited())
 					csi.print(x, y, '.', CSIColor.DARK_GRAY); // empty space
-
+			}
 		// simple sight view
 		int pl_x_l = player.getX() - 6;
 		if (pl_x_l < 0)
@@ -309,19 +317,20 @@ public class MainMap {
 		for (int x = pl_x_l; x < pl_x_r; x++) {
 			j = 0;
 			for (int y = pl_y_t; y < pl_y_b; y++) {
+				int map_x = x - camera_x;
+				int map_y = y - camera_y;
 				is_light = (light_pattern[j][i] == 1);
 				if (is_light) {
-					// draw objects you can see
-					map[x][y].setVisited(true);
 					for (Entity object : objects)
 						if (object.getX() == x && object.getY() == y)
 							object.draw();
+					map[x][y].setVisited(true);
+					if (map[x][y].isBlockedSight())
+						if ((map_x > 0) && (map_x < MainMap.CAMERA_WIDTH))
+							if ((map_y > 0) && (map_y < MainMap.CAMERA_HEIGHT))
+								csi.print(map_x, map_y, '#',
+										CSIColor.LIGHT_GRAY); // you see
 				}
-				if (map[x][y].isBlockedSight())
-					if (is_light) {
-						csi.print(x, y, '#', CSIColor.LIGHT_GRAY); // you see
-					} else if (map[x][y].wasVisited())
-						csi.print(x, y, '#', CSIColor.DARK_GRAY); // you saw
 				j++;
 			}
 			i++;
@@ -416,5 +425,34 @@ public class MainMap {
 		}
 
 		return closest;
+	}
+
+	// //////////////////////////
+	// //// MAP SCROLLING ///////
+	// //////////////////////////
+	private static int camera_x = 0;
+	private static int camera_y = 0;
+
+	public void moveCamera(int target_x, int target_y) {
+		int x = target_x - CAMERA_WIDTH / 2;
+		int y = target_y - CAMERA_HEIGHT / 2;
+		if (x < 0)
+			x = 0;
+		if (y < 0)
+			y = 0;
+		if (x > (MAP_WIDTH - CAMERA_WIDTH - 1))
+			x = MAP_WIDTH - CAMERA_WIDTH - 1;
+		if (y > (MAP_HEIGHT - CAMERA_HEIGHT - 1))
+			y = MAP_HEIGHT - CAMERA_HEIGHT - 1;
+		camera_x = x;
+		camera_y = y;
+	}
+
+	public int toCameraCoordX(int x) {
+		return x - camera_x;
+	}
+
+	public int toCameraCoordY(int y) {
+		return y - camera_y;
 	}
 }

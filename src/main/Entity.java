@@ -21,7 +21,7 @@ public class Entity {
 	private boolean blocks; // blocks movement or not
 	private FighterComponent fighter; // fighter component
 	private AIComponent ai; // ai component
-	private ItemComponent item; //item component
+	private ItemComponent item; // item component
 	private int level = 1;
 
 	// //// CREATE ENTITY WITH BOTH COMPONENTS /////
@@ -92,12 +92,12 @@ public class Entity {
 	public AIComponent getAIComponent() {
 		return this.ai;
 	}
-	
-	public ItemComponent getItemComponent(){
+
+	public ItemComponent getItemComponent() {
 		return this.item;
 	}
-	
-	public int getLevel(){
+
+	public int getLevel() {
 		return this.level;
 	}
 
@@ -121,13 +121,14 @@ public class Entity {
 		this.ai = ai;
 	}
 
-	public void setItemComponent(ItemComponent item){
+	public void setItemComponent(ItemComponent item) {
 		this.item = item;
 	}
-	
-	public void incLevel(){
+
+	public void incLevel() {
 		this.level++;
 	}
+
 	// ////////////////////////
 
 	// // FUNCTION TO MOVE ENTITY /////
@@ -140,12 +141,22 @@ public class Entity {
 
 	// // FUNCTION TO DRAW ENTITY /////
 	public void draw() {
-		MainGame.getCSI().print(this.x, this.y, this.key, this.color);
+		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
+		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
+		// check if within camera range
+		if ((new_x > 0) && (new_x < MainMap.CAMERA_WIDTH))
+			if ((new_y > 0) && (new_y < MainMap.CAMERA_HEIGHT))
+				MainGame.getCSI().print(new_x, new_y, this.key, this.color);
 	}
 
 	// // CREARING THE ENTITIES SPACE
 	public void clear() {
-		MainGame.getCSI().print(this.x, this.y, ' ', this.color);
+		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
+		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
+		// check if within camera range
+		if ((new_x > 0) && (new_x < MainMap.CAMERA_WIDTH))
+			if ((new_y > 0) && (new_y < MainMap.CAMERA_HEIGHT))
+				MainGame.getCSI().print(new_x, new_y, ' ', this.color);
 	}
 
 	// // FUNCTIONS TO MOVE ENTITY TOWARS TARGET LOCATION ////
@@ -183,7 +194,8 @@ public class Entity {
 			this.blocks = false;
 			this.fighter = null;
 			this.ai = null;
-			MainGame.getInstance().newMessage(Helpers.capitalizeString(this.name) + " dies");
+			MainGame.getInstance().newMessage(
+					Helpers.capitalizeString(this.name) + " dies");
 			this.name = "remains";
 		}
 	}
