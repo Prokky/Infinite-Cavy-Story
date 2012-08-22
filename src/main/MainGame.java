@@ -181,7 +181,7 @@ public class MainGame {
 				switch (dir.code) {
 				case CharKey.N1:
 					player.getFighterComponent().setMaxHp(
-							player.getFighterComponent().getMaxHP() + 30);
+							player.getFighterComponent().getMaxHP() + 10);
 					player.getFighterComponent().incConst(1);
 					player.getFighterComponent().setHp(
 							player.getFighterComponent().getMaxHP());
@@ -191,7 +191,7 @@ public class MainGame {
 					break;
 				case CharKey.N2:
 					player.getFighterComponent().setMaxMana(
-							player.getFighterComponent().getMaxMana() + 20);
+							player.getFighterComponent().getMaxMana() + 10);
 					player.getFighterComponent().incIntellect(1);
 					player.getFighterComponent().setHp(
 							player.getFighterComponent().getMaxHP());
@@ -275,29 +275,29 @@ public class MainGame {
 	// //////////////////////////////////////////////
 	private void printGUI() {
 		// printing player hp
-		csi.print(0, MainMap.MAP_HEIGHT, "HP "
+		csi.print(0, MainMap.CAMERA_HEIGHT, "HP "
 				+ player.getFighterComponent().getHp() + "/"
 				+ player.getFighterComponent().getMaxHP());
-		csi.print(0, MainMap.MAP_HEIGHT + 1, "MP "
+		csi.print(0, MainMap.CAMERA_HEIGHT + 1, "MP "
 				+ player.getFighterComponent().getMana() + "/"
 				+ player.getFighterComponent().getMaxMana());
-		csi.print(0, MainMap.MAP_HEIGHT + 3, "LEVEL " + player.getLevel());
-		csi.print(0, MainMap.MAP_HEIGHT + 4, "XP "
+		csi.print(0, MainMap.CAMERA_HEIGHT + 3, "LEVEL " + player.getLevel());
+		csi.print(0, MainMap.CAMERA_HEIGHT + 4, "XP "
 				+ player.getFighterComponent().getXP() + "/"
 				+ MainMap.getInstance().xpForLevelUp());
 		// printing the combat log
 		int y = 0;
 		for (String text : game_msgs) {
 			if (text.contains("dies"))
-				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.RED);
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.RED);
 			else if (text.contains("level"))
-				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.YELLOW);
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.YELLOW);
 			else if (text.contains("pick"))
-				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.VIOLET);
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.VIOLET);
 			else if (text.contains("healed"))
-				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.GREEN);
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.GREEN);
 			else
-				csi.print(20, y + MainMap.MAP_HEIGHT, text, CSIColor.WHITE);
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.WHITE);
 			y++;
 		}
 		// ////////////////////////

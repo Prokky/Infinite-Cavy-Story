@@ -199,8 +199,8 @@ public class MainMap {
 					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 8 + 2 * dungeon_level,
-							30 + 5 * dungeon_level, 0, 2 + dungeon_level);
+							AIComponent, 8 + 3 * dungeon_level,
+							30 + 7 * dungeon_level, 0, 2 + dungeon_level);
 					AIComponent ai_component = new AIComponent(AIComponent);
 					AIComponent.setFighterComponent(fighter_component);
 					AIComponent.setAIComponent(ai_component);
