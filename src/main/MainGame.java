@@ -296,6 +296,8 @@ public class MainGame {
 				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.VIOLET);
 			else if (text.contains("healed"))
 				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.GREEN);
+			else if (text.contains("mana"))
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.BLUE);
 			else
 				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.WHITE);
 			y++;
