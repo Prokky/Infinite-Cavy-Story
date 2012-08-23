@@ -152,6 +152,20 @@ public class MainMap {
 		stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs",
 				CSIColor.WHITE, false);
 		objects.add(stairs);
+
+		for (int x = 1; x < MAP_WIDTH - 1; x++)
+			for (int y = 1; y < MAP_HEIGHT - 1; y++)
+				if (map[x][y].isBlockedSight())
+					if (!map[x - 1][y - 1].isBlockedSight()
+							|| !map[x - 1][y].isBlockedSight()
+							|| !map[x - 1][y + 1].isBlockedSight()
+							|| !map[x][y - 1].isBlockedSight()
+							|| !map[x][y + 1].isBlockedSight()
+							|| !map[x + 1][y - 1].isBlockedSight()
+							|| !map[x + 1][y].isBlockedSight()
+							|| !map[x + 1][y + 1].isBlockedSight())
+						map[x][y].setWall(true);
+
 	}
 
 	// // FUNCTION TO CREATE ROOM IN THE RECT
@@ -293,10 +307,10 @@ public class MainMap {
 			for (int y = 0; y < CAMERA_HEIGHT; y++) {
 				int map_x = x + camera_x;
 				int map_y = y + camera_y;
-				if (map[map_x][map_y].isBlockedSight()) {
+				if (map[map_x][map_y].isWall()) {
 					if (map[map_x][map_y].wasVisited())
 						csi.print(x, y, '#', CSIColor.BISTRE); // walls
-				} else if (map[map_x][map_y].wasVisited())
+				} else if (map[map_x][map_y].wasVisited() && !map[map_x][map_y].isBlockedSight())
 					csi.print(x, y, '.', CSIColor.DARK_BROWN); // empty space
 			}
 		// simple sight view
@@ -326,11 +340,10 @@ public class MainMap {
 						if (object.getX() == x && object.getY() == y)
 							object.draw();
 					map[x][y].setVisited(true);
-					if (map[x][y].isBlockedSight())
+					if (map[x][y].isWall())
 						if ((map_x > 0) && (map_x < MainMap.CAMERA_WIDTH))
 							if ((map_y > 0) && (map_y < MainMap.CAMERA_HEIGHT))
-								csi.print(map_x, map_y, '#', CSIColor.BROWNER); // you
-																				// see
+								csi.print(map_x, map_y, '#', CSIColor.BROWNER);
 				}
 				j++;
 			}

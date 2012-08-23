@@ -6,6 +6,7 @@ public class Tile {
 	private boolean blocked; // is tile blocked
 	private boolean blocked_sight; // does tile block sight
 	private boolean visited; // was tile ever visited
+	private boolean wall; // is tile a wall
 
 	// // GETTERS ////
 	public boolean isBlocked() {
@@ -18,6 +19,10 @@ public class Tile {
 
 	public boolean wasVisited() {
 		return visited;
+	}
+	
+	public boolean isWall(){
+		return wall;
 	}
 
 	// ///////////////
@@ -34,6 +39,10 @@ public class Tile {
 	public void setVisited(boolean visited) {
 		this.visited = visited;
 	}
+	
+	public void setWall(boolean wall){
+		this.wall = wall;
+	}
 
 	// ///////////////
 
@@ -42,6 +51,7 @@ public class Tile {
 		this.blocked = blocked;
 		this.blocked_sight = blocked;
 		this.visited = false;
+		this.wall = false;
 	}
 
 	// // INITIATE TILE WITH 2 BOOLEANS
@@ -49,6 +59,6 @@ public class Tile {
 		this.blocked = blocked;
 		this.blocked_sight = blocked_sight;
 		this.visited = false;
+		this.wall = false;
 	}
-
 }
