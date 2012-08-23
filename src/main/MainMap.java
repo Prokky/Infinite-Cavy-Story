@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import main.components.AIComponent;
 import main.components.FighterComponent;
 import main.components.ItemComponent;
+import main.helpers.Message;
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 
@@ -328,8 +329,8 @@ public class MainMap {
 					if (map[x][y].isBlockedSight())
 						if ((map_x > 0) && (map_x < MainMap.CAMERA_WIDTH))
 							if ((map_y > 0) && (map_y < MainMap.CAMERA_HEIGHT))
-								csi.print(map_x, map_y, '#',
-										CSIColor.BROWNER); // you see
+								csi.print(map_x, map_y, '#', CSIColor.BROWNER); // you
+																				// see
 				}
 				j++;
 			}
@@ -369,7 +370,8 @@ public class MainMap {
 			dungeon_level++;
 			objects.clear();
 			MainGame.getInstance().newMessage(
-					"You proceed to level " + dungeon_level);
+					new Message("You proceed to level " + dungeon_level,
+							CSIColor.GOLDEN));
 			generateMap();
 			drawMap();
 		} else
@@ -400,8 +402,9 @@ public class MainMap {
 			player.getFighterComponent().setXP(
 					player.getFighterComponent().getXP() - levelUpXP);
 			MainGame.getInstance().newMessage(
-					"Your battle skills grow stronger! You reached level "
-							+ player.getLevel());
+					new Message(
+							"Your battle skills grow stronger! You reached level "
+									+ player.getLevel(), CSIColor.GOLDEN));
 			MainGame.getInstance().showLevelupWindow();
 			player.getFighterComponent().setHp(
 					player.getFighterComponent().getMaxHP());

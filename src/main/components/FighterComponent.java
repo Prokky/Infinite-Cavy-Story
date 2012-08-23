@@ -5,6 +5,8 @@ import main.Entity;
 import main.MainGame;
 import main.MainMap;
 import main.helpers.Helpers;
+import main.helpers.Message;
+import net.slashie.libjcsi.CSIColor;
 
 public class FighterComponent {
 	// /// LOGGING INSTANCE ////
@@ -134,17 +136,22 @@ public class FighterComponent {
 		int damage = this.power - target.getFighterComponent().getDefence();
 		if (damage > 0) {
 			// hit gowz in!
-			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.owner.getName()) + " hits "
-							+ Helpers.capitalizeString(target.getName())
-							+ " for " + damage + " damage");
+			Message message = new Message(Helpers.capitalizeString(this.owner
+					.getName())
+					+ " hits "
+					+ Helpers.capitalizeString(target.getName())
+					+ " for "
+					+ damage + " damage", CSIColor.RED);
+			MainGame.getInstance().newMessage(message);
 			target.getFighterComponent().takeDamage(damage);
 		} else {
 			// such much defence!
-			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.owner.getName()) + " hits "
-							+ Helpers.capitalizeString(target.getName())
-							+ " but it has no effect!");
+			Message message = new Message(Helpers.capitalizeString(this.owner
+					.getName())
+					+ " hits "
+					+ Helpers.capitalizeString(target.getName())
+					+ " but it has no effect!", CSIColor.WHITE);
+			MainGame.getInstance().newMessage(message);
 		}
 	}
 
@@ -152,18 +159,18 @@ public class FighterComponent {
 		this.hp += heal;
 		if (this.hp > this.max_hp)
 			this.hp = this.max_hp;
-		MainGame.getInstance().newMessage(
-				Helpers.capitalizeString(this.owner.getName())
-						+ " is healed for " + heal);
+		Message message = new Message(Helpers.capitalizeString(this.owner
+				.getName()) + " is healed for " + heal, CSIColor.GREEN);
+		MainGame.getInstance().newMessage(message);
 	}
 
 	public void addMana(int mana) {
 		this.mana += mana;
 		if (this.mana > this.maxmana)
 			this.mana = this.maxmana;
-		MainGame.getInstance().newMessage(
-				Helpers.capitalizeString(this.owner.getName()) + " gets "
-						+ mana + " mana");
+		Message message = new Message(Helpers.capitalizeString(this.owner
+				.getName()) + " gets " + mana + " mana", CSIColor.BLUE);
+		MainGame.getInstance().newMessage(message);
 	}
 
 	public void castLighning() {
@@ -171,15 +178,16 @@ public class FighterComponent {
 				ItemComponent.LIGHTNING_RANGE);
 		if (monster == null) {
 			MainGame.getInstance().newMessage(
-					"No enemy is close enough to strike.");
+					new Message("No enemy is close enough to strike.",
+							CSIColor.WHITE));
 		} else {
 			if (MainGame.getInstance().getPlayer().getFighterComponent()
 					.getMana() >= ItemComponent.LIGHTNING_MANA) {
-				MainGame.getInstance().newMessage(
-						"A lightning strikes the "
-								+ Helpers.capitalizeString(monster.getName())
-								+ " for " + ItemComponent.LIGHTNING_DAMAGE
-								+ " damage");
+				Message message = new Message("A lightning strikes the "
+						+ Helpers.capitalizeString(monster.getName()) + " for "
+						+ ItemComponent.LIGHTNING_DAMAGE + " damage",
+						CSIColor.AQUAMARINE);
+				MainGame.getInstance().newMessage(message);
 				monster.getFighterComponent().takeDamage(
 						ItemComponent.LIGHTNING_DAMAGE);
 				MainGame.getInstance()
@@ -191,7 +199,8 @@ public class FighterComponent {
 										- ItemComponent.LIGHTNING_MANA);
 			} else {
 				MainGame.getInstance().newMessage(
-						"Not enough mana to use Lightning");
+						new Message("Not enough mana to use Lightning",
+								CSIColor.WHITE));
 			}
 		}
 	}
@@ -202,7 +211,8 @@ public class FighterComponent {
 				ItemComponent.CONFUSION_RANGE);
 		if (monster == null) {
 			MainGame.getInstance().newMessage(
-					"No enemy is close enough to confuse.");
+					new Message("No enemy is close enough to confuse.",
+							CSIColor.WHITE));
 		} else {
 			if (MainGame.getInstance().getPlayer().getFighterComponent()
 					.getMana() >= ItemComponent.CONFUSION_MANA) {
@@ -211,10 +221,11 @@ public class FighterComponent {
 				monster.setAIComponent(new ConfusedMonster(monster, old_ai,
 						ItemComponent.CONFUSION_TURNS));
 				monster.getAIComponent().setOwner(monster);
-				MainGame.getInstance().newMessage(
-						"The eyes of the "
-								+ Helpers.capitalizeString(monster.getName())
-								+ " look vacant, as he stumbles around!");
+				Message message = new Message("The eyes of the "
+						+ Helpers.capitalizeString(monster.getName())
+						+ " look vacant, as he stumbles around!",
+						CSIColor.CERULEAN);
+				MainGame.getInstance().newMessage(message);
 				MainGame.getInstance()
 						.getPlayer()
 						.getFighterComponent()
@@ -225,7 +236,8 @@ public class FighterComponent {
 
 			} else {
 				MainGame.getInstance().newMessage(
-						"Not enough mana to use Confusion");
+						new Message("Not enough mana to use Confusion",
+								CSIColor.WHITE));
 			}
 		}
 	}

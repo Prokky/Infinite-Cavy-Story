@@ -4,6 +4,7 @@ import main.components.AIComponent;
 import main.components.FighterComponent;
 import main.components.ItemComponent;
 import main.helpers.Helpers;
+import main.helpers.Message;
 import net.slashie.libjcsi.CSIColor;
 
 ////////////////////////////////////////////////////////////////////////
@@ -187,15 +188,18 @@ public class Entity {
 			MainGame.getInstance().setGameState("dead");
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
-			MainGame.getInstance().newMessage("YOU DIE, BWAAHAHHAAHHA!");
+			Message message = new Message("YOU DIE, BWAAHAHHAAHHA!",
+					CSIColor.BURGUNDY);
+			MainGame.getInstance().newMessage(message);
 		} else if ((name.equals("troll")) || (name.equals("orc"))) {
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
 			this.blocks = false;
 			this.fighter = null;
 			this.ai = null;
-			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.name) + " dies");
+			Message message = new Message(Helpers.capitalizeString(this.name)
+					+ " dies", CSIColor.BURGUNDY);
+			MainGame.getInstance().newMessage(message);
 			this.name = "remains";
 		}
 	}

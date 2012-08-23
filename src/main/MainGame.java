@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 import main.components.FighterComponent;
+import main.helpers.Message;
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.CharKey;
 import net.slashie.libjcsi.ConsoleSystemInterface;
@@ -23,7 +24,7 @@ public class MainGame {
 
 	// ///// GAME OBJECTS ///////
 	private static Tile map[][] = new Tile[MainMap.MAP_WIDTH][MainMap.MAP_HEIGHT];
-	private ArrayList<String> game_msgs = new ArrayList<String>();
+	private ArrayList<Message> game_msgs = new ArrayList<Message>();
 	private boolean stop;
 	private boolean game_started;
 	private String gameState;
@@ -287,19 +288,8 @@ public class MainGame {
 				+ MainMap.getInstance().xpForLevelUp());
 		// printing the combat log
 		int y = 0;
-		for (String text : game_msgs) {
-			if (text.contains("dies"))
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.RED);
-			else if (text.contains("level"))
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.YELLOW);
-			else if (text.contains("pick"))
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.VIOLET);
-			else if (text.contains("healed"))
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.GREEN);
-			else if (text.contains("mana"))
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.BLUE);
-			else
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, text, CSIColor.WHITE);
+		for (Message message : game_msgs) {
+				csi.print(20, y + MainMap.CAMERA_HEIGHT, message.getMessage(), message.getColor());
 			y++;
 		}
 		// ////////////////////////
@@ -308,7 +298,7 @@ public class MainGame {
 	// //////////////////////////////////////////////////////
 	// //// FUNCTION TO ADD NEW MESSAGES TO COMBAT LOG //////
 	// //////////////////////////////////////////////////////
-	public void newMessage(String message) {
+	public void newMessage(Message message) {
 		// removing the messages from log if too much
 		if (game_msgs.size() > 4)
 			game_msgs.remove(0);

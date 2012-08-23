@@ -4,6 +4,8 @@ import java.util.Random;
 
 import main.components.AIComponent;
 import main.helpers.Helpers;
+import main.helpers.Message;
+import net.slashie.libjcsi.CSIColor;
 
 public class ConfusedMonster extends AIComponent {
 	private Entity owner;
@@ -24,9 +26,10 @@ public class ConfusedMonster extends AIComponent {
 			this.num_turns--;
 		} else {
 			this.owner.setAIComponent(old_ai);
-			MainGame.getInstance().newMessage(
+			Message message = new Message(
 					"The " + Helpers.capitalizeString(owner.getName())
-							+ " is no longer confused!");
+							+ " is no longer confused!", CSIColor.AMETHYST);
+			MainGame.getInstance().newMessage(message);
 		}
 	}
 }
