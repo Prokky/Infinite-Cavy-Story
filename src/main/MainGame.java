@@ -106,7 +106,8 @@ public class MainGame {
 			// / SHOW START HELP WINDOW //
 			if (!game_started) {
 				showStartWindow();
-				handleKeys();
+				handleMenu();
+				playerAction = "didnt-take-turn";
 			}
 
 			MainMap.getInstance().moveCamera(player.getX(), player.getY());
@@ -126,7 +127,8 @@ public class MainGame {
 			MainMap.getInstance().checkLevelUp();
 
 			// handling the player keys
-			playerAction = handleKeys();
+			if (game_started)
+				playerAction = handleKeys();
 			if (playerAction.equals("exit"))
 				System.exit(0);
 
@@ -144,6 +146,20 @@ public class MainGame {
 	// /////////////////////////////////////////////
 	// ////// FUNCTION TO HANDLE KEY PRESSES ///////
 	// /////////////////////////////////////////////
+
+	public void handleMenu() {
+		CharKey dir = csi.inkey();
+
+		// Q is the key for exit
+		if (dir.code == CharKey.Q || dir.code == CharKey.q) {
+			stop = true;
+		}
+		if (dir.code == CharKey.ENTER) {
+			game_started = true;
+			csi.cls();
+		}
+	}
+
 	public String handleKeys() {
 		// getch()
 		CharKey dir = csi.inkey();
@@ -152,12 +168,6 @@ public class MainGame {
 			stop = true;
 			return "exit";
 		}
-
-		if (!game_started)
-			if (dir.code == CharKey.ENTER) {
-				game_started = true;
-				csi.cls();
-			}
 
 		// C is the key to clear the combat log
 		if (gameState.equals("playing"))
@@ -289,7 +299,8 @@ public class MainGame {
 		// printing the combat log
 		int y = 0;
 		for (Message message : game_msgs) {
-				csi.print(20, y + MainMap.CAMERA_HEIGHT, message.getMessage(), message.getColor());
+			csi.print(20, y + MainMap.CAMERA_HEIGHT, message.getMessage(),
+					message.getColor());
 			y++;
 		}
 		// ////////////////////////
