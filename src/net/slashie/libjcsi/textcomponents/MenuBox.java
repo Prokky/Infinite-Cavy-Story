@@ -12,7 +12,11 @@ import net.slashie.util.*;
  */
 public class MenuBox extends TextComponent {
 
-    private List items;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7608694635501612607L;
+	private List<?> items;
     private int promptSize;
     private String title = "";
 
@@ -89,7 +93,7 @@ public class MenuBox extends TextComponent {
      * Allows the menu items to be set.
      * @param items Vector of the items in the menu.
      */
-    public void setMenuItems(List items) {
+    public void setMenuItems(List<?> items) {
         this.items = items;
     }
 
@@ -106,7 +110,7 @@ public class MenuBox extends TextComponent {
         promptBox.draw();
 
         int pageElements = inHeight - promptSize;
-        List shownItems = Util.page(items, pageElements, currentPage);
+        List<?> shownItems = Util.page(items, pageElements, currentPage);
 
         int i = 0;
         for (; i < shownItems.size(); i++) {
@@ -132,7 +136,7 @@ public class MenuBox extends TextComponent {
         while (true) {
             clearBox();
             draw();
-            List shownItems = Util.page(items, pageElements, currentPage);
+            List<?> shownItems = Util.page(items, pageElements, currentPage);
             CharKey key = new CharKey(CharKey.NONE);
             while (key.code != CharKey.SPACE &&
                 key.code != CharKey.ESC &&
@@ -176,7 +180,7 @@ public class MenuBox extends TextComponent {
 
 	public Object getSelection(CharKey key) {
 		int pageElements = inHeight - promptSize;
-        List shownItems = Util.page(items, pageElements, currentPage);
+        List<?> shownItems = Util.page(items, pageElements, currentPage);
         if (key.code == CharKey.SPACE || key.code == CharKey.ESC) {
             return null;
         }

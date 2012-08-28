@@ -1,20 +1,22 @@
-package main;
+package main.objects;
 
+import main.MainGame;
+import main.MainMap;
 import main.components.AIComponent;
 import main.components.FighterComponent;
 import main.components.ItemComponent;
 import main.helpers.Helpers;
-import main.helpers.Message;
 import net.slashie.libjcsi.CSIColor;
 
-////////////////////////////////////////////////////////////////////////
-/////// BASIC CLASS TO HANDLE ENTITIES SUCH AS AIComponent OR PLAYER ///////
-////////////////////////////////////////////////////////////////////////
+/**
+ * Basic class to handle with entities(monsters,items)
+ * 
+ * @author prokk
+ * 
+ */
 public class Entity {
-	// //// LOGGER INSTANCE //////
 	// private static Logger log = Logger.getLogger(Entity.class.getName());
 
-	// //// PRIVATE PARAMETERS //////
 	private int x, y; // position
 	private char key; // char symbol
 	private String name; // entity name
@@ -25,7 +27,24 @@ public class Entity {
 	private ItemComponent item; // item component
 	private int level = 1;
 
-	// //// CREATE ENTITY WITH BOTH COMPONENTS /////
+	/**
+	 * 
+	 * @param x
+	 *            position
+	 * @param y
+	 *            position
+	 * @param key
+	 *            - symbol presentation
+	 * @param name
+	 * @param color
+	 *            of symbol
+	 * @param blocks
+	 *            - can pass through
+	 * @param fighter
+	 *            component, describing combat properties
+	 * @param ai
+	 *            component
+	 */
 	public Entity(int x, int y, char key, String name, CSIColor color,
 			Boolean blocks, FighterComponent fighter, AIComponent ai) {
 		this.x = x;
@@ -38,7 +57,22 @@ public class Entity {
 		this.ai = ai;
 	}
 
-	// ///// CREATE ENTITY WITH FIGHTER COMPONENT //////
+	/**
+	 * 
+	 * @param x
+	 *            position
+	 * @param y
+	 *            position
+	 * @param key
+	 *            - symbol presentation
+	 * @param name
+	 * @param color
+	 *            of symbol
+	 * @param blocks
+	 *            - can pass through
+	 * @param fighter
+	 *            component, describing combat properties
+	 */
 	public Entity(int x, int y, char key, String name, CSIColor color,
 			Boolean blocks, FighterComponent fighter) {
 		this.x = x;
@@ -50,7 +84,20 @@ public class Entity {
 		this.fighter = fighter;
 	}
 
-	// /////// CREATE ENTITY WITHOUT COMPONENTS /////////
+	/**
+	 * 
+	 * @param x
+	 *            position
+	 * @param y
+	 *            position
+	 * @param key
+	 *            - symbol presentation
+	 * @param name
+	 * @param color
+	 *            of symbol
+	 * @param blocks
+	 *            - can pass through
+	 */
 	public Entity(int x, int y, char key, String name, CSIColor color,
 			Boolean blocks) {
 		this.x = x;
@@ -61,78 +108,146 @@ public class Entity {
 		this.blocks = blocks;
 	}
 
-	// //// GETTERS /////////
+	/**
+	 * 
+	 * @return x position of entity
+	 */
 	public int getX() {
 		return x;
 	}
 
+	/**
+	 * 
+	 * @return y position of entity
+	 */
 	public int getY() {
 		return y;
 	}
 
+	/**
+	 * 
+	 * @return symbol of entity
+	 */
 	public char getKey() {
 		return key;
 	}
 
+	/**
+	 * 
+	 * @return can pass through
+	 */
 	public boolean blocks() {
 		return blocks;
 	}
 
+	/**
+	 * 
+	 * @return color of symbol
+	 */
 	public CSIColor getColor() {
 		return color;
 	}
 
+	/**
+	 * 
+	 * @return name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * 
+	 * @return fighter component, can be NULL
+	 */
 	public FighterComponent getFighterComponent() {
 		return this.fighter;
 	}
 
+	/**
+	 * 
+	 * @return AI component, can be NULL
+	 */
 	public AIComponent getAIComponent() {
 		return this.ai;
 	}
 
+	/**
+	 * 
+	 * @return Item component, can be NULL
+	 */
 	public ItemComponent getItemComponent() {
 		return this.item;
 	}
 
+	/**
+	 * 
+	 * @return level of entity. Only for player
+	 */
 	public int getLevel() {
 		return this.level;
 	}
 
-	// ////////////////////////
-
-	// /// SETTERS/////////////
-
+	/**
+	 * 
+	 * @param x
+	 *            coord
+	 */
 	public void setX(int x) {
 		this.x = x;
 	}
 
+	/**
+	 * 
+	 * @param y
+	 *            coord
+	 */
 	public void setY(int y) {
 		this.y = y;
 	}
 
+	/**
+	 * 
+	 * @param fighter
+	 *            component, contains all combat properties
+	 */
 	public void setFighterComponent(FighterComponent fighter) {
 		this.fighter = fighter;
 	}
 
+	/**
+	 * 
+	 * @param ai
+	 *            component
+	 */
 	public void setAIComponent(AIComponent ai) {
 		this.ai = ai;
 	}
 
+	/**
+	 * 
+	 * @param item
+	 *            component
+	 */
 	public void setItemComponent(ItemComponent item) {
 		this.item = item;
 	}
 
+	/**
+	 * increase level by 1
+	 */
 	public void incLevel() {
 		this.level++;
 	}
 
-	// ////////////////////////
-
-	// // FUNCTION TO MOVE ENTITY /////
+	/**
+	 * Move the entity by distance
+	 * 
+	 * @param dx
+	 *            distance
+	 * @param dy
+	 *            distance
+	 */
 	public void move(int dx, int dy) {
 		if (!MainMap.getInstance().isBlocked(this.x + dx, this.y + dy)) {
 			this.x += dx;
@@ -140,7 +255,9 @@ public class Entity {
 		}
 	}
 
-	// // FUNCTION TO DRAW ENTITY /////
+	/**
+	 * Draw entity on map, if the entity is in camera range
+	 */
 	public void draw() {
 		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
 		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
@@ -150,7 +267,9 @@ public class Entity {
 				MainGame.getCSI().print(new_x, new_y, this.key, this.color);
 	}
 
-	// // CREARING THE ENTITIES SPACE
+	/**
+	 * Clear entity from map, if the entity is in camera range
+	 */
 	public void clear() {
 		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
 		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
@@ -160,7 +279,14 @@ public class Entity {
 				MainGame.getCSI().print(new_x, new_y, ' ', this.color);
 	}
 
-	// // FUNCTIONS TO MOVE ENTITY TOWARS TARGET LOCATION ////
+	/**
+	 * Move the entity towards another coord
+	 * 
+	 * @param target_x
+	 *            coord
+	 * @param target_y
+	 *            coord
+	 */
 	public void moveTowards(int target_x, int target_y) {
 		int dx = target_x - this.x;
 		int dy = target_y - this.y;
@@ -173,7 +299,13 @@ public class Entity {
 		this.move(dx, dy);
 	}
 
-	// /// FUNCTION TO COUNT DISTANCE TO OTHER ENTITY //////
+	/**
+	 * Count distance to target Entity
+	 * 
+	 * @param other
+	 *            entity
+	 * @return distance
+	 */
 	public double distanceTo(Entity other) {
 		int dx = other.x - this.x;
 		int dy = other.y - this.y;
@@ -181,25 +313,26 @@ public class Entity {
 		return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 	}
 
-	// //// ACTIONS FOR ENTITIES DEATH /////
+	/**
+	 * Fuction describes death of this entity
+	 */
 	public void deathFunction() {
 		String name = this.getName();
 		if (name.equals("player")) {
 			MainGame.getInstance().setGameState("dead");
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
-			Message message = new Message("YOU DIE, BWAAHAHHAAHHA!",
+			MainGame.getInstance().newMessage("YOU DIE, BWAAHAHHAAHHA!",
 					CSIColor.BURGUNDY);
-			MainGame.getInstance().newMessage(message);
 		} else if ((name.equals("troll")) || (name.equals("orc"))) {
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
 			this.blocks = false;
 			this.fighter = null;
 			this.ai = null;
-			Message message = new Message(Helpers.capitalizeString(this.name)
-					+ " dies", CSIColor.BURGUNDY);
-			MainGame.getInstance().newMessage(message);
+			MainGame.getInstance().newMessage(
+					Helpers.capitalizeString(this.name) + " dies",
+					CSIColor.BURGUNDY);
 			this.name = "remains";
 		}
 	}

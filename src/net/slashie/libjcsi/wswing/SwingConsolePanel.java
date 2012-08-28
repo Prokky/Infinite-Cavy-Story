@@ -8,6 +8,7 @@ import java.awt.*;
  * @author Santiago Zapata
  * @author Eben Howard
  */
+@SuppressWarnings("serial")
 public class SwingConsolePanel extends JPanel {
 
     private char[][] charBuffer;
@@ -18,12 +19,14 @@ public class SwingConsolePanel extends JPanel {
     //private boolean autoUpdate; //not currently implemented
     private transient Graphics graphicsBuff;
     private transient Image imageBuff;
-    private int width,  height, // Size of the Panel in points
+    @SuppressWarnings("unused")
+	private int width,  height, // Size of the Panel in points
          xdim,  ydim; // Size of the Panel in characters
     private int fontWidth;
     private int fontDown;
     private int ascent;
-    private Font font;
+    @SuppressWarnings("unused")
+	private Font font;
     private FontMetrics fMetric;
     private long timing;
 

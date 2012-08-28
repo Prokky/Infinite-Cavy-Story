@@ -1,14 +1,20 @@
 package net.slashie.libjcsi.wswing;
 
-import java.awt.*;
-import java.awt.event.*;
-
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Properties;
 
-import net.slashie.libjcsi.*;
+import net.slashie.libjcsi.CSIColor;
+import net.slashie.libjcsi.CharKey;
+import net.slashie.libjcsi.ConsoleSystemInterface;
 import net.slashie.libjcsi.util.Position;
-import net.slashie.util.*;
 
 /**
  * Swing interface for input and output.
@@ -179,7 +185,8 @@ public class WSwingConsoleInterface implements ConsoleSystemInterface, Runnable,
         targetFrame.repaint();
     }
 
-    public void print(int x, int y, String what, int color) {
+    @SuppressWarnings("static-access")
+	public void print(int x, int y, String what, int color) {
         print(x, y, what, frontColor.getColorFromCode(color), CSIColor.BLACK);
     }
 
@@ -206,7 +213,8 @@ public class WSwingConsoleInterface implements ConsoleSystemInterface, Runnable,
         }
     }
 
-    public void print(int x, int y, char what, int color) {
+    @SuppressWarnings("static-access")
+	public void print(int x, int y, char what, int color) {
         CSIColor front = frontColor.getColorFromCode(color);
         print(x, y, what, front);
     }
@@ -326,7 +334,8 @@ public class WSwingConsoleInterface implements ConsoleSystemInterface, Runnable,
         return targetFrame.peekChar(x, y);
     }
 
-    public int peekColor(int x, int y) {
+    @SuppressWarnings("static-access")
+	public int peekColor(int x, int y) {
         return frontColor.getCodeFromColor(colors[x][y]);
     }
 

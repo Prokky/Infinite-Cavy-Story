@@ -60,19 +60,20 @@ public class Util {
         return Util.rand(1, 100) <= p;
     }
 
-    public static Vector page(Vector source, int elementsOnPage, int pageNumber) {
+    public static Vector<?> page(Vector<?> source, int elementsOnPage, int pageNumber) {
         //System.out.println("elements on page"+elementsOnPage+" page Number"+pageNumber);
         if (source.size() == 0) {
             return source;
         }
         if ((pageNumber + 1) * elementsOnPage > source.size()) {
-            return new Vector(source.subList(pageNumber * elementsOnPage, source.size()));
+            return new Vector<Object>(source.subList(pageNumber * elementsOnPage, source.size()));
         } else {
-            return new Vector(source.subList(pageNumber * elementsOnPage, (pageNumber + 1) * elementsOnPage));
+            return new Vector<Object>(source.subList(pageNumber * elementsOnPage, (pageNumber + 1) * elementsOnPage));
         }
     }
     
-    public static List page(List source, int elementsOnPage, int pageNumber) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static List page(List source, int elementsOnPage, int pageNumber) {
         if (source.size() == 0) {
             return source;
         }
@@ -107,7 +108,7 @@ public class Util {
      * @param array
      * @return a randomly chosen element of array
      */
-    public static Object randomElementOf(Vector array) {
+    public static Object randomElementOf(Vector<?> array) {
         return array.elementAt(rand(0, array.size() - 1));
     }
 
@@ -116,7 +117,7 @@ public class Util {
      * @param array
      * @return a randomly chosen element of array
      */
-    public static Object randomElementOf(List array) {
+    public static Object randomElementOf(List<?> array) {
         return array.get(rand(0, array.size() - 1));
     }
 

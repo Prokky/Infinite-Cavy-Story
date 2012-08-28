@@ -10,7 +10,11 @@ import net.slashie.libjcsi.CharKey;
  */
 public class StrokeInformer implements KeyListener, java.io.Serializable {
 
-    private int bufferCode;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2421735286069021650L;
+	private int bufferCode;
     private transient Thread keyListener;
 
     public StrokeInformer() {

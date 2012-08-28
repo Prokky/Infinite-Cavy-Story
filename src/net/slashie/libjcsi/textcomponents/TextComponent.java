@@ -13,7 +13,11 @@ import net.slashie.libjcsi.util.Position;
  */
 public abstract class TextComponent implements Serializable {
 
-    protected Position position = new Position(0, 0);
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6828698500483542588L;
+	protected Position position = new Position(0, 0);
     protected int width;
     protected int height;
     protected String spaces;
@@ -91,7 +95,8 @@ public abstract class TextComponent implements Serializable {
      *
      * @return the code for the color in the foreground
      */
-    public int getForeColor() {
+    @SuppressWarnings("static-access")
+	public int getForeColor() {
         return foreColor.getCodeFromColor(foreColor);
     }
 
@@ -99,7 +104,8 @@ public abstract class TextComponent implements Serializable {
      * Allows for setting of the color using int codes.
      * @param color int code for color desired
      */
-    public void setForeColor(int color) {
+    @SuppressWarnings("static-access")
+	public void setForeColor(int color) {
         this.foreColor = this.foreColor.getColorFromCode(color);
     }
 
@@ -193,7 +199,8 @@ public abstract class TextComponent implements Serializable {
      * Allows for the setting of the border's color independently of the content's color.
      * @param color the int code for the color desired
      */
-    public void setBorderColor(int color) {
+    @SuppressWarnings("static-access")
+	public void setBorderColor(int color) {
         this.borderColor = borderColor.getColorFromCode(color);
     }
 

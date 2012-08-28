@@ -9,6 +9,10 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
  * @author Santiago Zapata
  */
 public class ListBox extends TextComponent {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2174951018597079060L;
 	private List<ListItem> itemsList;
 
     public ListBox(ConsoleSystemInterface si) {

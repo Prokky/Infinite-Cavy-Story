@@ -9,7 +9,11 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
  */
 public class TextBox extends TextComponent {
 
-    private StringBuffer[] lines;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4336705597946323195L;
+	private StringBuffer[] lines;
     private String title = "";
     public static final String BEOL = "XXX";// this is the EndOfLine String for this component
 

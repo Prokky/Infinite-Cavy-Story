@@ -1,52 +1,88 @@
-package main;
+package main.objects;
 
+/**
+ * Class to handle with tiles
+ * 
+ * @author prokk
+ * 
+ */
 public class Tile {
 
-	// // PRIVATE FIELDS
 	private boolean blocked; // is tile blocked
 	private boolean blocked_sight; // does tile block sight
 	private boolean visited; // was tile ever visited
 	private boolean wall; // is tile a wall
 
-	// // GETTERS ////
+	/**
+	 * 
+	 * @return tile is blocked
+	 */
 	public boolean isBlocked() {
 		return blocked;
 	}
 
+	/**
+	 * 
+	 * @return tile blocks sight
+	 */
 	public boolean isBlockedSight() {
 		return blocked_sight;
 	}
 
+	/**
+	 * 
+	 * @return tile was visited or not
+	 */
 	public boolean wasVisited() {
 		return visited;
 	}
-	
-	public boolean isWall(){
+
+	/**
+	 * 
+	 * @return is the tile a wall
+	 */
+	public boolean isWall() {
 		return wall;
 	}
 
-	// ///////////////
-
-	// //// SETTERS //////
+	/**
+	 * 
+	 * @param blocked
+	 */
 	public void setBlocked(boolean blocked) {
 		this.blocked = blocked;
 	}
 
+	/**
+	 * 
+	 * @param blocked_sight
+	 */
 	public void setBlockedSight(boolean blocked_sight) {
 		this.blocked_sight = blocked_sight;
 	}
 
+	/**
+	 * 
+	 * @param visited
+	 */
 	public void setVisited(boolean visited) {
 		this.visited = visited;
 	}
-	
-	public void setWall(boolean wall){
+
+	/**
+	 * 
+	 * @param wall
+	 */
+	public void setWall(boolean wall) {
 		this.wall = wall;
 	}
 
-	// ///////////////
-
-	// / INITIATE TILE WITH BLOCKED BOOLEAN
+	/**
+	 * Basic constructor
+	 * 
+	 * @param blocked
+	 *            - tile blocks movement
+	 */
 	public Tile(boolean blocked) {
 		this.blocked = blocked;
 		this.blocked_sight = blocked;
@@ -54,7 +90,14 @@ public class Tile {
 		this.wall = false;
 	}
 
-	// // INITIATE TILE WITH 2 BOOLEANS
+	/**
+	 * Extender constructor
+	 * 
+	 * @param blocked
+	 *            - tile blocks movement
+	 * @param blocked_sight
+	 *            - tile blocks sight
+	 */
 	public Tile(boolean blocked, boolean blocked_sight) {
 		this.blocked = blocked;
 		this.blocked_sight = blocked_sight;

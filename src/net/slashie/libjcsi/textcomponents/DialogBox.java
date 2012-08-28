@@ -10,6 +10,11 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
 public class DialogBox extends TextBox {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4950312250912503173L;
+
+	/**
      * Creates the box
      * @param si the ConsoleSystemInterface to be attached to
      * @param lines the number of desired lines for the output portion of the box

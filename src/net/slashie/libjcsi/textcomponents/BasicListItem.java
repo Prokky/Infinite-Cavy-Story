@@ -6,7 +6,11 @@ package net.slashie.libjcsi.textcomponents;
  */
 public class BasicListItem implements ListItem {
 
-    private String rowData;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6028631192761825338L;
+	private String rowData;
     private char index;
     private int indexColor;
 

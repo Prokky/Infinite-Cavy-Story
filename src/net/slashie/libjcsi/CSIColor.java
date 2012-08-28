@@ -18,7 +18,7 @@ import java.util.ArrayList;
  * @author Santiago Zapata
  * @author Eben Howard
  */
-public class CSIColor implements Comparable {
+public class CSIColor implements Comparable<Object> {
 
     private final static int OPAQUE = 255;// 255 is opaque for the all channels
     private int value; // this is where the color value is actually stored //964B00 == browner

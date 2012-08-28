@@ -2,27 +2,26 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import main.components.FighterComponent;
 import main.helpers.Message;
+import main.objects.Entity;
+import main.objects.Tile;
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.CharKey;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
+/**
+ * Starting Class, contains game properties, handling keys and game loop
+ * 
+ * @author prokk
+ * 
+ */
 public class MainGame {
-	// ///// LOGGER ///////
-	private static Logger log = Logger.getLogger(MainGame.class.getName());
-
-	// ///// SINGLETONE INSTANCE ///////
+	// private static Logger log = Logger.getLogger(MainGame.class.getName());
 	private static MainGame instance;
-
-	// ///// CONSOLE INSTANCE ///////
-
 	private static ConsoleSystemInterface csi;
-
-	// ///// GAME OBJECTS ///////
 	private static Tile map[][] = new Tile[MainMap.MAP_WIDTH][MainMap.MAP_HEIGHT];
 	private ArrayList<Message> game_msgs = new ArrayList<Message>();
 	private boolean stop;
@@ -31,34 +30,62 @@ public class MainGame {
 	private String playerAction;
 	private Entity player;
 
-	// ///// SINGLETONE GETTER ///////
+	/**
+	 * 
+	 * @return instance of the class
+	 */
 	public static MainGame getInstance() {
 		return instance;
 	}
 
-	// ///// GETTERS ///////
+	/**
+	 * 
+	 * @return the array of the map
+	 */
 	public Tile[][] getMap() {
 		return map;
 	}
 
+	/**
+	 * 
+	 * @return the player entity
+	 */
 	public Entity getPlayer() {
 		return player;
 	}
 
+	/**
+	 * 
+	 * @return interface for drawing in console
+	 */
 	public static ConsoleSystemInterface getCSI() {
 		return csi;
 	}
 
-	// ///////////////////////////////
-
-	// ///// SETTING GAME STATE FROM ANOTHER CLASS ///////
+	/**
+	 * Sets the game state
+	 * 
+	 * @param state
+	 */
 	public void setGameState(String state) {
 		gameState = state;
 	}
 
-	// //////////////////////////////
-	// ///// INITIAL FUNCTION ///////
-	// //////////////////////////////
+	private ArrayList<Entity> inventory = new ArrayList<Entity>();
+
+	/**
+	 * 
+	 * @return array of inventory
+	 */
+	public ArrayList<Entity> getInventory() {
+		return inventory;
+	}
+
+	/**
+	 * VOID MAIN
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Properties text = new Properties();
 		text.setProperty("fontSize", "15");
@@ -68,7 +95,9 @@ public class MainGame {
 		instance.run();
 	}
 
-	// ///// RUN INSTANCE ///////
+	/**
+	 * Runs the game
+	 */
 	public void run() {
 		// create new player entity
 		// and set a fighter component for it
@@ -124,7 +153,7 @@ public class MainGame {
 			// refreshing the console output
 			csi.refresh();
 
-			MainMap.getInstance().checkLevelUp();
+			checkLevelUp();
 
 			// handling the player keys
 			if (game_started)
@@ -143,10 +172,9 @@ public class MainGame {
 		System.exit(0);
 	}
 
-	// /////////////////////////////////////////////
-	// ////// FUNCTION TO HANDLE KEY PRESSES ///////
-	// /////////////////////////////////////////////
-
+	/**
+	 * Handle keys while start screen is active
+	 */
 	public void handleMenu() {
 		CharKey dir = csi.inkey();
 
@@ -160,6 +188,11 @@ public class MainGame {
 		}
 	}
 
+	/**
+	 * Handle keys while the game is active
+	 * 
+	 * @return the player action
+	 */
 	public String handleKeys() {
 		// getch()
 		CharKey dir = csi.inkey();
@@ -226,9 +259,8 @@ public class MainGame {
 				if (dir.code == CharKey.I || dir.code == CharKey.i)
 					showInventory();
 				if (dir.code >= 118 && dir.code <= 126) {
-					if (MainMap.getInstance().getInventory().size() > (dir.code - 118))
-						MainMap.getInstance().getInventory()
-								.get(dir.code - 118).getItemComponent()
+					if (getInventory().size() > (dir.code - 118))
+						getInventory().get(dir.code - 118).getItemComponent()
 								.useItem();
 					showInventory();
 				}
@@ -241,9 +273,8 @@ public class MainGame {
 				if (dir.code == CharKey.d || dir.code == CharKey.D)
 					showDrop();
 				if (dir.code >= 118 && dir.code <= 126) {
-					if (MainMap.getInstance().getInventory().size() > (dir.code - 118))
-						MainMap.getInstance().getInventory()
-								.get(dir.code - 118).getItemComponent()
+					if (getInventory().size() > (dir.code - 118))
+						getInventory().get(dir.code - 118).getItemComponent()
 								.dropItem();
 					showDrop();
 				}
@@ -281,9 +312,9 @@ public class MainGame {
 		return "";
 	}
 
-	// //////////////////////////////////////////////
-	// ///// FUNCTION TO PRINT USER INTERFACE ///////
-	// //////////////////////////////////////////////
+	/**
+	 * print the GUI on the screen
+	 */
 	private void printGUI() {
 		// printing player hp
 		csi.print(0, MainMap.CAMERA_HEIGHT, "HP "
@@ -294,8 +325,7 @@ public class MainGame {
 				+ player.getFighterComponent().getMaxMana());
 		csi.print(0, MainMap.CAMERA_HEIGHT + 3, "LEVEL " + player.getLevel());
 		csi.print(0, MainMap.CAMERA_HEIGHT + 4, "XP "
-				+ player.getFighterComponent().getXP() + "/"
-				+ MainMap.getInstance().xpForLevelUp());
+				+ player.getFighterComponent().getXP() + "/" + xpForLevelUp());
 		// printing the combat log
 		int y = 0;
 		for (Message message : game_msgs) {
@@ -306,20 +336,24 @@ public class MainGame {
 		// ////////////////////////
 	}
 
-	// //////////////////////////////////////////////////////
-	// //// FUNCTION TO ADD NEW MESSAGES TO COMBAT LOG //////
-	// //////////////////////////////////////////////////////
-	public void newMessage(Message message) {
+	/**
+	 * Adds new message to combat log
+	 * 
+	 * @param message
+	 * @param color
+	 *            of message
+	 */
+	public void newMessage(String message, CSIColor color) {
+		Message mes = new Message(message, color);
 		// removing the messages from log if too much
 		if (game_msgs.size() > 4)
 			game_msgs.remove(0);
-		game_msgs.add(message);
+		game_msgs.add(mes);
 	}
 
-	// //////////////////////////////////////
-	// // FUNCTION TO SHOW START WINDOW /////
-	// //////////////////////////////////////
-
+	/**
+	 * Show start screen with help
+	 */
 	public void showStartWindow() {
 		// clear all window
 		csi.cls();
@@ -341,25 +375,22 @@ public class MainGame {
 		csi.print(64, 44, "Created by Prokk");
 	}
 
-	// ////////////////////////
-	// /// SHOW INVENTORY /////
-	// ////////////////////////
 	boolean inventoryShown = false;
 
+	/**
+	 * Show inventory on screen
+	 */
 	public void showInventory() {
 		if (!inventoryShown) {
 			csi.print(30, 15, "====== INVENTORY ======");
 			int i = 0;
-			if (MainMap.getInstance().getInventory().isEmpty()) {
+			if (getInventory().isEmpty()) {
 				csi.print(30, 16, "Empty");
 				i++;
 			} else {
-				for (int count = 0; count < MainMap.getInstance()
-						.getInventory().size(); count++) {
-					csi.print(30, 16 + i, (i + 1)
-							+ ": "
-							+ MainMap.getInstance().getInventory().get(i)
-									.getName());
+				for (int count = 0; count < getInventory().size(); count++) {
+					csi.print(30, 16 + i, (i + 1) + ": "
+							+ getInventory().get(i).getName());
 					i++;
 				}
 			}
@@ -373,20 +404,20 @@ public class MainGame {
 
 	boolean dropShown = false;
 
+	/**
+	 * Show drop window on screen
+	 */
 	public void showDrop() {
 		if (!dropShown) {
 			csi.print(30, 15, "====== DROP ITEMS ======");
 			int i = 0;
-			if (MainMap.getInstance().getInventory().isEmpty()) {
+			if (getInventory().isEmpty()) {
 				csi.print(30, 16, "Empty");
 				i++;
 			} else {
-				for (int count = 0; count < MainMap.getInstance()
-						.getInventory().size(); count++) {
-					csi.print(30, 16 + i, (i + 1)
-							+ ": "
-							+ MainMap.getInstance().getInventory().get(i)
-									.getName());
+				for (int count = 0; count < getInventory().size(); count++) {
+					csi.print(30, 16 + i, (i + 1) + ": "
+							+ getInventory().get(i).getName());
 					i++;
 				}
 			}
@@ -398,11 +429,11 @@ public class MainGame {
 		}
 	}
 
-	// //////////////////////////
-	// //// SHOW CHARACTER //////
-	// //////////////////////////
 	boolean characterShown = false;
 
+	/**
+	 * show character stats window on screen
+	 */
 	public void showCharacterWindow() {
 		if (!characterShown) {
 			csi.print(30, 15, "====== CHARACTER ======");
@@ -432,6 +463,9 @@ public class MainGame {
 
 	private boolean levelUp = false;
 
+	/**
+	 * show levelup window on screen
+	 */
 	public void showLevelupWindow() {
 		printGUI();
 		if (!levelUp) {
@@ -451,5 +485,37 @@ public class MainGame {
 			levelUp = false;
 		}
 
+	}
+
+	private final static int LEVEL_UP_BASE = 200;
+	private final static int LEVEL_UP_FACTOR = 150;
+
+	/**
+	 * Count xp needed for next level up
+	 * 
+	 * @return
+	 */
+	public int xpForLevelUp() {
+		return LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
+	}
+
+	/**
+	 * Check if there is a levelup
+	 */
+	public void checkLevelUp() {
+		int levelUpXP = LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
+		if (player.getFighterComponent().getXP() >= levelUpXP) {
+			player.incLevel();
+			player.getFighterComponent().setXP(
+					player.getFighterComponent().getXP() - levelUpXP);
+			MainGame.getInstance().newMessage(
+					"Your battle skills grow stronger! You reached level "
+							+ player.getLevel(), CSIColor.GOLDEN);
+			MainGame.getInstance().showLevelupWindow();
+			player.getFighterComponent().setHp(
+					player.getFighterComponent().getMaxHP());
+			player.getFighterComponent().setMana(
+					player.getFighterComponent().getMaxMana());
+		}
 	}
 }

@@ -13,7 +13,11 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
  */
 public class TextInformBox extends TextComponent {
 
-    private int curx,  cury;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5366668819705482598L;
+	private int curx,  cury;
     private StringBuffer[] lines;
 
     /**

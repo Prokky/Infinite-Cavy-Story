@@ -1,22 +1,31 @@
 package main.components;
 
-import main.Entity;
 import main.MainGame;
+import main.objects.Entity;
 
+/**
+ * Component class containing AI for Entities. Call takeTurn function.
+ * 
+ * @author prokk
+ */
 public class AIComponent {
-	// // LOGGER INSTANCE ////
 	// private static Logger log =
 	// Logger.getLogger(AIComponent.class.getName());
 
-	// /// COMPONENTS OWNER ////
 	private Entity owner;
 
-	// // GET OWNER ////
+	/**
+	 * 
+	 * @param owner
+	 *            - entity which contains this component
+	 */
 	public AIComponent(Entity owner) {
 		this.owner = owner;
 	}
 
-	// // BASIC MONSTER AI ////
+	/**
+	 * AI for entity.
+	 */
 	public void takeTurn() {
 		Entity player = MainGame.getInstance().getPlayer();
 
@@ -29,6 +38,11 @@ public class AIComponent {
 				owner.getFighterComponent().attack(player);
 	}
 
+	/**
+	 * 
+	 * @param owner
+	 *            for the component
+	 */
 	public void setOwner(Entity owner) {
 		this.owner = owner;
 	}

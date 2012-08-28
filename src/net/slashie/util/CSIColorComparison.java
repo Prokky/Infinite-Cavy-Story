@@ -5,9 +5,9 @@
 package net.slashie.util;
 
 import java.util.Random;
+
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.CharKey;
-import net.slashie.libjcsi.textcomponents.TextBox;
 import net.slashie.libjcsi.wswing.WSwingConsoleInterface;
 
 /**
@@ -20,7 +20,8 @@ public class CSIColorComparison {
     Random rng = new Random();
     CSIColor colorList[] = CSIColor.FULL_PALLET;
     int colorOrder[] = new int[colorList.length];
-    int n = 0,
+    @SuppressWarnings("static-access")
+	int n = 0,
             carrot = 0,
             backColor = 0,
             frontColor = 17,
@@ -133,7 +134,8 @@ public class CSIColorComparison {
         backColor = carrot;
     }
 
-    private void sortRed() {
+    @SuppressWarnings("unused")
+	private void sortRed() {
         int t, j;
         for (int i = 1; i < colorOrder.length; i++) {
             t = colorOrder[i];
@@ -148,7 +150,8 @@ public class CSIColorComparison {
         printScreen();
     }
 
-    private void sortBlue() {
+    @SuppressWarnings("unused")
+	private void sortBlue() {
         int t, j;
         for (int i = 1; i < colorOrder.length; i++) {
             t = colorOrder[i];
@@ -163,7 +166,8 @@ public class CSIColorComparison {
         printScreen();
     }
 
-    private void sortGreen() {
+    @SuppressWarnings("unused")
+	private void sortGreen() {
         int t, j;
         for (int i = 1; i < colorOrder.length; i++) {
             t = colorOrder[i];
@@ -178,7 +182,8 @@ public class CSIColorComparison {
         printScreen();
     }
 
-    private void sortGrey() {
+    @SuppressWarnings("unused")
+	private void sortGrey() {
         int t, j;
         for (int i = 1; i < colorOrder.length; i++) {
             t = colorOrder[i];

@@ -2,36 +2,24 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.logging.Logger;
 
 import main.components.AIComponent;
 import main.components.FighterComponent;
 import main.components.ItemComponent;
-import main.helpers.Message;
+import main.helpers.Rect;
+import main.objects.Entity;
+import main.objects.Tile;
 import net.slashie.libjcsi.CSIColor;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 
+/**
+ * Map class. Used to generate dungeon and draw map.
+ * 
+ * @author prokk
+ * 
+ */
 public class MainMap {
-	// // LOGGET INSTANCE /////
-	private static Logger log = Logger.getLogger(MainMap.class.getName());
-
-	// /// SINGLETONE INSTANCE AND GETTER /////
-	private static MainMap instance = new MainMap();
-
-	public static MainMap getInstance() {
-		return instance;
-	}
-
-	// ////////////////////////////////////////
-
-	private int dungeon_level = 1;
-
-	public int getCurrentLevel() {
-		return dungeon_level;
-	}
-
-	private final static int LEVEL_UP_BASE = 200;
-	private final static int LEVEL_UP_FACTOR = 150;
+	// private static Logger log = Logger.getLogger(MainMap.class.getName());
 
 	// //// SIZE OF MAPS
 	public final static int MAP_WIDTH = 100;
@@ -47,29 +35,48 @@ public class MainMap {
 	private final static int MAX_ROOM_MONSTERS = 3;
 	private final static int MAX_ROOM_ITEMS = 2;
 
-	// // GETTING INSTANCES FROM MAINGAME CLASS
+	private static MainMap instance = new MainMap();
+
+	/**
+	 * 
+	 * @return instance of map
+	 */
+	public static MainMap getInstance() {
+		return instance;
+	}
+
+	private int dungeon_level = 1;
+	private Entity stairs;
+
 	private static Tile[][] map = MainGame.getInstance().getMap();
 	private static ConsoleSystemInterface csi = MainGame.getCSI();
 	private static Entity player = MainGame.getInstance().getPlayer();
 
-	// /// ARRAYLIST FOR MAP OBJECTS /////
 	private ArrayList<Entity> objects = new ArrayList<Entity>();
 
+	/**
+	 * 
+	 * @return objects on the map
+	 */
 	public ArrayList<Entity> getObjects() {
 		return objects;
 	}
 
-	private ArrayList<Entity> inventory = new ArrayList<Entity>();
 
-	public ArrayList<Entity> getInventory() {
-		return inventory;
+	/**
+	 * 
+	 * @return current level of the dungeon
+	 */
+	public int getCurrentLevel() {
+		return dungeon_level;
 	}
 
-	private Entity stairs;
-
-	// ///////////////////////////////////
-
-	// /// MAIN DUNGEON GENERATOR //////
+	/**
+	 * Dungeon generator. Creates room in random position. Creates another and
+	 * connects to the previous using tunnels. Repeats several times. Spawns
+	 * player in first rooms and stairs in last room. Fills the room with
+	 * mosters and items.
+	 */
 	public void generateMap() {
 		// / fill the map with blocking tiles
 		for (int x = 0; x < MAP_WIDTH; x++)
@@ -168,7 +175,12 @@ public class MainMap {
 
 	}
 
-	// // FUNCTION TO CREATE ROOM IN THE RECT
+	/**
+	 * Create a room in a rect
+	 * 
+	 * @param room
+	 *            rect
+	 */
 	public static void createRoom(Rect room) {
 		for (int x = room.getX1() + 1; x < room.getX2(); x++)
 			for (int y = room.getY1() + 1; y < room.getY2(); y++) {
@@ -178,7 +190,16 @@ public class MainMap {
 			}
 	}
 
-	// // CREATE HORIZONTAL TUNNEL
+	/**
+	 * Create horizontal tunnel
+	 * 
+	 * @param x1
+	 *            position of start
+	 * @param x2
+	 *            position of end
+	 * @param y
+	 *            position of both
+	 */
 	public static void create_h_tunnel(int x1, int x2, int y) {
 		// horizontal tunnel. min() and max() are used in case x1>x2
 
@@ -188,7 +209,16 @@ public class MainMap {
 		}
 	}
 
-	// // CREATE VERTICAL TUNNEL
+	/**
+	 * Creates vertical tunnel
+	 * 
+	 * @param y1
+	 *            position of start
+	 * @param y2
+	 *            position of end
+	 * @param x
+	 *            position of both
+	 */
 	public static void create_v_tunnel(int y1, int y2, int x) {
 		for (int y = Math.min(y1, y2); y < Math.max(y1, y2) + 1; y++) {
 			map[x][y].setBlocked(false);
@@ -197,7 +227,11 @@ public class MainMap {
 
 	}
 
-	// //// FUNCTION TO PLACE OBJECTS IN THE ROOM
+	/**
+	 * 
+	 * @param room
+	 *            rect
+	 */
 	public void placeObjects(Rect room) {
 
 		// / first placing monsters
@@ -209,7 +243,6 @@ public class MainMap {
 			int y = rand.nextInt(room.getY2() - room.getY1()) + room.getY1();
 			if (!isBlocked(x, y))
 
-				// TODO HERE MONSTERS SPAWN
 				if (rand.nextInt(100) < 80) { // 80% - orc
 					Entity AIComponent = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
@@ -276,7 +309,15 @@ public class MainMap {
 		}
 	}
 
-	// /// CHECK IF THE POSITION X Y IS BLOCKED
+	/**
+	 * Checks if the Tile is blocked with something
+	 * 
+	 * @param x
+	 *            coord of tile
+	 * @param y
+	 *            coord of tile
+	 * @return blocked
+	 */
 	public boolean isBlocked(int x, int y) {
 		if (map[x][y].isBlocked())
 			return true;
@@ -299,9 +340,9 @@ public class MainMap {
 			{ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
 			{ 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0 } };
 
-	// ////////////////////////////////
-	// //// DRAW ALL MAP FUNCTION /////
-	// ////////////////////////////////
+	/**
+	 * Draw map
+	 */
 	public void drawMap() {
 		for (int x = 0; x < CAMERA_WIDTH; x++)
 			for (int y = 0; y < CAMERA_HEIGHT; y++) {
@@ -310,7 +351,8 @@ public class MainMap {
 				if (map[map_x][map_y].isWall()) {
 					if (map[map_x][map_y].wasVisited())
 						csi.print(x, y, '#', CSIColor.BISTRE); // walls
-				} else if (map[map_x][map_y].wasVisited() && !map[map_x][map_y].isBlockedSight())
+				} else if (map[map_x][map_y].wasVisited()
+						&& !map[map_x][map_y].isBlockedSight())
 					csi.print(x, y, '.', CSIColor.DARK_BROWN); // empty space
 			}
 		// simple sight view
@@ -352,7 +394,15 @@ public class MainMap {
 
 	}
 
-	// // FUNCTION TO MOVE PLAYER, OR ATTACK IF TARGET IN THE DIRECTION PLACE
+	/**
+	 * Move the player with the distance. Attack if there is a target in the
+	 * moving position
+	 * 
+	 * @param dx
+	 *            distance
+	 * @param dy
+	 *            distance
+	 */
 	public void playerMoveOrAttack(int dx, int dy) {
 		int x = player.getX() + dx;
 		int y = player.getY() + dy;
@@ -375,7 +425,9 @@ public class MainMap {
 
 	}
 
-	// / GO TO NEXT LEVEL FUNCTION
+	/**
+	 * Proceed to the next level
+	 */
 	public void nextLevel() {
 		if (stairs.getX() == player.getX() && stairs.getY() == player.getY()) {
 			player.getFighterComponent().healFor(
@@ -383,15 +435,16 @@ public class MainMap {
 			dungeon_level++;
 			objects.clear();
 			MainGame.getInstance().newMessage(
-					new Message("You proceed to level " + dungeon_level,
-							CSIColor.GOLDEN));
+					"You proceed to level " + dungeon_level, CSIColor.GOLDEN);
 			generateMap();
 			drawMap();
 		} else
 			return;
 	}
 
-	// /// GRAB ITEM UNDER YOUR FEET
+	/**
+	 * Grab item under players feet
+	 */
 	public void grabItem() {
 		Entity object;
 		for (int i = 0; i < objects.size(); i++) {
@@ -404,28 +457,13 @@ public class MainMap {
 		}
 	}
 
-	public int xpForLevelUp() {
-		return LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
-	}
-
-	public void checkLevelUp() {
-		int levelUpXP = LEVEL_UP_BASE + player.getLevel() * LEVEL_UP_FACTOR;
-		if (player.getFighterComponent().getXP() >= levelUpXP) {
-			player.incLevel();
-			player.getFighterComponent().setXP(
-					player.getFighterComponent().getXP() - levelUpXP);
-			MainGame.getInstance().newMessage(
-					new Message(
-							"Your battle skills grow stronger! You reached level "
-									+ player.getLevel(), CSIColor.GOLDEN));
-			MainGame.getInstance().showLevelupWindow();
-			player.getFighterComponent().setHp(
-					player.getFighterComponent().getMaxHP());
-			player.getFighterComponent().setMana(
-					player.getFighterComponent().getMaxMana());
-		}
-	}
-
+	/**
+	 * Find closest monster in range
+	 * 
+	 * @param max_range
+	 *            to search in
+	 * @return entity
+	 */
 	public Entity getClosestMonster(int max_range) {
 		Entity closest = null;
 		int closest_dist = max_range + 1;
@@ -443,12 +481,17 @@ public class MainMap {
 		return closest;
 	}
 
-	// //////////////////////////
-	// //// MAP SCROLLING ///////
-	// //////////////////////////
 	private static int camera_x = 0;
 	private static int camera_y = 0;
 
+	/**
+	 * Move the Camera on the map
+	 * 
+	 * @param target_x
+	 *            position
+	 * @param target_y
+	 *            position
+	 */
 	public void moveCamera(int target_x, int target_y) {
 		int x = target_x - CAMERA_WIDTH / 2;
 		int y = target_y - CAMERA_HEIGHT / 2;
@@ -464,10 +507,22 @@ public class MainMap {
 		camera_y = y;
 	}
 
+	/**
+	 * Convert map coord to camera coord
+	 * 
+	 * @param x
+	 * @return map coord x
+	 */
 	public int toCameraCoordX(int x) {
 		return x - camera_x;
 	}
 
+	/**
+	 * Convert map coord to camera coord
+	 * 
+	 * @param y
+	 * @return map coord y
+	 */
 	public int toCameraCoordY(int y) {
 		return y - camera_y;
 	}

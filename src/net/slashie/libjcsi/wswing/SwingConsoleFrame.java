@@ -2,6 +2,7 @@ package net.slashie.libjcsi.wswing;
 
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class SwingConsoleFrame extends javax.swing.JFrame {
 
     /**
