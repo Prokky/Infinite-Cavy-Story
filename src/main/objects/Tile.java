@@ -6,18 +6,20 @@ package main.objects;
  * @author prokk
  * 
  */
-public class Tile {
+public class Tile
+{
 
-	private boolean blocked; // is tile blocked
-	private boolean blocked_sight; // does tile block sight
-	private boolean visited; // was tile ever visited
-	private boolean wall; // is tile a wall
+	private boolean	blocked;		// is tile blocked
+	private boolean	blocked_sight;	// does tile block sight
+	private boolean	visited;		// was tile ever visited
+	private boolean	wall;			// is tile a wall
 
 	/**
 	 * 
 	 * @return tile is blocked
 	 */
-	public boolean isBlocked() {
+	public boolean isBlocked()
+	{
 		return blocked;
 	}
 
@@ -25,7 +27,8 @@ public class Tile {
 	 * 
 	 * @return tile blocks sight
 	 */
-	public boolean isBlockedSight() {
+	public boolean isBlockedSight()
+	{
 		return blocked_sight;
 	}
 
@@ -33,7 +36,8 @@ public class Tile {
 	 * 
 	 * @return tile was visited or not
 	 */
-	public boolean wasVisited() {
+	public boolean wasVisited()
+	{
 		return visited;
 	}
 
@@ -41,7 +45,8 @@ public class Tile {
 	 * 
 	 * @return is the tile a wall
 	 */
-	public boolean isWall() {
+	public boolean isWall()
+	{
 		return wall;
 	}
 
@@ -49,7 +54,8 @@ public class Tile {
 	 * 
 	 * @param blocked
 	 */
-	public void setBlocked(boolean blocked) {
+	public void setBlocked(boolean blocked)
+	{
 		this.blocked = blocked;
 	}
 
@@ -57,7 +63,8 @@ public class Tile {
 	 * 
 	 * @param blocked_sight
 	 */
-	public void setBlockedSight(boolean blocked_sight) {
+	public void setBlockedSight(boolean blocked_sight)
+	{
 		this.blocked_sight = blocked_sight;
 	}
 
@@ -65,7 +72,8 @@ public class Tile {
 	 * 
 	 * @param visited
 	 */
-	public void setVisited(boolean visited) {
+	public void setVisited(boolean visited)
+	{
 		this.visited = visited;
 	}
 
@@ -73,7 +81,8 @@ public class Tile {
 	 * 
 	 * @param wall
 	 */
-	public void setWall(boolean wall) {
+	public void setWall(boolean wall)
+	{
 		this.wall = wall;
 	}
 
@@ -83,7 +92,8 @@ public class Tile {
 	 * @param blocked
 	 *            - tile blocks movement
 	 */
-	public Tile(boolean blocked) {
+	public Tile(boolean blocked)
+	{
 		this.blocked = blocked;
 		this.blocked_sight = blocked;
 		this.visited = false;
@@ -98,7 +108,8 @@ public class Tile {
 	 * @param blocked_sight
 	 *            - tile blocks sight
 	 */
-	public Tile(boolean blocked, boolean blocked_sight) {
+	public Tile(boolean blocked, boolean blocked_sight)
+	{
 		this.blocked = blocked;
 		this.blocked_sight = blocked_sight;
 		this.visited = false;

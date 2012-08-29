@@ -6,7 +6,8 @@ package main.helpers;
  * @author prokk
  * 
  */
-public class Helpers {
+public class Helpers
+{
 
 	/**
 	 * Set first letter of string to capital
@@ -15,7 +16,8 @@ public class Helpers {
 	 *            string
 	 * @return string with capital first letter
 	 */
-	public static String capitalizeString(String input) {
+	public static String capitalizeString(String input)
+	{
 		return input.substring(0, 1).toUpperCase() + input.substring(1);
 	}
 }

@@ -13,20 +13,21 @@ import net.slashie.libjcsi.CSIColor;
  * @author prokk
  * 
  */
-public class FighterComponent {
+public class FighterComponent
+{
 	// private static Logger log =
 	// Logger.getLogger(FighterComponent.class.getName());
 
-	private Entity owner; // owner
-	private int max_hp; // maximum hp
-	private int hp; // current hp
-	private int defence; // defence
-	private int power; // power
-	private int xp; // xp
-	private int intellect = 1; // intellect for player
-	private int constitution = 1; // const for player
-	private int maxmana = 20; // mana for player
-	private int mana = 20; // mana
+	private Entity	owner;					// owner
+	private int		max_hp;				// maximum hp
+	private int		hp;					// current hp
+	private int		defence;				// defence
+	private int		power;					// power
+	private int		xp;					// xp
+	private int		intellect		= 1;	// intellect for player
+	private int		constitution	= 1;	// const for player
+	private int		maxmana			= 20;	// mana for player
+	private int		mana			= 20;	// mana
 
 	/**
 	 * 
@@ -41,7 +42,8 @@ public class FighterComponent {
 	 * @param power
 	 *            - damage of entity
 	 */
-	public FighterComponent(Entity owner, int hp, int xp, int defence, int power) {
+	public FighterComponent(Entity owner, int hp, int xp, int defence, int power)
+	{
 		this.owner = owner;
 		this.max_hp = hp;
 		this.xp = xp;
@@ -54,7 +56,8 @@ public class FighterComponent {
 	 * 
 	 * @return max HP of entity
 	 */
-	public int getMaxHP() {
+	public int getMaxHP()
+	{
 		return this.max_hp;
 	}
 
@@ -62,7 +65,8 @@ public class FighterComponent {
 	 * 
 	 * @return max MANA of entity
 	 */
-	public int getMaxMana() {
+	public int getMaxMana()
+	{
 		return this.maxmana;
 	}
 
@@ -70,7 +74,8 @@ public class FighterComponent {
 	 * 
 	 * @return current mana of entity
 	 */
-	public int getMana() {
+	public int getMana()
+	{
 		return this.mana;
 	}
 
@@ -78,7 +83,8 @@ public class FighterComponent {
 	 * 
 	 * @return current hp of entity
 	 */
-	public int getHp() {
+	public int getHp()
+	{
 		return this.hp;
 	}
 
@@ -86,7 +92,8 @@ public class FighterComponent {
 	 * 
 	 * @return defence of entity
 	 */
-	public int getDefence() {
+	public int getDefence()
+	{
 		return this.defence;
 	}
 
@@ -94,7 +101,8 @@ public class FighterComponent {
 	 * 
 	 * @return power of entity
 	 */
-	public int getPower() {
+	public int getPower()
+	{
 		return this.power;
 	}
 
@@ -102,7 +110,8 @@ public class FighterComponent {
 	 * 
 	 * @return XP for entities kill OR players current XP
 	 */
-	public int getXP() {
+	public int getXP()
+	{
 		return this.xp;
 	}
 
@@ -110,7 +119,8 @@ public class FighterComponent {
 	 * 
 	 * @return constitution of player. Allmost equal his maximum XP
 	 */
-	public int getConstitution() {
+	public int getConstitution()
+	{
 		return this.constitution;
 	}
 
@@ -118,7 +128,8 @@ public class FighterComponent {
 	 * 
 	 * @return intellect of player
 	 */
-	public int getIntellect() {
+	public int getIntellect()
+	{
 		return this.intellect;
 	}
 
@@ -127,7 +138,8 @@ public class FighterComponent {
 	 * @param hp
 	 *            of entity
 	 */
-	public void setHp(int hp) {
+	public void setHp(int hp)
+	{
 		this.hp = hp;
 	}
 
@@ -136,7 +148,8 @@ public class FighterComponent {
 	 * @param mana
 	 *            of entity
 	 */
-	public void setMana(int mana) {
+	public void setMana(int mana)
+	{
 		this.mana = mana;
 	}
 
@@ -145,7 +158,8 @@ public class FighterComponent {
 	 * @param maxhp
 	 *            of entity
 	 */
-	public void setMaxHp(int maxhp) {
+	public void setMaxHp(int maxhp)
+	{
 		this.max_hp = maxhp;
 	}
 
@@ -154,7 +168,8 @@ public class FighterComponent {
 	 * @param maxmana
 	 *            of entity
 	 */
-	public void setMaxMana(int maxmana) {
+	public void setMaxMana(int maxmana)
+	{
 		this.maxmana = maxmana;
 	}
 
@@ -163,7 +178,8 @@ public class FighterComponent {
 	 * @param xp
 	 *            of entity
 	 */
-	public void setXP(int xp) {
+	public void setXP(int xp)
+	{
 		this.xp = xp;
 	}
 
@@ -173,7 +189,8 @@ public class FighterComponent {
 	 * @param inc
 	 *            - add this number to power
 	 */
-	public void incPower(int inc) {
+	public void incPower(int inc)
+	{
 		this.power += inc;
 	}
 
@@ -183,7 +200,8 @@ public class FighterComponent {
 	 * @param inc
 	 *            - add this num to defence
 	 */
-	public void incDefence(int inc) {
+	public void incDefence(int inc)
+	{
 		this.defence += inc;
 	}
 
@@ -193,7 +211,8 @@ public class FighterComponent {
 	 * @param inc
 	 *            - add this to intellect
 	 */
-	public void incIntellect(int inc) {
+	public void incIntellect(int inc)
+	{
 		this.intellect += inc;
 	}
 
@@ -203,7 +222,8 @@ public class FighterComponent {
 	 * @param inc
 	 *            - add this to constitution
 	 */
-	public void incConst(int inc) {
+	public void incConst(int inc)
+	{
 		this.constitution += inc;
 	}
 
@@ -212,14 +232,15 @@ public class FighterComponent {
 	 * 
 	 * @param damage
 	 */
-	public void takeDamage(int damage) {
+	public void takeDamage(int damage)
+	{
 		if (damage > 0)
 			this.hp -= damage;
 
-		if (this.hp <= 0) {
+		if (this.hp <= 0)
+		{
 			if (this.owner != MainGame.getInstance().getPlayer())
-				MainGame.getInstance().getPlayer().getFighterComponent()
-						.addXP(owner.getFighterComponent().getXP());
+				MainGame.getInstance().getPlayer().getFighterComponent().addXP(owner.getFighterComponent().getXP());
 			owner.deathFunction();
 		}
 	}
@@ -229,7 +250,8 @@ public class FighterComponent {
 	 * 
 	 * @param xp
 	 */
-	private void addXP(int xp2) {
+	private void addXP(int xp2)
+	{
 		this.xp += xp2;
 
 	}
@@ -240,21 +262,20 @@ public class FighterComponent {
 	 * @param target
 	 *            entity
 	 */
-	public void attack(Entity target) {
+	public void attack(Entity target)
+	{
 		int damage = this.power - target.getFighterComponent().getDefence();
-		if (damage > 0) {
+		if (damage > 0)
+		{
 			// hit gowz in!
 			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.owner.getName()) + " hits "
-							+ Helpers.capitalizeString(target.getName())
-							+ " for " + damage + " damage", CSIColor.RED);
+					Helpers.capitalizeString(this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName()) + " for " + damage + " damage", CSIColor.RED);
 			target.getFighterComponent().takeDamage(damage);
-		} else {
+		} else
+		{
 			// such much defence!
-			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.owner.getName()) + " hits "
-							+ Helpers.capitalizeString(target.getName())
-							+ " but it has no effect!", CSIColor.WHITE);
+			MainGame.getInstance().newMessage(Helpers.capitalizeString(this.owner.getName()) + " hits " + Helpers.capitalizeString(target.getName()) + " but it has no effect!",
+					CSIColor.WHITE);
 		}
 	}
 
@@ -264,13 +285,12 @@ public class FighterComponent {
 	 * @param heal
 	 *            - num hp to add using heal
 	 */
-	public void healFor(int heal) {
+	public void healFor(int heal)
+	{
 		this.hp += heal;
 		if (this.hp > this.max_hp)
 			this.hp = this.max_hp;
-		MainGame.getInstance().newMessage(
-				Helpers.capitalizeString(this.owner.getName())
-						+ " is healed for " + heal, CSIColor.GREEN);
+		MainGame.getInstance().newMessage(Helpers.capitalizeString(this.owner.getName()) + " is healed for " + heal, CSIColor.GREEN);
 	}
 
 	/**
@@ -279,44 +299,34 @@ public class FighterComponent {
 	 * @param mana
 	 *            to add
 	 */
-	public void addMana(int mana) {
+	public void addMana(int mana)
+	{
 		this.mana += mana;
 		if (this.mana > this.maxmana)
 			this.mana = this.maxmana;
-		MainGame.getInstance().newMessage(
-				Helpers.capitalizeString(this.owner.getName()) + " gets "
-						+ mana + " mana", CSIColor.BLUE);
+		MainGame.getInstance().newMessage(Helpers.capitalizeString(this.owner.getName()) + " gets " + mana + " mana", CSIColor.BLUE);
 	}
 
 	/**
 	 * Cast Lighning Function, if player uses the scroll
 	 */
-	public void castLighning() {
-		Entity monster = MainMap.getInstance().getClosestMonster(
-				ItemComponent.LIGHTNING_RANGE);
-		if (monster == null) {
-			MainGame.getInstance().newMessage(
-					"No enemy is close enough to strike.", CSIColor.WHITE);
-		} else {
-			if (MainGame.getInstance().getPlayer().getFighterComponent()
-					.getMana() >= ItemComponent.LIGHTNING_MANA) {
-				MainGame.getInstance().newMessage(
-						"A lightning strikes the "
-								+ Helpers.capitalizeString(monster.getName())
-								+ " for " + ItemComponent.LIGHTNING_DAMAGE
-								+ " damage", CSIColor.AQUAMARINE);
-				monster.getFighterComponent().takeDamage(
-						ItemComponent.LIGHTNING_DAMAGE);
-				MainGame.getInstance()
-						.getPlayer()
-						.getFighterComponent()
-						.setMana(
-								MainGame.getInstance().getPlayer()
-										.getFighterComponent().getMana()
-										- ItemComponent.LIGHTNING_MANA);
-			} else {
-				MainGame.getInstance().newMessage(
-						"Not enough mana to use Lightning", CSIColor.WHITE);
+	public void castLighning()
+	{
+		Entity monster = MainMap.getInstance().getClosestMonster(ItemComponent.LIGHTNING_RANGE);
+		if (monster == null)
+		{
+			MainGame.getInstance().newMessage("No enemy is close enough to strike.", CSIColor.WHITE);
+		} else
+		{
+			if (MainGame.getInstance().getPlayer().getFighterComponent().getMana() >= ItemComponent.LIGHTNING_MANA)
+			{
+				MainGame.getInstance().newMessage("A lightning strikes the " + Helpers.capitalizeString(monster.getName()) + " for " + ItemComponent.LIGHTNING_DAMAGE + " damage",
+						CSIColor.AQUAMARINE);
+				monster.getFighterComponent().takeDamage(ItemComponent.LIGHTNING_DAMAGE);
+				MainGame.getInstance().getPlayer().getFighterComponent().setMana(MainGame.getInstance().getPlayer().getFighterComponent().getMana() - ItemComponent.LIGHTNING_MANA);
+			} else
+			{
+				MainGame.getInstance().newMessage("Not enough mana to use Lightning", CSIColor.WHITE);
 			}
 		}
 	}
@@ -324,37 +334,27 @@ public class FighterComponent {
 	/**
 	 * Cast Confuse Function, if player uses the scroll
 	 */
-	public void castConfuse() {
+	public void castConfuse()
+	{
 
-		Entity monster = MainMap.getInstance().getClosestMonster(
-				ItemComponent.CONFUSION_RANGE);
-		if (monster == null) {
-			MainGame.getInstance().newMessage(
-					"No enemy is close enough to confuse.", CSIColor.WHITE);
-		} else {
-			if (MainGame.getInstance().getPlayer().getFighterComponent()
-					.getMana() >= ItemComponent.CONFUSION_MANA) {
+		Entity monster = MainMap.getInstance().getClosestMonster(ItemComponent.CONFUSION_RANGE);
+		if (monster == null)
+		{
+			MainGame.getInstance().newMessage("No enemy is close enough to confuse.", CSIColor.WHITE);
+		} else
+		{
+			if (MainGame.getInstance().getPlayer().getFighterComponent().getMana() >= ItemComponent.CONFUSION_MANA)
+			{
 
 				AIComponent old_ai = monster.getAIComponent();
-				monster.setAIComponent(new ConfusedMonster(monster, old_ai,
-						ItemComponent.CONFUSION_TURNS));
+				monster.setAIComponent(new ConfusedMonster(monster, old_ai, ItemComponent.CONFUSION_TURNS));
 				monster.getAIComponent().setOwner(monster);
-				MainGame.getInstance().newMessage(
-						"The eyes of the "
-								+ Helpers.capitalizeString(monster.getName())
-								+ " look vacant, as he stumbles around!",
-						CSIColor.CERULEAN);
-				MainGame.getInstance()
-						.getPlayer()
-						.getFighterComponent()
-						.setMana(
-								MainGame.getInstance().getPlayer()
-										.getFighterComponent().getMana()
-										- ItemComponent.CONFUSION_MANA);
+				MainGame.getInstance().newMessage("The eyes of the " + Helpers.capitalizeString(monster.getName()) + " look vacant, as he stumbles around!", CSIColor.CERULEAN);
+				MainGame.getInstance().getPlayer().getFighterComponent().setMana(MainGame.getInstance().getPlayer().getFighterComponent().getMana() - ItemComponent.CONFUSION_MANA);
 
-			} else {
-				MainGame.getInstance().newMessage(
-						"Not enough mana to use Confusion", CSIColor.WHITE);
+			} else
+			{
+				MainGame.getInstance().newMessage("Not enough mana to use Confusion", CSIColor.WHITE);
 			}
 		}
 	}

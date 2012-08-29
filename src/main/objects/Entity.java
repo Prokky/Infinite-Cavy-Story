@@ -14,18 +14,19 @@ import net.slashie.libjcsi.CSIColor;
  * @author prokk
  * 
  */
-public class Entity {
+public class Entity
+{
 	// private static Logger log = Logger.getLogger(Entity.class.getName());
 
-	private int x, y; // position
-	private char key; // char symbol
-	private String name; // entity name
-	private CSIColor color; // entity color
-	private boolean blocks; // blocks movement or not
-	private FighterComponent fighter; // fighter component
-	private AIComponent ai; // ai component
-	private ItemComponent item; // item component
-	private int level = 1;
+	private int					x, y;			// position
+	private char				key;			// char symbol
+	private String				name;			// entity name
+	private CSIColor			color;			// entity color
+	private boolean				blocks;		// blocks movement or not
+	private FighterComponent	fighter;		// fighter component
+	private AIComponent			ai;			// ai component
+	private ItemComponent		item;			// item component
+	private int					level	= 1;
 
 	/**
 	 * 
@@ -45,8 +46,8 @@ public class Entity {
 	 * @param ai
 	 *            component
 	 */
-	public Entity(int x, int y, char key, String name, CSIColor color,
-			Boolean blocks, FighterComponent fighter, AIComponent ai) {
+	public Entity(int x, int y, char key, String name, CSIColor color, Boolean blocks, FighterComponent fighter, AIComponent ai)
+	{
 		this.x = x;
 		this.y = y;
 		this.key = key;
@@ -73,8 +74,8 @@ public class Entity {
 	 * @param fighter
 	 *            component, describing combat properties
 	 */
-	public Entity(int x, int y, char key, String name, CSIColor color,
-			Boolean blocks, FighterComponent fighter) {
+	public Entity(int x, int y, char key, String name, CSIColor color, Boolean blocks, FighterComponent fighter)
+	{
 		this.x = x;
 		this.y = y;
 		this.key = key;
@@ -98,8 +99,8 @@ public class Entity {
 	 * @param blocks
 	 *            - can pass through
 	 */
-	public Entity(int x, int y, char key, String name, CSIColor color,
-			Boolean blocks) {
+	public Entity(int x, int y, char key, String name, CSIColor color, Boolean blocks)
+	{
 		this.x = x;
 		this.y = y;
 		this.key = key;
@@ -112,7 +113,8 @@ public class Entity {
 	 * 
 	 * @return x position of entity
 	 */
-	public int getX() {
+	public int getX()
+	{
 		return x;
 	}
 
@@ -120,7 +122,8 @@ public class Entity {
 	 * 
 	 * @return y position of entity
 	 */
-	public int getY() {
+	public int getY()
+	{
 		return y;
 	}
 
@@ -128,7 +131,8 @@ public class Entity {
 	 * 
 	 * @return symbol of entity
 	 */
-	public char getKey() {
+	public char getKey()
+	{
 		return key;
 	}
 
@@ -136,7 +140,8 @@ public class Entity {
 	 * 
 	 * @return can pass through
 	 */
-	public boolean blocks() {
+	public boolean blocks()
+	{
 		return blocks;
 	}
 
@@ -144,7 +149,8 @@ public class Entity {
 	 * 
 	 * @return color of symbol
 	 */
-	public CSIColor getColor() {
+	public CSIColor getColor()
+	{
 		return color;
 	}
 
@@ -152,7 +158,8 @@ public class Entity {
 	 * 
 	 * @return name
 	 */
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
@@ -160,7 +167,8 @@ public class Entity {
 	 * 
 	 * @return fighter component, can be NULL
 	 */
-	public FighterComponent getFighterComponent() {
+	public FighterComponent getFighterComponent()
+	{
 		return this.fighter;
 	}
 
@@ -168,7 +176,8 @@ public class Entity {
 	 * 
 	 * @return AI component, can be NULL
 	 */
-	public AIComponent getAIComponent() {
+	public AIComponent getAIComponent()
+	{
 		return this.ai;
 	}
 
@@ -176,7 +185,8 @@ public class Entity {
 	 * 
 	 * @return Item component, can be NULL
 	 */
-	public ItemComponent getItemComponent() {
+	public ItemComponent getItemComponent()
+	{
 		return this.item;
 	}
 
@@ -184,7 +194,8 @@ public class Entity {
 	 * 
 	 * @return level of entity. Only for player
 	 */
-	public int getLevel() {
+	public int getLevel()
+	{
 		return this.level;
 	}
 
@@ -193,7 +204,8 @@ public class Entity {
 	 * @param x
 	 *            coord
 	 */
-	public void setX(int x) {
+	public void setX(int x)
+	{
 		this.x = x;
 	}
 
@@ -202,7 +214,8 @@ public class Entity {
 	 * @param y
 	 *            coord
 	 */
-	public void setY(int y) {
+	public void setY(int y)
+	{
 		this.y = y;
 	}
 
@@ -211,7 +224,8 @@ public class Entity {
 	 * @param fighter
 	 *            component, contains all combat properties
 	 */
-	public void setFighterComponent(FighterComponent fighter) {
+	public void setFighterComponent(FighterComponent fighter)
+	{
 		this.fighter = fighter;
 	}
 
@@ -220,7 +234,8 @@ public class Entity {
 	 * @param ai
 	 *            component
 	 */
-	public void setAIComponent(AIComponent ai) {
+	public void setAIComponent(AIComponent ai)
+	{
 		this.ai = ai;
 	}
 
@@ -229,14 +244,16 @@ public class Entity {
 	 * @param item
 	 *            component
 	 */
-	public void setItemComponent(ItemComponent item) {
+	public void setItemComponent(ItemComponent item)
+	{
 		this.item = item;
 	}
 
 	/**
 	 * increase level by 1
 	 */
-	public void incLevel() {
+	public void incLevel()
+	{
 		this.level++;
 	}
 
@@ -248,8 +265,10 @@ public class Entity {
 	 * @param dy
 	 *            distance
 	 */
-	public void move(int dx, int dy) {
-		if (!MainMap.getInstance().isBlocked(this.x + dx, this.y + dy)) {
+	public void move(int dx, int dy)
+	{
+		if (!MainMap.getInstance().isBlocked(this.x + dx, this.y + dy))
+		{
 			this.x += dx;
 			this.y += dy;
 		}
@@ -258,7 +277,8 @@ public class Entity {
 	/**
 	 * Draw entity on map, if the entity is in camera range
 	 */
-	public void draw() {
+	public void draw()
+	{
 		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
 		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
 		// check if within camera range
@@ -270,7 +290,8 @@ public class Entity {
 	/**
 	 * Clear entity from map, if the entity is in camera range
 	 */
-	public void clear() {
+	public void clear()
+	{
 		int new_x = MainMap.getInstance().toCameraCoordX(this.x);
 		int new_y = MainMap.getInstance().toCameraCoordY(this.y);
 		// check if within camera range
@@ -287,7 +308,8 @@ public class Entity {
 	 * @param target_y
 	 *            coord
 	 */
-	public void moveTowards(int target_x, int target_y) {
+	public void moveTowards(int target_x, int target_y)
+	{
 		int dx = target_x - this.x;
 		int dy = target_y - this.y;
 		double distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
@@ -306,7 +328,8 @@ public class Entity {
 	 *            entity
 	 * @return distance
 	 */
-	public double distanceTo(Entity other) {
+	public double distanceTo(Entity other)
+	{
 		int dx = other.x - this.x;
 		int dy = other.y - this.y;
 
@@ -316,24 +339,25 @@ public class Entity {
 	/**
 	 * Fuction describes death of this entity
 	 */
-	public void deathFunction() {
+	public void deathFunction()
+	{
 		String name = this.getName();
-		if (name.equals("player")) {
+		if (name.equals("player"))
+		{
 			MainGame.getInstance().setGameState("dead");
 			this.key = '%';
 			this.color = CSIColor.DARK_RED;
-			MainGame.getInstance().newMessage("YOU DIE, BWAAHAHHAAHHA!",
-					CSIColor.BURGUNDY);
-		} else if ((name.equals("troll")) || (name.equals("orc"))) {
-			this.key = '%';
-			this.color = CSIColor.DARK_RED;
-			this.blocks = false;
-			this.fighter = null;
-			this.ai = null;
-			MainGame.getInstance().newMessage(
-					Helpers.capitalizeString(this.name) + " dies",
-					CSIColor.BURGUNDY);
-			this.name = "remains";
-		}
+			MainGame.getInstance().newMessage("YOU DIE, BWAAHAHHAAHHA!", CSIColor.BURGUNDY);
+		} else
+			if ((name.equals("troll")) || (name.equals("orc")))
+			{
+				this.key = '%';
+				this.color = CSIColor.DARK_RED;
+				this.blocks = false;
+				this.fighter = null;
+				this.ai = null;
+				MainGame.getInstance().newMessage(Helpers.capitalizeString(this.name) + " dies", CSIColor.BURGUNDY);
+				this.name = "remains";
+			}
 	}
 }

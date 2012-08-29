@@ -18,47 +18,50 @@ import net.slashie.libjcsi.ConsoleSystemInterface;
  * @author prokk
  * 
  */
-public class MainMap {
+public class MainMap
+{
 	// private static Logger log = Logger.getLogger(MainMap.class.getName());
 
 	// //// SIZE OF MAPS
-	public final static int MAP_WIDTH = 100;
-	public final static int MAP_HEIGHT = 100;
+	public final static int		MAP_WIDTH			= 100;
+	public final static int		MAP_HEIGHT			= 100;
 
-	public final static int CAMERA_WIDTH = 80;
-	public final static int CAMERA_HEIGHT = 40;
+	public final static int		CAMERA_WIDTH		= 80;
+	public final static int		CAMERA_HEIGHT		= 40;
 
 	// ///// DUNGEON GENERATOR PARAMETERS
-	private final static int ROOM_MAX_SIZE = 15;
-	private final static int ROOM_MIN_SIZE = 6;
-	private final static int MAX_ROOMS = 50;
-	private final static int MAX_ROOM_MONSTERS = 3;
-	private final static int MAX_ROOM_ITEMS = 2;
+	private final static int	ROOM_MAX_SIZE		= 15;
+	private final static int	ROOM_MIN_SIZE		= 6;
+	private final static int	MAX_ROOMS			= 50;
+	private final static int	MAX_ROOM_MONSTERS	= 3;
+	private final static int	MAX_ROOM_ITEMS		= 2;
 
-	private static MainMap instance = new MainMap();
+	private static MainMap		instance			= new MainMap();
 
 	/**
 	 * 
 	 * @return instance of map
 	 */
-	public static MainMap getInstance() {
+	public static MainMap getInstance()
+	{
 		return instance;
 	}
 
-	private int dungeon_level = 1;
-	private Entity stairs;
+	private int								dungeon_level	= 1;
+	private Entity							stairs;
 
-	private static Tile[][] map = MainGame.getInstance().getMap();
-	private static ConsoleSystemInterface csi = MainGame.getCSI();
-	private static Entity player = MainGame.getInstance().getPlayer();
+	private static Tile[][]					map				= MainGame.getInstance().getMap();
+	private static ConsoleSystemInterface	csi				= MainGame.getCSI();
+	private static Entity					player			= MainGame.getInstance().getPlayer();
 
-	private ArrayList<Entity> objects = new ArrayList<Entity>();
+	private ArrayList<Entity>				objects			= new ArrayList<Entity>();
 
 	/**
 	 * 
 	 * @return objects on the map
 	 */
-	public ArrayList<Entity> getObjects() {
+	public ArrayList<Entity> getObjects()
+	{
 		return objects;
 	}
 
@@ -66,7 +69,8 @@ public class MainMap {
 	 * 
 	 * @return current level of the dungeon
 	 */
-	public int getCurrentLevel() {
+	public int getCurrentLevel()
+	{
 		return dungeon_level;
 	}
 
@@ -76,7 +80,8 @@ public class MainMap {
 	 * player in first rooms and stairs in last room. Fills the room with
 	 * mosters and items.
 	 */
-	public void generateMap() {
+	public void generateMap()
+	{
 		// / fill the map with blocking tiles
 		for (int x = 0; x < MAP_WIDTH; x++)
 			for (int y = 0; y < MAP_HEIGHT; y++)
@@ -90,12 +95,11 @@ public class MainMap {
 
 		int roomCenterX = 0;
 		int roomCenterY = 0;
-		for (int r = 0; r < MAX_ROOMS; r++) {
+		for (int r = 0; r < MAX_ROOMS; r++)
+		{
 			// randomizing room size
-			int w = rand.nextInt((ROOM_MAX_SIZE - ROOM_MIN_SIZE))
-					+ ROOM_MIN_SIZE;
-			int h = rand.nextInt((ROOM_MAX_SIZE - ROOM_MIN_SIZE))
-					+ ROOM_MIN_SIZE;
+			int w = rand.nextInt((ROOM_MAX_SIZE - ROOM_MIN_SIZE)) + ROOM_MIN_SIZE;
+			int h = rand.nextInt((ROOM_MAX_SIZE - ROOM_MIN_SIZE)) + ROOM_MIN_SIZE;
 
 			// randomizing room position
 			int x = rand.nextInt(MAP_WIDTH - w - 1);
@@ -106,15 +110,18 @@ public class MainMap {
 
 			// check if new room doesn't intersect with older ones
 			boolean failed = false;
-			for (Rect other_room : rooms) {
+			for (Rect other_room : rooms)
+			{
 				if (other_room != null)
-					if (new_room.intersect(other_room)) {
+					if (new_room.intersect(other_room))
+					{
 						failed = true;
 						break;
 					}
 			}
 
-			if (!failed) {
+			if (!failed)
+			{
 				// this means there are no intersections, so this room is valid
 				createRoom(new_room); // create rooms
 				placeObjects(new_room); // create objects in room
@@ -123,28 +130,28 @@ public class MainMap {
 				roomCenterX = new_room.getCenterX();
 				roomCenterY = new_room.getCenterY();
 
-				if (num_rooms == 0) {
+				if (num_rooms == 0)
+				{
 					// set player in first room
 					player.setX(roomCenterX);
 					player.setY(roomCenterY);
-				} else {
+				} else
+				{
 
 					// get previous room center
 					int prevRoomCenterX = rooms[num_rooms - 1].getCenterX();
 					int prevRoomCenterY = rooms[num_rooms - 1].getCenterY();
 
 					// connect current and previous room with tunnel
-					if (rand.nextInt(1) == 1) {
-						create_h_tunnel(prevRoomCenterX, roomCenterX,
-								prevRoomCenterY);
-						create_v_tunnel(prevRoomCenterY, roomCenterY,
-								roomCenterX);
-					} else {
+					if (rand.nextInt(1) == 1)
+					{
+						create_h_tunnel(prevRoomCenterX, roomCenterX, prevRoomCenterY);
+						create_v_tunnel(prevRoomCenterY, roomCenterY, roomCenterX);
+					} else
+					{
 
-						create_v_tunnel(prevRoomCenterY, roomCenterY,
-								prevRoomCenterX);
-						create_h_tunnel(prevRoomCenterX, roomCenterX,
-								roomCenterY);
+						create_v_tunnel(prevRoomCenterY, roomCenterY, prevRoomCenterX);
+						create_h_tunnel(prevRoomCenterX, roomCenterX, roomCenterY);
 					}
 				}
 
@@ -155,21 +162,14 @@ public class MainMap {
 			}
 
 		}
-		stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs",
-				CSIColor.WHITE, false);
+		stairs = new Entity(roomCenterX, roomCenterY, '<', "stairs", CSIColor.WHITE, false);
 		objects.add(stairs);
 
 		for (int x = 1; x < MAP_WIDTH - 1; x++)
 			for (int y = 1; y < MAP_HEIGHT - 1; y++)
 				if (map[x][y].isBlockedSight())
-					if (!map[x - 1][y - 1].isBlockedSight()
-							|| !map[x - 1][y].isBlockedSight()
-							|| !map[x - 1][y + 1].isBlockedSight()
-							|| !map[x][y - 1].isBlockedSight()
-							|| !map[x][y + 1].isBlockedSight()
-							|| !map[x + 1][y - 1].isBlockedSight()
-							|| !map[x + 1][y].isBlockedSight()
-							|| !map[x + 1][y + 1].isBlockedSight())
+					if (!map[x - 1][y - 1].isBlockedSight() || !map[x - 1][y].isBlockedSight() || !map[x - 1][y + 1].isBlockedSight() || !map[x][y - 1].isBlockedSight()
+							|| !map[x][y + 1].isBlockedSight() || !map[x + 1][y - 1].isBlockedSight() || !map[x + 1][y].isBlockedSight() || !map[x + 1][y + 1].isBlockedSight())
 						map[x][y].setWall(true);
 
 	}
@@ -180,9 +180,11 @@ public class MainMap {
 	 * @param room
 	 *            rect
 	 */
-	public static void createRoom(Rect room) {
+	public static void createRoom(Rect room)
+	{
 		for (int x = room.getX1() + 1; x < room.getX2(); x++)
-			for (int y = room.getY1() + 1; y < room.getY2(); y++) {
+			for (int y = room.getY1() + 1; y < room.getY2(); y++)
+			{
 				// fillig the room with empty tiles
 				map[x][y].setBlocked(false);
 				map[x][y].setBlockedSight(false);
@@ -199,10 +201,12 @@ public class MainMap {
 	 * @param y
 	 *            position of both
 	 */
-	public static void create_h_tunnel(int x1, int x2, int y) {
+	public static void create_h_tunnel(int x1, int x2, int y)
+	{
 		// horizontal tunnel. min() and max() are used in case x1>x2
 
-		for (int x = Math.min(x1, x2); x < Math.max(x1, x2) + 1; x++) {
+		for (int x = Math.min(x1, x2); x < Math.max(x1, x2) + 1; x++)
+		{
 			map[x][y].setBlocked(false);
 			map[x][y].setBlockedSight(false);
 		}
@@ -218,8 +222,10 @@ public class MainMap {
 	 * @param x
 	 *            position of both
 	 */
-	public static void create_v_tunnel(int y1, int y2, int x) {
-		for (int y = Math.min(y1, y2); y < Math.max(y1, y2) + 1; y++) {
+	public static void create_v_tunnel(int y1, int y2, int x)
+	{
+		for (int y = Math.min(y1, y2); y < Math.max(y1, y2) + 1; y++)
+		{
 			map[x][y].setBlocked(false);
 			map[x][y].setBlockedSight(false);
 		}
@@ -231,34 +237,32 @@ public class MainMap {
 	 * @param room
 	 *            rect
 	 */
-	public void placeObjects(Rect room) {
+	public void placeObjects(Rect room)
+	{
 
 		// / first placing monsters
 		Random rand = new Random();
 		int num_Monsters = rand.nextInt(MAX_ROOM_MONSTERS);
-		for (int i = 0; i < num_Monsters; i++) {
+		for (int i = 0; i < num_Monsters; i++)
+		{
 			// random object position
 			int x = rand.nextInt(room.getX2() - room.getX1()) + room.getX1();
 			int y = rand.nextInt(room.getY2() - room.getY1()) + room.getY1();
 			if (!isBlocked(x, y))
 
-				if (rand.nextInt(100) < 80) { // 80% - orc
-					Entity monster = new Entity(x, y, 'O', "orc",
-							CSIColor.LIME_GREEN, true);
-					FighterComponent fighter_component = new FighterComponent(
-							monster, 8 + 3 * dungeon_level,
-							30 + 7 * dungeon_level, 0, 2 + dungeon_level);
+				if (rand.nextInt(100) < 80)
+				{ // 80% - orc
+					Entity monster = new Entity(x, y, 'O', "orc", CSIColor.LIME_GREEN, true);
+					FighterComponent fighter_component = new FighterComponent(monster, 8 + 3 * dungeon_level, 30 + 7 * dungeon_level, 0, 2 + dungeon_level);
 					AIComponent ai_component = new AIComponent(monster);
 					monster.setFighterComponent(fighter_component);
 					monster.setAIComponent(ai_component);
 					objects.add(monster);
-				} else { // 20% - troll
-					Entity monster = new Entity(x, y, 'T', "troll",
-							CSIColor.GREEN, true);
-					FighterComponent fighter_component = new FighterComponent(
-							monster, 12 + 3 * dungeon_level,
-							100 + 10 * dungeon_level,
-							(int) (1 + dungeon_level * 0.5f), 4 + dungeon_level);
+				} else
+				{ // 20% - troll
+					Entity monster = new Entity(x, y, 'T', "troll", CSIColor.GREEN, true);
+					FighterComponent fighter_component = new FighterComponent(monster, 12 + 3 * dungeon_level, 100 + 10 * dungeon_level, (int) (1 + dungeon_level * 0.5f),
+							4 + dungeon_level);
 					AIComponent ai_component = new AIComponent(monster);
 					monster.setFighterComponent(fighter_component);
 					monster.setAIComponent(ai_component);
@@ -268,42 +272,40 @@ public class MainMap {
 
 		// // now placing items
 		int num_items = rand.nextInt(MAX_ROOM_ITEMS);
-		for (int i = 0; i < num_items; i++) {
-			int x = rand.nextInt(room.getX2() - room.getX1() - 1)
-					+ room.getX1() + 1;
-			int y = rand.nextInt(room.getY2() - room.getY1() - 1)
-					+ room.getY1() + 1;
-			if (!isBlocked(x, y)) {
+		for (int i = 0; i < num_items; i++)
+		{
+			int x = rand.nextInt(room.getX2() - room.getX1() - 1) + room.getX1() + 1;
+			int y = rand.nextInt(room.getY2() - room.getY1() - 1) + room.getY1() + 1;
+			if (!isBlocked(x, y))
+			{
 				int dice = rand.nextInt(100);
-				if (dice < 60) {
-					Entity item = new Entity(x, y, '!', "healing potion",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.HEALING_POTION);
+				if (dice < 60)
+				{
+					Entity item = new Entity(x, y, '!', "healing potion", CSIColor.VIOLET, false);
+					ItemComponent itemComponent = new ItemComponent(item, ItemComponent.HEALING_POTION);
 					item.setItemComponent(itemComponent);
 					objects.add(item);
-				} else if (dice > 60 && dice < 80) {
-					Entity item = new Entity(x, y, '!', "mana potion",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.MANA_POTION);
-					item.setItemComponent(itemComponent);
-					objects.add(item);
-				} else if (dice > 80 && dice < 95) {
-					Entity item = new Entity(x, y, '!', "lightning scroll",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.LIGHTNING);
-					item.setItemComponent(itemComponent);
-					objects.add(item);
-				} else {
-					Entity item = new Entity(x, y, '!', "confusion scroll",
-							CSIColor.VIOLET, false);
-					ItemComponent itemComponent = new ItemComponent(item,
-							ItemComponent.CONFUSION);
-					item.setItemComponent(itemComponent);
-					objects.add(item);
-				}
+				} else
+					if (dice > 60 && dice < 80)
+					{
+						Entity item = new Entity(x, y, '!', "mana potion", CSIColor.VIOLET, false);
+						ItemComponent itemComponent = new ItemComponent(item, ItemComponent.MANA_POTION);
+						item.setItemComponent(itemComponent);
+						objects.add(item);
+					} else
+						if (dice > 80 && dice < 95)
+						{
+							Entity item = new Entity(x, y, '!', "lightning scroll", CSIColor.VIOLET, false);
+							ItemComponent itemComponent = new ItemComponent(item, ItemComponent.LIGHTNING);
+							item.setItemComponent(itemComponent);
+							objects.add(item);
+						} else
+						{
+							Entity item = new Entity(x, y, '!', "confusion scroll", CSIColor.VIOLET, false);
+							ItemComponent itemComponent = new ItemComponent(item, ItemComponent.CONFUSION);
+							item.setItemComponent(itemComponent);
+							objects.add(item);
+						}
 			}
 		}
 	}
@@ -317,11 +319,13 @@ public class MainMap {
 	 *            coord of tile
 	 * @return blocked
 	 */
-	public boolean isBlocked(int x, int y) {
+	public boolean isBlocked(int x, int y)
+	{
 		if (map[x][y].isBlocked())
 			return true;
 
-		for (Entity object : objects) {
+		for (Entity object : objects)
+		{
 			if (object.blocks() && (x == object.getX()) && (y == object.getY()))
 				return true;
 		}
@@ -331,16 +335,19 @@ public class MainMap {
 	/**
 	 * Draw map
 	 */
-	public void drawMap() {
+	public void drawMap()
+	{
 		FieldOfView.getInstance().calculate();
 
 		for (int x = 0; x < CAMERA_WIDTH; x++)
-			for (int y = 0; y < CAMERA_HEIGHT; y++) {
+			for (int y = 0; y < CAMERA_HEIGHT; y++)
+			{
 				int map_x = x + camera_x;
 				int map_y = y + camera_y;
 
-				if (FieldOfView.getInstance().getFov()[map_x][map_y]) { // is
-																		// visible
+				if (FieldOfView.getInstance().getFov()[map_x][map_y])
+				{ // is
+					// visible
 					map[map_x][map_y].setVisited(true);
 
 					if (!map[map_x][map_y].isWall())
@@ -351,12 +358,14 @@ public class MainMap {
 					for (Entity object : objects)
 						if (object.getX() == map_x && object.getY() == map_y)
 							object.draw();
-				} else if (map[map_x][map_y].wasVisited()) {
-					if (!map[map_x][map_y].isWall())
-						csi.print(x, y, ".", CSIColor.BISTRE);
-					else
-						csi.print(x, y, "#", CSIColor.BISTRE);
-				}
+				} else
+					if (map[map_x][map_y].wasVisited())
+					{
+						if (!map[map_x][map_y].isWall())
+							csi.print(x, y, ".", CSIColor.BISTRE);
+						else
+							csi.print(x, y, "#", CSIColor.BISTRE);
+					}
 
 			}
 	}
@@ -370,20 +379,23 @@ public class MainMap {
 	 * @param dy
 	 *            distance
 	 */
-	public void playerMoveOrAttack(int dx, int dy) {
+	public void playerMoveOrAttack(int dx, int dy)
+	{
 		int x = player.getX() + dx;
 		int y = player.getY() + dy;
 
 		Entity target = null;
 		for (Entity object : objects)
-			if ((object.getX() == x) && (object.getY() == y)) {
+			if ((object.getX() == x) && (object.getY() == y))
+			{
 				target = object;
 				break;
 			}
 
-		if (target != null) {
-			if (target.getName().equals("orc")
-					|| target.getName().equals("troll")) {
+		if (target != null)
+		{
+			if (target.getName().equals("orc") || target.getName().equals("troll"))
+			{
 				player.getFighterComponent().attack(target);
 				return;
 			}
@@ -395,14 +407,14 @@ public class MainMap {
 	/**
 	 * Proceed to the next level
 	 */
-	public void nextLevel() {
-		if (stairs.getX() == player.getX() && stairs.getY() == player.getY()) {
-			player.getFighterComponent().healFor(
-					player.getFighterComponent().getMaxHP() / 2);
+	public void nextLevel()
+	{
+		if (stairs.getX() == player.getX() && stairs.getY() == player.getY())
+		{
+			player.getFighterComponent().healFor(player.getFighterComponent().getMaxHP() / 2);
 			dungeon_level++;
 			objects.clear();
-			MainGame.getInstance().newMessage(
-					"You proceed to level " + dungeon_level, CSIColor.GOLDEN);
+			MainGame.getInstance().newMessage("You proceed to level " + dungeon_level, CSIColor.GOLDEN);
 			generateMap();
 			drawMap();
 		} else
@@ -412,12 +424,14 @@ public class MainMap {
 	/**
 	 * Grab item under players feet
 	 */
-	public void grabItem() {
+	public void grabItem()
+	{
 		Entity object;
-		for (int i = 0; i < objects.size(); i++) {
+		for (int i = 0; i < objects.size(); i++)
+		{
 			object = objects.get(i);
-			if (object.getX() == player.getX()
-					&& object.getY() == player.getY()) {
+			if (object.getX() == player.getX() && object.getY() == player.getY())
+			{
 				if (object.getItemComponent() != null)
 					object.getItemComponent().pickUp();
 			}
@@ -431,14 +445,18 @@ public class MainMap {
 	 *            to search in
 	 * @return entity
 	 */
-	public Entity getClosestMonster(int max_range) {
+	public Entity getClosestMonster(int max_range)
+	{
 		Entity closest = null;
 		int closest_dist = max_range + 1;
 
-		for (Entity object : objects) {
-			if (object.getFighterComponent() != null && object != player) {
+		for (Entity object : objects)
+		{
+			if (object.getFighterComponent() != null && object != player)
+			{
 				int dist = (int) player.distanceTo(object);
-				if (dist < closest_dist) {
+				if (dist < closest_dist)
+				{
 					closest = object;
 					closest_dist = dist;
 				}
@@ -448,8 +466,8 @@ public class MainMap {
 		return closest;
 	}
 
-	private static int camera_x = 0;
-	private static int camera_y = 0;
+	private static int	camera_x	= 0;
+	private static int	camera_y	= 0;
 
 	/**
 	 * Move the Camera on the map
@@ -459,7 +477,8 @@ public class MainMap {
 	 * @param target_y
 	 *            position
 	 */
-	public void moveCamera(int target_x, int target_y) {
+	public void moveCamera(int target_x, int target_y)
+	{
 		int x = target_x - CAMERA_WIDTH / 2;
 		int y = target_y - CAMERA_HEIGHT / 2;
 		if (x < 0)
@@ -480,7 +499,8 @@ public class MainMap {
 	 * @param x
 	 * @return map coord x
 	 */
-	public int toCameraCoordX(int x) {
+	public int toCameraCoordX(int x)
+	{
 		return x - camera_x;
 	}
 
@@ -490,7 +510,8 @@ public class MainMap {
 	 * @param y
 	 * @return map coord y
 	 */
-	public int toCameraCoordY(int y) {
+	public int toCameraCoordY(int y)
+	{
 		return y - camera_y;
 	}
 }

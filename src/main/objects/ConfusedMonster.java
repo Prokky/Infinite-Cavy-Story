@@ -13,10 +13,11 @@ import net.slashie.libjcsi.CSIColor;
  * @author prokk
  * 
  */
-public class ConfusedMonster extends AIComponent {
-	private Entity owner;
-	private AIComponent old_ai;
-	private int num_turns;
+public class ConfusedMonster extends AIComponent
+{
+	private Entity		owner;
+	private AIComponent	old_ai;
+	private int			num_turns;
 
 	/**
 	 * 
@@ -27,7 +28,8 @@ public class ConfusedMonster extends AIComponent {
 	 * @param num_turns
 	 *            - number of confused turns
 	 */
-	public ConfusedMonster(Entity owner, AIComponent old_ai, int num_turns) {
+	public ConfusedMonster(Entity owner, AIComponent old_ai, int num_turns)
+	{
 		super(owner);
 		this.owner = owner;
 		this.old_ai = old_ai;
@@ -37,16 +39,17 @@ public class ConfusedMonster extends AIComponent {
 	/**
 	 * Overrides the AIComponent function with random movement takeTurn
 	 */
-	public void takeTurn() {
+	public void takeTurn()
+	{
 		Random rand = new Random();
-		if (this.num_turns > 0) {
+		if (this.num_turns > 0)
+		{
 			this.owner.move(rand.nextInt(3) - 1, rand.nextInt(3) - 1);
 			this.num_turns--;
-		} else {
+		} else
+		{
 			this.owner.setAIComponent(old_ai);
-			MainGame.getInstance().newMessage(
-					"The " + Helpers.capitalizeString(owner.getName())
-							+ " is no longer confused!", CSIColor.AMETHYST);
+			MainGame.getInstance().newMessage("The " + Helpers.capitalizeString(owner.getName()) + " is no longer confused!", CSIColor.AMETHYST);
 		}
 	}
 }

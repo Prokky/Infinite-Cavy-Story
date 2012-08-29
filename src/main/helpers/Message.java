@@ -9,16 +9,18 @@ import net.slashie.libjcsi.CSIColor;
  * @author prokk
  * 
  */
-public class Message {
+public class Message
+{
 
-	private String message;
-	private CSIColor color;
+	private String		message;
+	private CSIColor	color;
 
 	/**
 	 * 
 	 * @return message
 	 */
-	public String getMessage() {
+	public String getMessage()
+	{
 		return this.message;
 	}
 
@@ -26,7 +28,8 @@ public class Message {
 	 * 
 	 * @return color of message
 	 */
-	public CSIColor getColor() {
+	public CSIColor getColor()
+	{
 		return this.color;
 	}
 
@@ -34,7 +37,8 @@ public class Message {
 	 * 
 	 * @param message
 	 */
-	public void setMessage(String message) {
+	public void setMessage(String message)
+	{
 		this.message = message;
 	}
 
@@ -43,7 +47,8 @@ public class Message {
 	 * @param color
 	 *            of message
 	 */
-	public void setColor(CSIColor color) {
+	public void setColor(CSIColor color)
+	{
 		this.color = color;
 	}
 
@@ -54,7 +59,8 @@ public class Message {
 	 * @param color
 	 *            of message
 	 */
-	public Message(String message, CSIColor color) {
+	public Message(String message, CSIColor color)
+	{
 		this.message = message;
 		this.color = color;
 	}
