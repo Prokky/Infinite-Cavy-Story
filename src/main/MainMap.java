@@ -243,26 +243,26 @@ public class MainMap {
 			if (!isBlocked(x, y))
 
 				if (rand.nextInt(100) < 80) { // 80% - orc
-					Entity AIComponent = new Entity(x, y, 'O', "orc",
+					Entity monster = new Entity(x, y, 'O', "orc",
 							CSIColor.LIME_GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 8 + 3 * dungeon_level,
+							monster, 8 + 3 * dungeon_level,
 							30 + 7 * dungeon_level, 0, 2 + dungeon_level);
-					AIComponent ai_component = new AIComponent(AIComponent);
-					AIComponent.setFighterComponent(fighter_component);
-					AIComponent.setAIComponent(ai_component);
-					objects.add(AIComponent);
+					AIComponent ai_component = new AIComponent(monster);
+					monster.setFighterComponent(fighter_component);
+					monster.setAIComponent(ai_component);
+					objects.add(monster);
 				} else { // 20% - troll
-					Entity AIComponent = new Entity(x, y, 'T', "troll",
+					Entity monster = new Entity(x, y, 'T', "troll",
 							CSIColor.GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
-							AIComponent, 12 + 3 * dungeon_level,
+							monster, 12 + 3 * dungeon_level,
 							100 + 10 * dungeon_level,
 							(int) (1 + dungeon_level * 0.5f), 4 + dungeon_level);
-					AIComponent ai_component = new AIComponent(AIComponent);
-					AIComponent.setFighterComponent(fighter_component);
-					AIComponent.setAIComponent(ai_component);
-					objects.add(AIComponent);
+					AIComponent ai_component = new AIComponent(monster);
+					monster.setFighterComponent(fighter_component);
+					monster.setAIComponent(ai_component);
+					objects.add(monster);
 				}
 		}
 
