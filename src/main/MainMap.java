@@ -62,7 +62,6 @@ public class MainMap {
 		return objects;
 	}
 
-
 	/**
 	 * 
 	 * @return current level of the dungeon
@@ -255,7 +254,7 @@ public class MainMap {
 					objects.add(AIComponent);
 				} else { // 20% - troll
 					Entity AIComponent = new Entity(x, y, 'T', "troll",
-							CSIColor.DARK_GREEN, true);
+							CSIColor.GREEN, true);
 					FighterComponent fighter_component = new FighterComponent(
 							AIComponent, 12 + 3 * dungeon_level,
 							100 + 10 * dungeon_level,
@@ -329,69 +328,37 @@ public class MainMap {
 		return false;
 	}
 
-	// /// PATTERN FOR LIGHT SPREADING
-	private final static int light_pattern[][] = {
-			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0 },
-			{ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
-			{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
-			{ 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
-			{ 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0 } };
-
 	/**
 	 * Draw map
 	 */
 	public void drawMap() {
+		FieldOfView.getInstance().calculate();
+
 		for (int x = 0; x < CAMERA_WIDTH; x++)
 			for (int y = 0; y < CAMERA_HEIGHT; y++) {
 				int map_x = x + camera_x;
 				int map_y = y + camera_y;
-				if (map[map_x][map_y].isWall()) {
-					if (map[map_x][map_y].wasVisited())
-						csi.print(x, y, '#', CSIColor.BISTRE); // walls
-				} else if (map[map_x][map_y].wasVisited()
-						&& !map[map_x][map_y].isBlockedSight())
-					csi.print(x, y, '.', CSIColor.DARK_BROWN); // empty space
-			}
-		// simple sight view
-		int pl_x_l = player.getX() - 6;
-		if (pl_x_l < 0)
-			pl_x_l = 0;
-		int pl_x_r = player.getX() + 6;
-		if (pl_x_r > MAP_WIDTH)
-			pl_x_r = MAP_WIDTH;
-		int pl_y_t = player.getY() - 4;
-		if (pl_y_t < 0)
-			pl_y_t = 0;
-		int pl_y_b = player.getY() + 4;
-		if (pl_y_b > MAP_HEIGHT)
-			pl_y_b = MAP_HEIGHT;
 
-		boolean is_light;
-		int i = 0, j = 0;
-		for (int x = pl_x_l; x < pl_x_r; x++) {
-			j = 0;
-			for (int y = pl_y_t; y < pl_y_b; y++) {
-				int map_x = x - camera_x;
-				int map_y = y - camera_y;
-				is_light = (light_pattern[j][i] == 1);
-				if (is_light) {
+				if (FieldOfView.getInstance().getFov()[map_x][map_y]) { // is
+																		// visible
+					map[map_x][map_y].setVisited(true);
+
+					if (!map[map_x][map_y].isWall())
+						csi.print(x, y, ".", CSIColor.BROWNER);
+					else
+						csi.print(x, y, "#", CSIColor.BROWNER);
+
 					for (Entity object : objects)
-						if (object.getX() == x && object.getY() == y)
+						if (object.getX() == map_x && object.getY() == map_y)
 							object.draw();
-					map[x][y].setVisited(true);
-					if (map[x][y].isWall())
-						if ((map_x > 0) && (map_x < MainMap.CAMERA_WIDTH))
-							if ((map_y > 0) && (map_y < MainMap.CAMERA_HEIGHT))
-								csi.print(map_x, map_y, '#', CSIColor.BROWNER);
+				} else if (map[map_x][map_y].wasVisited()) {
+					if (!map[map_x][map_y].isWall())
+						csi.print(x, y, ".", CSIColor.BISTRE);
+					else
+						csi.print(x, y, "#", CSIColor.BISTRE);
 				}
-				j++;
-			}
-			i++;
-		}
 
+			}
 	}
 
 	/**
