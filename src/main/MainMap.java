@@ -167,9 +167,9 @@ public class MainMap
 
 		for (int x = 1; x < MAP_WIDTH - 1; x++)
 			for (int y = 1; y < MAP_HEIGHT - 1; y++)
-				if (map[x][y].isBlockedSight())
-					if (!map[x - 1][y - 1].isBlockedSight() || !map[x - 1][y].isBlockedSight() || !map[x - 1][y + 1].isBlockedSight() || !map[x][y - 1].isBlockedSight()
-							|| !map[x][y + 1].isBlockedSight() || !map[x + 1][y - 1].isBlockedSight() || !map[x + 1][y].isBlockedSight() || !map[x + 1][y + 1].isBlockedSight())
+				if (map[x][y].isBlocked())
+					if (!map[x - 1][y - 1].isBlocked() || !map[x - 1][y].isBlocked() || !map[x - 1][y + 1].isBlocked() || !map[x][y - 1].isBlocked() || !map[x][y + 1].isBlocked()
+							|| !map[x + 1][y - 1].isBlocked() || !map[x + 1][y].isBlocked() || !map[x + 1][y + 1].isBlocked())
 						map[x][y].setWall(true);
 
 	}
@@ -184,11 +184,8 @@ public class MainMap
 	{
 		for (int x = room.getX1() + 1; x < room.getX2(); x++)
 			for (int y = room.getY1() + 1; y < room.getY2(); y++)
-			{
-				// fillig the room with empty tiles
 				map[x][y].setBlocked(false);
-				map[x][y].setBlockedSight(false);
-			}
+
 	}
 
 	/**
@@ -206,10 +203,8 @@ public class MainMap
 		// horizontal tunnel. min() and max() are used in case x1>x2
 
 		for (int x = Math.min(x1, x2); x < Math.max(x1, x2) + 1; x++)
-		{
 			map[x][y].setBlocked(false);
-			map[x][y].setBlockedSight(false);
-		}
+
 	}
 
 	/**
@@ -225,10 +220,7 @@ public class MainMap
 	public static void create_v_tunnel(int y1, int y2, int x)
 	{
 		for (int y = Math.min(y1, y2); y < Math.max(y1, y2) + 1; y++)
-		{
 			map[x][y].setBlocked(false);
-			map[x][y].setBlockedSight(false);
-		}
 
 	}
 
