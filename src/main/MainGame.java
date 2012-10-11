@@ -242,6 +242,7 @@ public class MainGame
 				switch (dir.code)
 				{
 				case CharKey.N1:
+				case CharKey.T1:
 					player.getFighterComponent().setMaxHp(player.getFighterComponent().getMaxHP() + 10);
 					player.getFighterComponent().incConst(1);
 					player.getFighterComponent().setHp(player.getFighterComponent().getMaxHP());
@@ -249,6 +250,7 @@ public class MainGame
 					showLevelupWindow();
 					break;
 				case CharKey.N2:
+				case CharKey.T2:
 					player.getFighterComponent().setMaxMana(player.getFighterComponent().getMaxMana() + 10);
 					player.getFighterComponent().incIntellect(1);
 					player.getFighterComponent().setHp(player.getFighterComponent().getMaxHP());
@@ -256,10 +258,12 @@ public class MainGame
 					showLevelupWindow();
 					break;
 				case CharKey.N3:
+				case CharKey.T3:
 					player.getFighterComponent().incPower(1);
 					showLevelupWindow();
 					break;
 				case CharKey.N4:
+				case CharKey.T4:
 					player.getFighterComponent().incDefence(1);
 					showLevelupWindow();
 					break;
@@ -275,6 +279,13 @@ public class MainGame
 				{
 					if (getInventory().size() > (dir.code - 118))
 						getInventory().get(dir.code - 118).getItemComponent().useItem();
+					showInventory();
+				}
+				
+				if (dir.code >= 131 && dir.code <= 139)
+				{
+					if (getInventory().size() > (dir.code - 131))
+						getInventory().get(dir.code - 131).getItemComponent().useItem();
 					showInventory();
 				}
 
