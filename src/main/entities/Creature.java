@@ -2,6 +2,8 @@ package main.entities;
 
 import java.awt.Color;
 
+import main.Line;
+import main.Point;
 import main.items.Inventory;
 import main.items.Item;
 import main.world.Tile;
@@ -20,12 +22,6 @@ public class Creature {
 		return glyph;
 	}
 
-	private String name;
-
-	public String name() {
-		return name;
-	}
-
 	private Color color;
 
 	public Color color() {
@@ -36,12 +32,6 @@ public class Creature {
 
 	public void setCreatureAi(CreatureAi ai) {
 		this.ai = ai;
-	}
-
-	private Inventory inventory;
-
-	public Inventory inventory() {
-		return inventory;
 	}
 
 	private int maxHp;
@@ -59,13 +49,15 @@ public class Creature {
 	private int attackValue;
 
 	public int attackValue() {
-		return attackValue;
+		return attackValue + (weapon == null ? 0 : weapon.attackValue())
+				+ (armor == null ? 0 : armor.attackValue());
 	}
 
 	private int defenseValue;
 
 	public int defenseValue() {
-		return defenseValue;
+		return defenseValue + (weapon == null ? 0 : weapon.defenseValue())
+				+ (armor == null ? 0 : armor.defenseValue());
 	}
 
 	private int visionRadius;
@@ -74,7 +66,68 @@ public class Creature {
 		return visionRadius;
 	}
 
-	public Creature(World world, char glyph, String name, Color color,
+	private String name;
+
+	public String name() {
+		return name;
+	}
+
+	private Inventory inventory;
+
+	public Inventory inventory() {
+		return inventory;
+	}
+
+	private int maxFood;
+
+	public int maxFood() {
+		return maxFood;
+	}
+
+	private int food;
+
+	public int food() {
+		return food;
+	}
+
+	private Item weapon;
+
+	public Item weapon() {
+		return weapon;
+	}
+
+	private Item armor;
+
+	public Item armor() {
+		return armor;
+	}
+
+	private int xp;
+
+	public int xp() {
+		return xp;
+	}
+
+	public void modifyXp(int amount) {
+		xp += amount;
+
+		notify("You %s %d xp.", amount < 0 ? "lose" : "gain", amount);
+
+		while (xp > (int) (Math.pow(level, 1.5) * 20)) {
+			level++;
+			doAction("advance to level %d", level);
+			ai.onGainLevel();
+			modifyHp(level * 2);
+		}
+	}
+
+	private int level;
+
+	public int level() {
+		return level;
+	}
+
+	public Creature(World world, char glyph, Color color, String name,
 			int maxHp, int attack, int defense) {
 		this.world = world;
 		this.glyph = glyph;
@@ -86,6 +139,9 @@ public class Creature {
 		this.visionRadius = 9;
 		this.name = name;
 		this.inventory = new Inventory(20);
+		this.maxFood = 1000;
+		this.food = maxFood / 3 * 2;
+		this.level = 1;
 	}
 
 	public void moveBy(int mx, int my, int mz) {
@@ -112,37 +168,85 @@ public class Creature {
 
 		Creature other = world.creature(x + mx, y + my, z + mz);
 
+		modifyFood(-1);
+
 		if (other == null)
 			ai.onEnter(x + mx, y + my, z + mz, tile);
 		else
-			attack(other);
+			meleeAttack(other);
 	}
 
-	public void attack(Creature other) {
-		int amount = Math.max(0, attackValue() - other.defenseValue());
+	public void meleeAttack(Creature other) {
+		commonAttack(other, attackValue(), "attack the %s for %d damage",
+				other.name);
+	}
+
+	private void throwAttack(Item item, Creature other) {
+		commonAttack(other, attackValue / 2 + item.thrownAttackValue(),
+				"throw a %s at the %s for %d damage", item.name(), other.name);
+	}
+
+	public void rangedWeaponAttack(Creature other) {
+		commonAttack(other, attackValue / 2 + weapon.rangedAttackValue(),
+				"fire a %s at the %s for %d damage", weapon.name(), other.name);
+	}
+
+	private void commonAttack(Creature other, int attack, String action,
+			Object... params) {
+		modifyFood(-2);
+
+		int amount = Math.max(0, attack - other.defenseValue());
 
 		amount = (int) (Math.random() * amount) + 1;
 
-		doAction("attack the '%s' for %d damage", other.name, amount);
+		Object[] params2 = new Object[params.length + 1];
+		for (int i = 0; i < params.length; i++) {
+			params2[i] = params[i];
+		}
+		params2[params2.length - 1] = amount;
+
+		doAction(action, params2);
 
 		other.modifyHp(-amount);
+
+		if (other.hp < 1)
+			gainXp(other);
+	}
+
+	public void gainXp(Creature other) {
+		int amount = other.maxHp + other.attackValue() + other.defenseValue()
+				- level;
+
+		if (amount > 0)
+			modifyXp(amount);
 	}
 
 	public void modifyHp(int amount) {
 		hp += amount;
 
-		if (hp < 1) {
+		if (hp > maxHp) {
+			hp = maxHp;
+		} else if (hp < 1) {
 			doAction("die");
+			leaveCorpse();
 			world.remove(this);
 		}
 	}
 
+	private void leaveCorpse() {
+		Item corpse = new Item('%', color, name + " corpse");
+		corpse.modifyFoodValue(maxHp);
+		world.addAtEmptySpace(corpse, x, y, z);
+	}
+
 	public void dig(int wx, int wy, int wz) {
+		modifyFood(-10);
 		world.dig(wx, wy, wz);
 		doAction("dig");
 	}
 
 	public void update() {
+		modifyFood(-1);
 		ai.onUpdate();
 	}
 
@@ -169,8 +273,8 @@ public class Creature {
 
 				if (other == this)
 					other.notify("You " + message + ".", params);
-				else
-					other.notify(String.format("The '%s' %s.", name,
+				else if (other.canSee(x, y, z))
+					other.notify(String.format("The %s %s.", name,
 							makeSecondPerson(message)), params);
 			}
 		}
@@ -193,12 +297,22 @@ public class Creature {
 		return ai.canSee(wx, wy, wz);
 	}
 
-	public Tile tile(int wx, int wy, int wz) {
+	public Tile realTile(int wx, int wy, int wz) {
 		return world.tile(wx, wy, wz);
 	}
 
+	public Tile tile(int wx, int wy, int wz) {
+		if (canSee(wx, wy, wz))
+			return world.tile(wx, wy, wz);
+		else
+			return ai.rememberedTile(wx, wy, wz);
+	}
+
 	public Creature creature(int wx, int wy, int wz) {
-		return world.creature(wx, wy, wz);
+		if (canSee(wx, wy, wz))
+			return world.creature(wx, wy, wz);
+		else
+			return null;
 	}
 
 	public void pickup() {
@@ -217,8 +331,128 @@ public class Creature {
 		if (world.addAtEmptySpace(item, x, y, z)) {
 			doAction("drop a " + item.name());
 			inventory.remove(item);
+			unequip(item);
 		} else {
 			notify("There's nowhere to drop the %s.", item.name());
 		}
+	}
+
+	public void modifyFood(int amount) {
+		food += amount;
+
+		if (food > maxFood) {
+			maxFood = (maxFood + food) / 2;
+			food = maxFood;
+			notify("You can't belive your stomach can hold that much!");
+			modifyHp(-1);
+		} else if (food < 1 && isPlayer()) {
+			modifyHp(-1000);
+		}
+	}
+
+	public boolean isPlayer() {
+		return glyph == '@';
+	}
+
+	public void eat(Item item) {
+		if (item.foodValue() < 0)
+			notify("Gross!");
+
+		modifyFood(item.foodValue());
+		getRidOf(item);
+	}
+
+	private void getRidOf(Item item) {
+		inventory.remove(item);
+		unequip(item);
+	}
+
+	private void putAt(Item item, int wx, int wy, int wz) {
+		inventory.remove(item);
+		unequip(item);
+		world.addAtEmptySpace(item, wx, wy, wz);
+	}
+
+	public void unequip(Item item) {
+		if (item == null)
+			return;
+
+		if (item == armor) {
+			doAction("remove a " + item.name());
+			armor = null;
+		} else if (item == weapon) {
+			doAction("put away a " + item.name());
+			weapon = null;
+		}
+	}
+
+	public void equip(Item item) {
+		if (item.attackValue() == 0 && item.defenseValue() == 0)
+			return;
+
+		if (item.attackValue() >= item.defenseValue()) {
+			unequip(weapon);
+			doAction("wield out a " + item.name());
+			weapon = item;
+		} else {
+			unequip(armor);
+			doAction("put on a " + item.name());
+			armor = item;
+		}
+	}
+
+	public void gainMaxHp() {
+		maxHp += 10;
+		hp += 10;
+		doAction("look healthier");
+	}
+
+	public void gainAttackValue() {
+		attackValue += 2;
+		doAction("look stronger");
+	}
+
+	public void gainDefenseValue() {
+		defenseValue += 2;
+		doAction("look tougher");
+	}
+
+	public void gainVision() {
+		visionRadius += 1;
+		doAction("look more aware");
+	}
+
+	public Item item(int wx, int wy, int wz) {
+		if (canSee(wx, wy, wz))
+			return world.item(wx, wy, wz);
+		else
+			return null;
+	}
+
+	public String details() {
+		return String.format("  level:%d  attack:%d  defense:%d  hp:%d", level,
+				attackValue(), defenseValue(), hp);
+	}
+
+	public void throwItem(Item item, int wx, int wy, int wz) {
+		Point end = new Point(x, y, 0);
+
+		for (Point p : new Line(x, y, wx, wy)) {
+			if (!realTile(p.x, p.y, z).isGround())
+				break;
+			end = p;
+		}
+
+		wx = end.x;
+		wy = end.y;
+
+		Creature c = creature(wx, wy, wz);
+
+		if (c != null)
+			throwAttack(item, c);
+		else
+			doAction("throw a %s", item.name());
+
+		putAt(item, wx, wy, wz);
 	}
 }

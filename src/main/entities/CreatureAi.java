@@ -1,5 +1,6 @@
 package main.entities;
 
+import main.LevelUpController;
 import main.Line;
 import main.Point;
 import main.world.Tile;
@@ -22,19 +23,6 @@ public class CreatureAi {
 		}
 	}
 
-	public void wander() {
-		int mx = (int) (Math.random() * 3) - 1;
-		int my = (int) (Math.random() * 3) - 1;
-
-		Creature other = creature.creature(creature.x + mx, creature.y + my,
-				creature.z);
-
-		if (other != null && other.glyph() == creature.glyph())
-			return;
-		else
-			creature.moveBy(mx, my, 0);
-	}
-
 	public void onUpdate() {
 	}
 
@@ -51,7 +39,7 @@ public class CreatureAi {
 			return false;
 
 		for (Point p : new Line(creature.x, creature.y, wx, wy)) {
-			if (creature.tile(p.x, p.y, wz).isGround() || p.x == wx
+			if (creature.realTile(p.x, p.y, wz).isGround() || p.x == wx
 					&& p.y == wy)
 				continue;
 
@@ -59,5 +47,29 @@ public class CreatureAi {
 		}
 
 		return true;
+	}
+
+	public void wander() {
+		int mx = (int) (Math.random() * 3) - 1;
+		int my = (int) (Math.random() * 3) - 1;
+
+		Creature other = creature.creature(creature.x + mx, creature.y + my,
+				creature.z);
+
+		if (other != null
+				&& other.name().equals(creature.name())
+				|| !creature.tile(creature.x + mx, creature.y + my, creature.z)
+						.isGround())
+			return;
+		else
+			creature.moveBy(mx, my, 0);
+	}
+
+	public void onGainLevel() {
+		new LevelUpController().autoLevelUp(creature);
+	}
+
+	public Tile rememberedTile(int wx, int wy, int wz) {
+		return Tile.UNKNOWN;
 	}
 }

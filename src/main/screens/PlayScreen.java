@@ -41,6 +41,13 @@ public class PlayScreen implements Screen {
 			for (int i = 0; i < world.width() * world.height() / 20; i++) {
 				factory.newRock(z);
 			}
+
+			factory.newFruit(z);
+			factory.newEdibleWeapon(z);
+			factory.newBread(z);
+			factory.randomArmor(z);
+			factory.randomWeapon(z);
+			factory.randomWeapon(z);
 		}
 		factory.newVictoryItem(world.depth() - 1);
 	}
@@ -55,6 +62,10 @@ public class PlayScreen implements Screen {
 
 			for (int i = 0; i < 20; i++) {
 				stuffFactory.newBat(z);
+			}
+
+			for (int i = 0; i < z + 3; i++) {
+				stuffFactory.newZombie(z, player);
 			}
 		}
 	}
@@ -85,15 +96,25 @@ public class PlayScreen implements Screen {
 		displayTiles(terminal, left, top);
 		displayMessages(terminal, messages);
 
-		terminal.writeCenter("-- press [escape] to lose or [enter] to win --",
-				23);
-
-		String stats = String
-				.format(" %3d/%3d hp", player.hp(), player.maxHp());
+		String stats = String.format(" %3d/%3d hp %8s", player.hp(),
+				player.maxHp(), hunger());
 		terminal.write(stats, 1, 23);
 
 		if (subscreen != null)
 			subscreen.displayOutput(terminal);
+	}
+
+	private String hunger() {
+		if (player.food() < player.maxFood() * 0.1)
+			return "Starving";
+		else if (player.food() < player.maxFood() * 0.2)
+			return "Hungry";
+		else if (player.food() > player.maxFood() * 0.9)
+			return "Stuffed";
+		else if (player.food() > player.maxFood() * 0.8)
+			return "Full";
+		else
+			return "Fine";
 	}
 
 	private void displayMessages(AsciiPanel terminal, List<String> messages) {
@@ -124,6 +145,9 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public Screen respondToUserInput(KeyEvent key) {
+
+		int level = player.level();
+
 		if (subscreen != null) {
 			subscreen = subscreen.respondToUserInput(key);
 		} else {
@@ -156,6 +180,38 @@ public class PlayScreen implements Screen {
 			case KeyEvent.VK_N:
 				player.moveBy(1, 1, 0);
 				break;
+			case KeyEvent.VK_T:
+				subscreen = new ThrowScreen(player, player.x - getScrollX(),
+						player.y - getScrollY());
+				break;
+			case KeyEvent.VK_F:
+				if (player.weapon() == null
+						|| player.weapon().rangedAttackValue() == 0)
+					player.notify("You don't have a ranged weapon equiped.");
+				else
+					subscreen = new FireWeaponScreen(player, player.x
+							- getScrollX(), player.y - getScrollY());
+				break;
+			case KeyEvent.VK_D:
+				subscreen = new DropScreen(player);
+				break;
+			case KeyEvent.VK_E:
+				subscreen = new EatScreen(player);
+				break;
+			case KeyEvent.VK_W:
+				subscreen = new EquipScreen(player);
+				break;
+			case KeyEvent.VK_X:
+				subscreen = new ExamineScreen(player);
+				break;
+			case KeyEvent.VK_F1:
+				subscreen = new HelpScreen();
+				break;
+			case KeyEvent.VK_SEMICOLON:
+				subscreen = new LookScreen(player, "Looking", player.x
+						- getScrollX(), player.y - getScrollY());
+				break;
+
 			case KeyEvent.VK_PAGE_UP:
 				if (userIsTryingToExit())
 					return userExits();
@@ -180,6 +236,9 @@ public class PlayScreen implements Screen {
 
 		if (player.hp() < 1)
 			return new LoseScreen();
+
+		if (player.level() > level)
+			subscreen = new LevelUpScreen(player, player.level() - level);
 
 		return this;
 	}

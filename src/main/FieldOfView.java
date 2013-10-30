@@ -17,7 +17,7 @@ public class FieldOfView {
 	private Tile[][][] tiles;
 
 	public Tile tile(int x, int y, int z) {
-		return tiles[x][y][z];
+			return tiles[x][y][z];
 	}
 
 	public FieldOfView(World world) {
@@ -58,5 +58,4 @@ public class FieldOfView {
 			}
 		}
 	}
-
 }
