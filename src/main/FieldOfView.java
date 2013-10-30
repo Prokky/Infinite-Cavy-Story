@@ -1,55 +1,62 @@
 package main;
 
-public class FieldOfView
-{
-	private final static int	RAYS		= 360;
-	private static FieldOfView	instance	= new FieldOfView();
+import main.world.Tile;
+import main.world.World;
 
-	public static FieldOfView getInstance()
-	{
-		return instance;
+public class FieldOfView {
+	private World world;
+	private int depth;
+
+	private boolean[][] visible;
+
+	public boolean isVisible(int x, int y, int z) {
+		return z == depth && x >= 0 && y >= 0 && x < visible.length
+				&& y < visible[0].length && visible[x][y];
 	}
 
-	public final static int	STEP	= 3;
+	private Tile[][][] tiles;
 
-	public final static int	RAD		= 6;
-	private boolean[][]		fov		= new boolean[MainMap.MAP_WIDTH][MainMap.MAP_HEIGHT];
-
-	public boolean[][] getFov()
-	{
-		return fov;
+	public Tile tile(int x, int y, int z) {
+		return tiles[x][y][z];
 	}
 
-	public void calculate()
-	{
-		for (int i = 0; i < MainMap.MAP_WIDTH; i++)
-			for (int j = 0; j < MainMap.MAP_HEIGHT; j++)
-				fov[i][j] = false;
-		for (int i = 0; i < RAYS + 1; i += STEP)
-		{
-			double ax = Math.sin(i * Math.PI / 180);// sintable[i]; // # Get
-													// precalculated value sin(x
-													// / (180 /
-			// pi))
-			double ay = Math.cos(i * Math.PI / 180);// # cos(x / (180 / pi))
+	public FieldOfView(World world) {
+		this.world = world;
+		this.visible = new boolean[world.width()][world.height()];
+		this.tiles = new Tile[world.width()][world.height()][world.depth()];
 
-			double x = MainGame.getInstance().getPlayer().getX(); // # Player's
-																	// x
-			double y = MainGame.getInstance().getPlayer().getY(); // # Player's
-																	// y
-
-			for (int z = 0; z < RAD; z++)
-			{// # Cast the ray
-				x += ax;
-				y += ay;
-
-				if ((x < 0) || (y < 0) || (x > MainMap.MAP_WIDTH) || (y > MainMap.MAP_HEIGHT))
-					break;
-
-				fov[(int) Math.round(x)][(int) Math.round(y)] = true;
-				if (MainGame.getInstance().getMap()[(int) Math.round(x)][(int) Math.round(y)].isBlocked())
-					break;
+		for (int x = 0; x < world.width(); x++) {
+			for (int y = 0; y < world.height(); y++) {
+				for (int z = 0; z < world.depth(); z++) {
+					tiles[x][y][z] = Tile.UNKNOWN;
+				}
 			}
 		}
 	}
+
+	public void update(int wx, int wy, int wz, int r) {
+		depth = wz;
+		visible = new boolean[world.width()][world.height()];
+
+		for (int x = -r; x < r; x++) {
+			for (int y = -r; y < r; y++) {
+				if (x * x + y * y > r * r)
+					continue;
+
+				if (wx + x < 0 || wx + x >= world.width() || wy + y < 0
+						|| wy + y >= world.height())
+					continue;
+
+				for (Point p : new Line(wx, wy, wx + x, wy + y)) {
+					Tile tile = world.tile(p.x, p.y, wz);
+					visible[p.x][p.y] = true;
+					tiles[p.x][p.y][wz] = tile;
+
+					if (!tile.isGround())
+						break;
+				}
+			}
+		}
+	}
+
 }
