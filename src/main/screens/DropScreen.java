@@ -10,18 +10,18 @@ public class DropScreen extends InventoryBasedScreen {
 	}
 
 	@Override
-	protected String getVerb() {
-		return "drop";
+	protected String getVerb() { 
+		return "drop"; 
 	}
 
 	@Override
-	protected boolean isAcceptable(Item item) {
-		return true;
+	protected boolean isAcceptable(Item item) { 
+		return true; 
 	}
-
+	
 	@Override
-	protected Screen use(Item item) {
-        player.drop(item);
-        return null;
-    }
+	protected Screen use(Item item) { 
+		player.drop(item); 
+		return null;
+	}
 }

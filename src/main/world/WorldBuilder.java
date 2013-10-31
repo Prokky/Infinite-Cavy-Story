@@ -134,15 +134,15 @@ public class WorldBuilder {
 	}
 
 	private void connectRegionsDown(int z) {
-		List<String> connected = new ArrayList<String>();
+		List<Integer> connected = new ArrayList<Integer>();
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				String region = regions[x][y][z] + "," + regions[x][y][z + 1];
+				int r = regions[x][y][z] * 1000 + regions[x][y][z + 1];
 				if (tiles[x][y][z] == Tile.FLOOR
 						&& tiles[x][y][z + 1] == Tile.FLOOR
-						&& !connected.contains(region)) {
-					connected.add(region);
+						&& !connected.contains(r)) {
+					connected.add(r);
 					connectRegionsDown(z, regions[x][y][z],
 							regions[x][y][z + 1]);
 				}
@@ -179,11 +179,6 @@ public class WorldBuilder {
 		return candidates;
 	}
 
-	public WorldBuilder makeCaves() {
-		return randomizeTiles().smooth(8).createRegions().connectRegions()
-				.addExitStairs();
-	}
-
 	private WorldBuilder addExitStairs() {
 		int x = -1;
 		int y = -1;
@@ -195,5 +190,10 @@ public class WorldBuilder {
 
 		tiles[x][y][0] = Tile.STAIRS_UP;
 		return this;
+	}
+
+	public WorldBuilder makeCaves() {
+		return randomizeTiles().smooth(8).createRegions().connectRegions()
+				.addExitStairs();
 	}
 }

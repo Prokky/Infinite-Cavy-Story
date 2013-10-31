@@ -49,10 +49,6 @@ public class World {
 		return null;
 	}
 
-	public Item item(int x, int y, int z) {
-		return items[x][y][z];
-	}
-
 	public Tile tile(int x, int y, int z) {
 		if (x < 0 || x >= width || y < 0 || y >= height || z < 0 || z >= depth)
 			return Tile.BOUNDS;
@@ -87,19 +83,6 @@ public class World {
 			tiles[x][y][z] = Tile.FLOOR;
 	}
 
-	public void remove(Item item) {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				for (int z = 0; z < depth; z++) {
-					if (items[x][y][z] == item) {
-						items[x][y][z] = null;
-						return;
-					}
-				}
-			}
-		}
-	}
-
 	public void addAtEmptyLocation(Creature creature, int z) {
 		int x;
 		int y;
@@ -115,6 +98,34 @@ public class World {
 		creatures.add(creature);
 	}
 
+	public void update() {
+		List<Creature> toUpdate = new ArrayList<Creature>(creatures);
+		for (Creature creature : toUpdate) {
+			creature.update();
+		}
+	}
+
+	public void remove(Creature other) {
+		creatures.remove(other);
+	}
+
+	public void remove(Item item) {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				for (int z = 0; z < depth; z++) {
+					if (items[x][y][z] == item) {
+						items[x][y][z] = null;
+						return;
+					}
+				}
+			}
+		}
+	}
+
+	public Item item(int x, int y, int z) {
+		return items[x][y][z];
+	}
+
 	public void addAtEmptyLocation(Item item, int depth) {
 		int x;
 		int y;
@@ -125,6 +136,10 @@ public class World {
 		} while (!tile(x, y, depth).isGround() || item(x, y, depth) != null);
 
 		items[x][y][depth] = item;
+	}
+
+	public void remove(int x, int y, int z) {
+		items[x][y][z] = null;
 	}
 
 	public boolean addAtEmptySpace(Item item, int x, int y, int z) {
@@ -140,14 +155,14 @@ public class World {
 			Point p = points.remove(0);
 			checked.add(p);
 
-			if (!tiles[p.x][p.y][p.z].isGround())
+			if (!tile(p.x, p.y, p.z).isGround())
 				continue;
 
 			if (items[p.x][p.y][p.z] == null) {
 				items[p.x][p.y][p.z] = item;
 				Creature c = this.creature(p.x, p.y, p.z);
 				if (c != null)
-					c.notify("A %s lands between your feet.", item.name());
+					c.notify("A %s lands between your feet.", c.nameOf(item));
 				return true;
 			} else {
 				List<Point> neighbors = p.neighbors8();
@@ -158,18 +173,7 @@ public class World {
 		return false;
 	}
 
-	public void update() {
-		List<Creature> toUpdate = new ArrayList<Creature>(creatures);
-		for (Creature creature : toUpdate) {
-			creature.update();
-		}
-	}
-
-	public void remove(Creature other) {
-		creatures.remove(other);
-	}
-
-	public void remove(int x, int y, int z) {
-		items[x][y][z] = null;
+	public void add(Creature pet) {
+		creatures.add(pet);
 	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import main.Effect;
 import main.Line;
 import main.Point;
+import main.Spell;
 import main.items.Inventory;
 import main.items.Item;
 import main.world.Tile;
@@ -41,6 +42,10 @@ public class Creature {
 
 	public int maxHp() {
 		return maxHp;
+	}
+
+	public void modifyMaxHp(int amount) {
+		maxHp += amount;
 	}
 
 	private int hp;
@@ -132,7 +137,7 @@ public class Creature {
 			level++;
 			doAction("advance to level %d", level);
 			ai.onGainLevel();
-			modifyHp(level * 2);
+			modifyHp(level * 2, "Died from having a negative level?");
 		}
 	}
 
@@ -155,6 +160,39 @@ public class Creature {
 		return effects;
 	}
 
+	private int maxMana;
+
+	public int maxMana() {
+		return maxMana;
+	}
+
+	public void modifyMaxMana(int amount) {
+		maxMana += amount;
+	}
+
+	private int mana;
+
+	public int mana() {
+		return mana;
+	}
+
+	public void modifyMana(int amount) {
+		mana = Math.max(0, Math.min(mana + amount, maxMana));
+	}
+
+	private int regenManaCooldown;
+	private int regenManaPer1000;
+
+	public void modifyRegenManaPer1000(int amount) {
+		regenManaPer1000 += amount;
+	}
+
+	private String causeOfDeath;
+
+	public String causeOfDeath() {
+		return causeOfDeath;
+	}
+
 	public Creature(World world, char glyph, Color color, String name,
 			int maxHp, int attack, int defense) {
 		this.world = world;
@@ -167,11 +205,14 @@ public class Creature {
 		this.visionRadius = 9;
 		this.name = name;
 		this.inventory = new Inventory(20);
-		this.maxFood = 500;
+		this.maxFood = 1000;
 		this.food = maxFood / 3 * 2;
 		this.level = 1;
 		this.regenHpPer1000 = 10;
 		this.effects = new ArrayList<Effect>();
+		this.maxMana = 5;
+		this.mana = maxMana;
+		this.regenManaPer1000 = 20;
 	}
 
 	public void moveBy(int mx, int my, int mz) {
@@ -213,13 +254,13 @@ public class Creature {
 
 	private void throwAttack(Item item, Creature other) {
 		commonAttack(other, attackValue / 2 + item.thrownAttackValue(),
-				"throw a %s at the %s for %d damage", item.name(), other.name);
+				"throw a %s at the %s for %d damage", nameOf(item), other.name);
 		other.addEffect(item.quaffEffect());
 	}
 
 	public void rangedWeaponAttack(Creature other) {
 		commonAttack(other, attackValue / 2 + weapon.rangedAttackValue(),
-				"fire a %s at the %s for %d damage", weapon.name(), other.name);
+				"fire a %s at the %s for %d damage", nameOf(weapon), other.name);
 	}
 
 	private void commonAttack(Creature other, int attack, String action,
@@ -238,7 +279,7 @@ public class Creature {
 
 		doAction(action, params2);
 
-		other.modifyHp(-amount);
+		other.modifyHp(-amount, "Killed by a " + name);
 
 		if (other.hp < 1)
 			gainXp(other);
@@ -252,8 +293,9 @@ public class Creature {
 			modifyXp(amount);
 	}
 
-	public void modifyHp(int amount) {
+	public void modifyHp(int amount, String causeOfDeath) {
 		hp += amount;
+		this.causeOfDeath = causeOfDeath;
 
 		if (hp > maxHp) {
 			hp = maxHp;
@@ -265,8 +307,8 @@ public class Creature {
 	}
 
 	private void leaveCorpse() {
-		Item corpse = new Item('%', color, name + " corpse");
-		corpse.modifyFoodValue(maxHp * 4);
+		Item corpse = new Item('%', color, name + " corpse", null);
+		corpse.modifyFoodValue(maxHp * 5);
 		world.addAtEmptySpace(corpse, x, y, z);
 		for (Item item : inventory.getItems()) {
 			if (item != null)
@@ -283,6 +325,7 @@ public class Creature {
 	public void update() {
 		modifyFood(-1);
 		regenerateHealth();
+		regenerateMana();
 		updateEffects();
 		ai.onUpdate();
 	}
@@ -304,9 +347,22 @@ public class Creature {
 	private void regenerateHealth() {
 		regenHpCooldown -= regenHpPer1000;
 		if (regenHpCooldown < 0) {
-			modifyHp(1);
-			modifyFood(-1);
+			if (hp < maxHp) {
+				modifyHp(1, "Died from regenerating health?");
+				modifyFood(-1);
+			}
 			regenHpCooldown += 1000;
+		}
+	}
+
+	private void regenerateMana() {
+		regenManaCooldown -= regenManaPer1000;
+		if (regenManaCooldown < 0) {
+			if (mana < maxMana) {
+				modifyMana(1);
+				modifyFood(-1);
+			}
+			regenManaCooldown += 1000;
 		}
 	}
 
@@ -320,6 +376,33 @@ public class Creature {
 	}
 
 	public void doAction(String message, Object... params) {
+		for (Creature other : getCreaturesWhoSeeMe()) {
+			if (other == this) {
+				other.notify("You " + message + ".", params);
+			} else {
+				other.notify(String.format("The %s %s.", name,
+						makeSecondPerson(message)), params);
+			}
+		}
+	}
+
+	public void doAction(Item item, String message, Object... params) {
+		if (hp < 1)
+			return;
+
+		for (Creature other : getCreaturesWhoSeeMe()) {
+			if (other == this) {
+				other.notify("You " + message + ".", params);
+			} else {
+				other.notify(String.format("The %s %s.", name,
+						makeSecondPerson(message)), params);
+			}
+			other.learnName(item);
+		}
+	}
+
+	private List<Creature> getCreaturesWhoSeeMe() {
+		List<Creature> others = new ArrayList<Creature>();
 		int r = 9;
 		for (int ox = -r; ox < r + 1; ox++) {
 			for (int oy = -r; oy < r + 1; oy++) {
@@ -331,13 +414,10 @@ public class Creature {
 				if (other == null)
 					continue;
 
-				if (other == this)
-					other.notify("You " + message + ".", params);
-				else if (other.canSee(x, y, z))
-					other.notify(String.format("The %s %s.", name,
-							makeSecondPerson(message)), params);
+				others.add(other);
 			}
 		}
+		return others;
 	}
 
 	private String makeSecondPerson(String text) {
@@ -354,7 +434,8 @@ public class Creature {
 	}
 
 	public boolean canSee(int wx, int wy, int wz) {
-		return ai.canSee(wx, wy, wz);
+		return (detectCreatures > 0 && world.creature(wx, wy, wz) != null || ai
+				.canSee(wx, wy, wz));
 	}
 
 	public Tile realTile(int wx, int wy, int wz) {
@@ -381,7 +462,7 @@ public class Creature {
 		if (inventory.isFull() || item == null) {
 			doAction("grab at the ground");
 		} else {
-			doAction("pickup a %s", item.name());
+			doAction("pickup a %s", nameOf(item));
 			world.remove(x, y, z);
 			inventory.add(item);
 		}
@@ -389,11 +470,11 @@ public class Creature {
 
 	public void drop(Item item) {
 		if (world.addAtEmptySpace(item, x, y, z)) {
-			doAction("drop a " + item.name());
+			doAction("drop a " + nameOf(item));
 			inventory.remove(item);
 			unequip(item);
 		} else {
-			notify("There's nowhere to drop the %s.", item.name());
+			notify("There's nowhere to drop the %s.", nameOf(item));
 		}
 	}
 
@@ -404,9 +485,9 @@ public class Creature {
 			maxFood = (maxFood + food) / 2;
 			food = maxFood;
 			notify("You can't belive your stomach can hold that much!");
-			modifyHp(-1);
+			modifyHp(-1, "Killed by overeating.");
 		} else if (food < 1 && isPlayer()) {
-			modifyHp(-1000);
+			modifyHp(-1000, "Starved to death.");
 		}
 	}
 
@@ -415,12 +496,12 @@ public class Creature {
 	}
 
 	public void eat(Item item) {
-		doAction("eat a " + item.name());
+		doAction("eat a " + nameOf(item));
 		consume(item);
 	}
 
 	public void quaff(Item item) {
-		doAction("quaff a " + item.name());
+		doAction("quaff a " + nameOf(item));
 		consume(item);
 	}
 
@@ -459,11 +540,11 @@ public class Creature {
 
 		if (item == armor) {
 			if (hp > 0)
-				doAction("remove a " + item.name());
+				doAction("remove a " + nameOf(item));
 			armor = null;
 		} else if (item == weapon) {
 			if (hp > 0)
-				doAction("put away a " + item.name());
+				doAction("put away a " + nameOf(item));
 			weapon = null;
 		}
 	}
@@ -472,7 +553,7 @@ public class Creature {
 		if (!inventory.contains(item)) {
 			if (inventory.isFull()) {
 				notify("Can't equip %s since you're holding too much stuff.",
-						item.name());
+						nameOf(item));
 				return;
 			} else {
 				world.remove(item);
@@ -487,39 +568,13 @@ public class Creature {
 		if (item.attackValue() + item.rangedAttackValue() >= item
 				.defenseValue()) {
 			unequip(weapon);
-			doAction("wield a " + item.name());
+			doAction("wield a " + nameOf(item));
 			weapon = item;
 		} else {
 			unequip(armor);
-			doAction("put on a " + item.name());
+			doAction("put on a " + nameOf(item));
 			armor = item;
 		}
-	}
-
-	public void gainMaxHp() {
-		maxHp += 10;
-		hp += 10;
-		doAction("look a lot healthier");
-	}
-
-	public void gainAttackValue() {
-		attackValue += 2;
-		doAction("look stronger");
-	}
-
-	public void gainDefenseValue() {
-		defenseValue += 1;
-		doAction("look a little tougher");
-	}
-
-	public void gainVision() {
-		visionRadius += 1;
-		doAction("look a little more aware");
-	}
-
-	public void gainRegenHp() {
-		regenHpPer1000 += 2;
-		doAction("look a little less bruised");
 	}
 
 	public Item item(int wx, int wy, int wz) {
@@ -551,11 +606,45 @@ public class Creature {
 		if (c != null)
 			throwAttack(item, c);
 		else
-			doAction("throw a %s", item.name());
+			doAction("throw a %s", nameOf(item));
 
 		if (item.quaffEffect() != null && c != null)
 			getRidOf(item);
 		else
 			putAt(item, wx, wy, wz);
+	}
+
+	public void summon(Creature other) {
+		world.add(other);
+	}
+
+	private int detectCreatures;
+
+	public void modifyDetectCreatures(int amount) {
+		detectCreatures += amount;
+	}
+
+	public void castSpell(Spell spell, int x2, int y2) {
+		Creature other = creature(x2, y2, z);
+
+		if (spell.manaCost() > mana) {
+			doAction("point and mumble but nothing happens");
+			return;
+		} else if (other == null) {
+			doAction("point and mumble at nothing");
+			return;
+		}
+
+		other.addEffect(spell.effect());
+		modifyMana(-spell.manaCost());
+	}
+
+	public String nameOf(Item item) {
+		return ai.getName(item);
+	}
+
+	public void learnName(Item item) {
+		notify("The " + item.appearance() + " is a " + item.name() + "!");
+		ai.setName(item, item.name());
 	}
 }

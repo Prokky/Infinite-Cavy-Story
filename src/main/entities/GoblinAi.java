@@ -1,6 +1,5 @@
 package main.entities;
 
-
 public class GoblinAi extends CreatureAi {
 	private Creature player;
 

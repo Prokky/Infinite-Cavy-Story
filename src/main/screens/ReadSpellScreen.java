@@ -3,22 +3,25 @@ package main.screens;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import main.Spell;
 import main.entities.Creature;
 import main.items.Item;
 import asciiPanel.AsciiPanel;
 
-public abstract class InventoryBasedScreen implements Screen {
+public class ReadSpellScreen implements Screen {
 
 	protected Creature player;
 	private String letters;
+	private Item item;
+	private int sx;
+	private int sy;
 	
-	protected abstract String getVerb();
-	protected abstract boolean isAcceptable(Item item);
-	protected abstract Screen use(Item item);
-	
-	public InventoryBasedScreen(Creature player){
+	public ReadSpellScreen(Creature player, int sx, int sy, Item item){
 		this.player = player;
 		this.letters = "abcdefghijklmnopqrstuvwxyz";
+		this.item = item;
+		this.sx = sx;
+		this.sy = sy;
 	}
 	
 	public void displayOutput(AsciiPanel terminal) {
@@ -35,25 +38,18 @@ public abstract class InventoryBasedScreen implements Screen {
 		}
 		
 		terminal.clear(' ', 0, 23, 80, 1);
-		terminal.write("What would you like to " + getVerb() + "?", 2, 23);
+		terminal.write("What would you like to read?", 2, 23);
 		
 		terminal.repaint();
 	}
 	
 	private ArrayList<String> getList() {
 		ArrayList<String> lines = new ArrayList<String>();
-		Item[] inventory = player.inventory().getItems();
 		
-		for (int i = 0; i < inventory.length; i++){
-			Item item = inventory[i];
+		for (int i = 0; i < item.writtenSpells().size(); i++){
+			Spell spell = item.writtenSpells().get(i);
 			
-			if (item == null || !isAcceptable(item))
-				continue;
-			
-			String line = letters.charAt(i) + " - " + item.glyph() + " " + player.nameOf(item);
-			
-			if(item == player.weapon() || item == player.armor())
-				line += " (equipped)";
+			String line = letters.charAt(i) + " - " + spell.name() + " (" + spell.manaCost() + " mana)";
 			
 			lines.add(line);
 		}
@@ -67,13 +63,20 @@ public abstract class InventoryBasedScreen implements Screen {
 		
 		if (letters.indexOf(c) > -1 
 				&& items.length > letters.indexOf(c)
-				&& items[letters.indexOf(c)] != null
-				&& isAcceptable(items[letters.indexOf(c)])) {
-			return use(items[letters.indexOf(c)]);
+				&& items[letters.indexOf(c)] != null) {
+			return use(item.writtenSpells().get(letters.indexOf(c)));
 		} else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			return null;
 		} else {
 			return this;
 		}
+	}
+
+	protected Screen use(Spell spell){
+		if (spell.requiresTarget())
+			return new CastSpellScreen(player, "", sx, sy, spell);
+		
+		player.castSpell(spell, player.x, player.y);
+		return null;
 	}
 }

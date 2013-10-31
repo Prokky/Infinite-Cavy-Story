@@ -1,8 +1,11 @@
 package main.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import main.Effect;
+import main.Spell;
 
 public class Item {
 
@@ -24,19 +27,10 @@ public class Item {
 		return name;
 	}
 
-	public String details() {
-		String details = "";
+	private String appearance;
 
-		if (attackValue != 0)
-			details += "     attack:" + attackValue;
-
-		if (defenseValue != 0)
-			details += "     defense:" + defenseValue;
-
-		if (foodValue != 0)
-			details += "     food:" + foodValue;
-
-		return details;
+	public String appearance() {
+		return appearance;
 	}
 
 	private int foodValue;
@@ -47,12 +41,6 @@ public class Item {
 
 	public void modifyFoodValue(int amount) {
 		foodValue += amount;
-	}
-
-	public Item(char glyph, Color color, String name) {
-		this.glyph = glyph;
-		this.color = color;
-		this.name = name;
 	}
 
 	private int attackValue;
@@ -103,5 +91,45 @@ public class Item {
 
 	public void setQuaffEffect(Effect effect) {
 		this.quaffEffect = effect;
+	}
+
+	private List<Spell> writtenSpells;
+
+	public List<Spell> writtenSpells() {
+		return writtenSpells;
+	}
+
+	public void addWrittenSpell(String name, int manaCost, Effect effect) {
+		writtenSpells.add(new Spell(name, manaCost, effect));
+	}
+
+	public Item(char glyph, Color color, String name, String appearance) {
+		this.glyph = glyph;
+		this.color = color;
+		this.name = name;
+		this.appearance = appearance == null ? name : appearance;
+		this.thrownAttackValue = 1;
+		this.writtenSpells = new ArrayList<Spell>();
+	}
+
+	public String details() {
+		String details = "";
+
+		if (attackValue != 0)
+			details += "  attack:" + attackValue;
+
+		if (thrownAttackValue != 1)
+			details += "  thrown:" + thrownAttackValue;
+
+		if (rangedAttackValue > 0)
+			details += "  ranged:" + rangedAttackValue;
+
+		if (defenseValue != 0)
+			details += "  defense:" + defenseValue;
+
+		if (foodValue != 0)
+			details += "  food:" + foodValue;
+
+		return details;
 	}
 }

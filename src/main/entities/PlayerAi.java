@@ -3,6 +3,7 @@ package main.entities;
 import java.util.List;
 
 import main.FieldOfView;
+import main.items.Item;
 import main.world.Tile;
 
 public class PlayerAi extends CreatureAi {
@@ -21,6 +22,11 @@ public class PlayerAi extends CreatureAi {
 			creature.x = x;
 			creature.y = y;
 			creature.z = z;
+
+			Item item = creature.item(creature.x, creature.y, creature.z);
+			if (item != null)
+				creature.notify("There's a " + creature.nameOf(item) + " here.");
+
 		} else if (tile.isDiggable()) {
 			creature.dig(x, y, z);
 		}

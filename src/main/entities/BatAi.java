@@ -6,7 +6,7 @@ public class BatAi extends CreatureAi {
 		super(creature);
 	}
 
-	public void onUpdate() {
+	public void onUpdate(){
 		wander();
 		wander();
 	}

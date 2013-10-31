@@ -5,8 +5,8 @@ import java.awt.Color;
 import asciiPanel.AsciiPanel;
 
 public enum Tile {
-	FLOOR((char) 250, new Color(150, 75, 0), "A dirt and rock cave floor."), WALL(
-			(char) 177, new Color(150, 75, 0), "A dirt and rock cave wall."), BOUNDS(
+	FLOOR((char) 250, new Color(205, 133, 63), "A dirt and rock cave floor."), WALL(
+			(char) 177, new Color(205, 133, 63), "A dirt and rock cave wall."), BOUNDS(
 			'x', AsciiPanel.brightBlack, "Beyond the edge of the world."), STAIRS_DOWN(
 			'>', AsciiPanel.white, "A stone staircase that goes down."), STAIRS_UP(
 			'<', AsciiPanel.white, "A stone staircase that goes up."), UNKNOWN(
@@ -24,16 +24,16 @@ public enum Tile {
 		return color;
 	}
 
-	private String details;
+	private String description;
 
 	public String details() {
-		return details;
+		return description;
 	}
 
-	Tile(char glyph, Color color, String details) {
+	Tile(char glyph, Color color, String description) {
 		this.glyph = glyph;
 		this.color = color;
-		this.details = details;
+		this.description = description;
 	}
 
 	public boolean isGround() {
