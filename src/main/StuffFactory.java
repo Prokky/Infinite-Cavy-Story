@@ -5,6 +5,7 @@ import java.util.List;
 import main.entities.BatAi;
 import main.entities.Creature;
 import main.entities.FungusAi;
+import main.entities.GoblinAi;
 import main.entities.PlayerAi;
 import main.entities.ZombieAi;
 import main.items.Item;
@@ -32,6 +33,16 @@ public class StuffFactory {
 		world.addAtEmptyLocation(zombie, depth);
 		new ZombieAi(zombie, player);
 		return zombie;
+	}
+
+	public Creature newGoblin(int depth, Creature player) {
+		Creature goblin = new Creature(world, 'g', AsciiPanel.brightGreen,
+				"goblin", 66, 15, 5);
+		goblin.equip(randomWeapon(depth));
+		goblin.equip(randomArmor(depth));
+		world.addAtEmptyLocation(goblin, depth);
+		new GoblinAi(goblin, player);
+		return goblin;
 	}
 
 	public Creature newFungus(int depth) {

@@ -113,7 +113,7 @@ public class Creature {
 
 		notify("You %s %d xp.", amount < 0 ? "lose" : "gain", amount);
 
-		while (xp > (int) (Math.pow(level, 1.5) * 20)) {
+		while (xp > (int) (Math.pow(level, 1.75) * 25)) {
 			level++;
 			doAction("advance to level %d", level);
 			ai.onGainLevel();
@@ -125,6 +125,13 @@ public class Creature {
 
 	public int level() {
 		return level;
+	}
+
+	private int regenHpCooldown;
+	private int regenHpPer1000;
+
+	public void modifyRegenHpPer1000(int amount) {
+		regenHpPer1000 += amount;
 	}
 
 	public Creature(World world, char glyph, Color color, String name,
@@ -139,9 +146,10 @@ public class Creature {
 		this.visionRadius = 9;
 		this.name = name;
 		this.inventory = new Inventory(20);
-		this.maxFood = 1000;
+		this.maxFood = 500;
 		this.food = maxFood / 3 * 2;
 		this.level = 1;
+		this.regenHpPer1000 = 10;
 	}
 
 	public void moveBy(int mx, int my, int mz) {
@@ -235,8 +243,12 @@ public class Creature {
 
 	private void leaveCorpse() {
 		Item corpse = new Item('%', color, name + " corpse");
-		corpse.modifyFoodValue(maxHp);
+		corpse.modifyFoodValue(maxHp * 4);
 		world.addAtEmptySpace(corpse, x, y, z);
+		for (Item item : inventory.getItems()) {
+			if (item != null)
+				drop(item);
+		}
 	}
 
 	public void dig(int wx, int wy, int wz) {
@@ -247,7 +259,17 @@ public class Creature {
 
 	public void update() {
 		modifyFood(-1);
+		regenerateHealth();
 		ai.onUpdate();
+	}
+
+	private void regenerateHealth() {
+		regenHpCooldown -= regenHpPer1000;
+		if (regenHpCooldown < 0) {
+			modifyHp(1);
+			modifyFood(-1);
+			regenHpCooldown += 1000;
+		}
 	}
 
 	public boolean canEnter(int wx, int wy, int wz) {
@@ -378,21 +400,36 @@ public class Creature {
 			return;
 
 		if (item == armor) {
-			doAction("remove a " + item.name());
+			if (hp > 0)
+				doAction("remove a " + item.name());
 			armor = null;
 		} else if (item == weapon) {
-			doAction("put away a " + item.name());
+			if (hp > 0)
+				doAction("put away a " + item.name());
 			weapon = null;
 		}
 	}
 
 	public void equip(Item item) {
-		if (item.attackValue() == 0 && item.defenseValue() == 0)
+		if (!inventory.contains(item)) {
+			if (inventory.isFull()) {
+				notify("Can't equip %s since you're holding too much stuff.",
+						item.name());
+				return;
+			} else {
+				world.remove(item);
+				inventory.add(item);
+			}
+		}
+
+		if (item.attackValue() == 0 && item.rangedAttackValue() == 0
+				&& item.defenseValue() == 0)
 			return;
 
-		if (item.attackValue() >= item.defenseValue()) {
+		if (item.attackValue() + item.rangedAttackValue() >= item
+				.defenseValue()) {
 			unequip(weapon);
-			doAction("wield out a " + item.name());
+			doAction("wield a " + item.name());
 			weapon = item;
 		} else {
 			unequip(armor);
@@ -404,7 +441,7 @@ public class Creature {
 	public void gainMaxHp() {
 		maxHp += 10;
 		hp += 10;
-		doAction("look healthier");
+		doAction("look a lot healthier");
 	}
 
 	public void gainAttackValue() {
@@ -413,13 +450,18 @@ public class Creature {
 	}
 
 	public void gainDefenseValue() {
-		defenseValue += 2;
-		doAction("look tougher");
+		defenseValue += 1;
+		doAction("look a little tougher");
 	}
 
 	public void gainVision() {
 		visionRadius += 1;
-		doAction("look more aware");
+		doAction("look a little more aware");
+	}
+
+	public void gainRegenHp() {
+		regenHpPer1000 += 2;
+		doAction("look a little less bruised");
 	}
 
 	public Item item(int wx, int wy, int wz) {
