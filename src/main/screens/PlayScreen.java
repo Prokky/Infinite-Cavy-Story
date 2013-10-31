@@ -72,6 +72,7 @@ public class PlayScreen implements Screen {
 				factory.randomSpellBook(z);
 			}
 		}
+		factory.newBlueMagesSpellbook(1);
 		factory.newVictoryItem(world.depth() - 1);
 	}
 
@@ -144,10 +145,17 @@ public class PlayScreen implements Screen {
 
 		terminal.write("Effects:", 71, 14);
 		int x = 15;
-		//TODO DISPLAY EFFECTS
-		// for (Effect effect : player.effects()) {
-		// terminal.write(effect.);
-		// }
+
+		if (player.effects().size() == 0)
+			terminal.write("None", 71, 15);
+		else {
+			for (Effect effect : player.effects()) {
+				String effectText = String.format("%s %d left", effect.name(),
+						effect.duration());
+				terminal.write(effectText, 71, x);
+				x++;
+			}
+		}
 
 		displayHelp(terminal);
 

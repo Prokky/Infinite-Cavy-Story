@@ -203,7 +203,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(0);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"health potion", appearance);
-		item.setQuaffEffect(new Effect(1) {
+		item.setQuaffEffect(new Effect(1, "Health Potion") {
 			public void start(Creature creature) {
 				if (creature.hp() == creature.maxHp())
 					return;
@@ -221,7 +221,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(1);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"mana potion", appearance);
-		item.setQuaffEffect(new Effect(1) {
+		item.setQuaffEffect(new Effect(1, "Mana potion") {
 			public void start(Creature creature) {
 				if (creature.mana() == creature.maxMana())
 					return;
@@ -239,7 +239,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(2);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"slow health potion", appearance);
-		item.setQuaffEffect(new Effect(100) {
+		item.setQuaffEffect(new Effect(100, "Regenerating from potion") {
 			public void start(Creature creature) {
 				creature.doAction(item, "look a little better");
 			}
@@ -258,7 +258,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(3);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"poison potion", appearance);
-		item.setQuaffEffect(new Effect(20) {
+		item.setQuaffEffect(new Effect(20, "Poisoned") {
 			public void start(Creature creature) {
 				creature.doAction(item, "look sick");
 			}
@@ -277,7 +277,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(4);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"warrior's potion", appearance);
-		item.setQuaffEffect(new Effect(20) {
+		item.setQuaffEffect(new Effect(20, "+5 attack +5 defense") {
 			public void start(Creature creature) {
 				creature.modifyAttackValue(5);
 				creature.modifyDefenseValue(5);
@@ -299,7 +299,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(5);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"archers potion", appearance);
-		item.setQuaffEffect(new Effect(20) {
+		item.setQuaffEffect(new Effect(20, "+3 vision") {
 			public void start(Creature creature) {
 				creature.modifyVisionRadius(3);
 				creature.doAction(item, "look more alert");
@@ -319,7 +319,7 @@ public class StuffFactory {
 		String appearance = potionAppearances.get(6);
 		final Item item = new Item('!', potionColors.get(appearance),
 				"experience potion", appearance);
-		item.setQuaffEffect(new Effect(20) {
+		item.setQuaffEffect(new Effect(20, "Increased EXP gain") {
 			public void start(Creature creature) {
 				creature.doAction(item, "look more experienced");
 				creature.modifyXp(creature.level() * 5);
@@ -356,7 +356,7 @@ public class StuffFactory {
 	public Item newWhiteMagesSpellbook(int depth) {
 		Item item = new Item('+', AsciiPanel.brightWhite,
 				"white mage's spellbook", null);
-		item.addWrittenSpell("minor heal", 4, new Effect(1) {
+		item.addWrittenSpell("minor heal", 4, new Effect(1, "Healed") {
 			public void start(Creature creature) {
 				if (creature.hp() == creature.maxHp())
 					return;
@@ -366,7 +366,7 @@ public class StuffFactory {
 			}
 		});
 
-		item.addWrittenSpell("major heal", 8, new Effect(1) {
+		item.addWrittenSpell("major heal", 8, new Effect(1, "Healed") {
 			public void start(Creature creature) {
 				if (creature.hp() == creature.maxHp())
 					return;
@@ -376,14 +376,14 @@ public class StuffFactory {
 			}
 		});
 
-		item.addWrittenSpell("slow heal", 12, new Effect(50) {
+		item.addWrittenSpell("slow heal", 12, new Effect(50, "Regenerating from heal") {
 			public void update(Creature creature) {
 				super.update(creature);
 				creature.modifyHp(2, "Killed by a slow heal spell?");
 			}
 		});
 
-		item.addWrittenSpell("inner strength", 16, new Effect(50) {
+		item.addWrittenSpell("inner strength", 16, new Effect(50, "Inner Strength") {
 			public void start(Creature creature) {
 				creature.modifyAttackValue(2);
 				creature.modifyDefenseValue(2);
@@ -416,7 +416,7 @@ public class StuffFactory {
 		Item item = new Item('+', AsciiPanel.brightBlue,
 				"blue mage's spellbook", null);
 
-		item.addWrittenSpell("blood to mana", 1, new Effect(1) {
+		item.addWrittenSpell("blood to mana", 1, new Effect(1, "Blood to Mana") {
 			public void start(Creature creature) {
 				int amount = Math.min(creature.hp() - 1, creature.maxMana()
 						- creature.mana());
@@ -425,7 +425,7 @@ public class StuffFactory {
 			}
 		});
 
-		item.addWrittenSpell("blink", 6, new Effect(1) {
+		item.addWrittenSpell("blink", 6, new Effect(1, "Blinked") {
 			public void start(Creature creature) {
 				creature.doAction("fade out");
 
@@ -446,7 +446,7 @@ public class StuffFactory {
 			}
 		});
 
-		item.addWrittenSpell("summon bats", 11, new Effect(1) {
+		item.addWrittenSpell("summon bats", 11, new Effect(1, "Bats!") {
 			public void start(Creature creature) {
 				for (int ox = -1; ox < 2; ox++) {
 					for (int oy = -1; oy < 2; oy++) {
@@ -474,7 +474,7 @@ public class StuffFactory {
 			}
 		});
 
-		item.addWrittenSpell("detect creatures", 16, new Effect(75) {
+		item.addWrittenSpell("detect creatures", 16, new Effect(75, "Detect Creatures") {
 			public void start(Creature creature) {
 				creature.doAction("look far off into the distance");
 				creature.modifyDetectCreatures(1);
