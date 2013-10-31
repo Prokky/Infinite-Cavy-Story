@@ -48,6 +48,10 @@ public class PlayScreen implements Screen {
 			factory.randomArmor(z);
 			factory.randomWeapon(z);
 			factory.randomWeapon(z);
+
+			for (int i = 0; i < 4 + z; i++) {
+				factory.randomPotion(z);
+			}
 		}
 		factory.newVictoryItem(world.depth() - 1);
 	}
@@ -204,6 +208,9 @@ public class PlayScreen implements Screen {
 				break;
 			case KeyEvent.VK_X:
 				subscreen = new ExamineScreen(player);
+				break;
+			case KeyEvent.VK_Q:
+				subscreen = new QuaffScreen(player);
 				break;
 			case KeyEvent.VK_F1:
 				subscreen = new HelpScreen();

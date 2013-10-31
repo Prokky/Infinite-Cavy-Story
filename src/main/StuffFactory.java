@@ -169,4 +169,68 @@ public class StuffFactory {
 			return newHeavyArmor(depth);
 		}
 	}
+
+	public Item newPotionOfHealth(int depth) {
+		Item item = new Item('!', AsciiPanel.white, "health potion");
+		item.setQuaffEffect(new Effect(1) {
+			public void start(Creature creature) {
+				if (creature.hp() == creature.maxHp())
+					return;
+
+				creature.modifyHp(15);
+				creature.doAction("look healthier");
+			}
+		});
+
+		world.addAtEmptyLocation(item, depth);
+		return item;
+	}
+
+	public Item newPotionOfPoison(int depth) {
+		Item item = new Item('!', AsciiPanel.white, "poison potion");
+		item.setQuaffEffect(new Effect(20) {
+			public void start(Creature creature) {
+				creature.doAction("look sick");
+			}
+
+			public void update(Creature creature) {
+				super.update(creature);
+				creature.modifyHp(-1);
+			}
+		});
+
+		world.addAtEmptyLocation(item, depth);
+		return item;
+	}
+
+	public Item newPotionOfWarrior(int depth) {
+		Item item = new Item('!', AsciiPanel.white, "warrior's potion");
+		item.setQuaffEffect(new Effect(20) {
+			public void start(Creature creature) {
+				creature.modifyAttackValue(5);
+				creature.modifyDefenseValue(5);
+				creature.doAction("look stronger");
+			}
+
+			public void end(Creature creature) {
+				creature.modifyAttackValue(-5);
+				creature.modifyDefenseValue(-5);
+				creature.doAction("look less strong");
+			}
+		});
+
+		world.addAtEmptyLocation(item, depth);
+		return item;
+	}
+
+	public Item randomPotion(int depth) {
+		switch ((int) (Math.random() * 3)) {
+		case 0:
+			return newPotionOfHealth(depth);
+		case 1:
+			return newPotionOfPoison(depth);
+		default:
+			return newPotionOfWarrior(depth);
+		}
+	}
 }

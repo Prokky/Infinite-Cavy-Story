@@ -1,7 +1,10 @@
 package main.entities;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
+import main.Effect;
 import main.Line;
 import main.Point;
 import main.items.Inventory;
@@ -48,6 +51,10 @@ public class Creature {
 
 	private int attackValue;
 
+	public void modifyAttackValue(int value) {
+		attackValue += value;
+	}
+
 	public int attackValue() {
 		return attackValue + (weapon == null ? 0 : weapon.attackValue())
 				+ (armor == null ? 0 : armor.attackValue());
@@ -55,12 +62,20 @@ public class Creature {
 
 	private int defenseValue;
 
+	public void modifyDefenseValue(int value) {
+		defenseValue += value;
+	}
+
 	public int defenseValue() {
 		return defenseValue + (weapon == null ? 0 : weapon.defenseValue())
 				+ (armor == null ? 0 : armor.defenseValue());
 	}
 
 	private int visionRadius;
+
+	public void modifyVisionRadius(int value) {
+		visionRadius += value;
+	}
 
 	public int visionRadius() {
 		return visionRadius;
@@ -134,6 +149,12 @@ public class Creature {
 		regenHpPer1000 += amount;
 	}
 
+	private List<Effect> effects;
+
+	public List<Effect> effects() {
+		return effects;
+	}
+
 	public Creature(World world, char glyph, Color color, String name,
 			int maxHp, int attack, int defense) {
 		this.world = world;
@@ -150,6 +171,7 @@ public class Creature {
 		this.food = maxFood / 3 * 2;
 		this.level = 1;
 		this.regenHpPer1000 = 10;
+		this.effects = new ArrayList<Effect>();
 	}
 
 	public void moveBy(int mx, int my, int mz) {
@@ -192,6 +214,7 @@ public class Creature {
 	private void throwAttack(Item item, Creature other) {
 		commonAttack(other, attackValue / 2 + item.thrownAttackValue(),
 				"throw a %s at the %s for %d damage", item.name(), other.name);
+		other.addEffect(item.quaffEffect());
 	}
 
 	public void rangedWeaponAttack(Creature other) {
@@ -260,7 +283,22 @@ public class Creature {
 	public void update() {
 		modifyFood(-1);
 		regenerateHealth();
+		updateEffects();
 		ai.onUpdate();
+	}
+
+	private void updateEffects() {
+		List<Effect> done = new ArrayList<Effect>();
+
+		for (Effect effect : effects) {
+			effect.update(this);
+			if (effect.isDone()) {
+				effect.end(this);
+				done.add(effect);
+			}
+		}
+
+		effects.removeAll(done);
 	}
 
 	private void regenerateHealth() {
@@ -377,11 +415,31 @@ public class Creature {
 	}
 
 	public void eat(Item item) {
+		doAction("eat a " + item.name());
+		consume(item);
+	}
+
+	public void quaff(Item item) {
+		doAction("quaff a " + item.name());
+		consume(item);
+	}
+
+	private void consume(Item item) {
 		if (item.foodValue() < 0)
 			notify("Gross!");
 
+		addEffect(item.quaffEffect());
+
 		modifyFood(item.foodValue());
 		getRidOf(item);
+	}
+
+	private void addEffect(Effect effect) {
+		if (effect == null)
+			return;
+
+		effect.start(this);
+		effects.add(effect);
 	}
 
 	private void getRidOf(Item item) {
@@ -495,6 +553,9 @@ public class Creature {
 		else
 			doAction("throw a %s", item.name());
 
-		putAt(item, wx, wy, wz);
+		if (item.quaffEffect() != null && c != null)
+			getRidOf(item);
+		else
+			putAt(item, wx, wy, wz);
 	}
 }

@@ -2,6 +2,8 @@ package main.items;
 
 import java.awt.Color;
 
+import main.Effect;
+
 public class Item {
 
 	private char glyph;
@@ -91,5 +93,15 @@ public class Item {
 
 	public void modifyRangedAttackValue(int amount) {
 		rangedAttackValue += amount;
+	}
+
+	private Effect quaffEffect;
+
+	public Effect quaffEffect() {
+		return quaffEffect;
+	}
+
+	public void setQuaffEffect(Effect effect) {
+		this.quaffEffect = effect;
 	}
 }
