@@ -8,8 +8,9 @@ public class StartScreen implements Screen {
 
 	@Override
 	public void displayOutput(AsciiPanel terminal) {
-		terminal.write("rl tutorial", 1, 1);
-		terminal.writeCenter("-- press [enter] to start --", 22);
+		terminal.writeCenter("INFINITE CAVY STORY", 10);
+		terminal.writeCenter("by Prokk", 12);
+		terminal.writeCenter("-- press [enter] to start --", 32);
 	}
 
 	@Override

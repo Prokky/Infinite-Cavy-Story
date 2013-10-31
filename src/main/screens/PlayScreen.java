@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import main.Effect;
 import main.FieldOfView;
 import main.StuffFactory;
 import main.entities.Creature;
@@ -103,11 +105,49 @@ public class PlayScreen implements Screen {
 		String mana = String.format("%d/%d mana", player.mana(),
 				player.maxMana());
 		String hunger = String.format("%s", hunger());
-		terminal.write(hp, 71, 1, Color.RED);
+
+		Color hpColor = Color.GREEN;
+		if (player.hp() / player.maxHp() < 0.5)
+			hpColor = Color.YELLOW;
+		else if (player.hp() / player.maxHp() < 0.3)
+			hpColor = Color.RED;
+		terminal.write(hp, 71, 1, hpColor);
 		terminal.write(mana, 71, 2, Color.CYAN);
-		terminal.write("Satiety:" + hunger, 71, 3);
+
+		Color hungerColor = Color.WHITE;
+		if (hunger.equals("Hungry"))
+			hungerColor = Color.YELLOW;
+		else if (hunger.equals("Starving"))
+			hungerColor = Color.RED;
+		terminal.write("Satiety:" + hunger, 71, 3, hungerColor);
 
 		terminal.write("============================", 71, 4);
+
+		terminal.write("Weapon:" + getWeaponName(), 71, 5);
+		terminal.write("Armor:" + getArmorName(), 71, 6);
+
+		terminal.write("============================", 71, 7);
+
+		terminal.write("Attack:" + player.attackValue(), 71, 8);
+		terminal.write("Defense:" + player.defenseValue(), 71, 9);
+		terminal.write("Vision:" + player.visionRadius(), 71, 10);
+
+		String hpreg = String.format(Locale.US, "HP Reg per turn:%.2f",
+				(float) player.hpRegenerationRate() / 1000);
+		String manareg = String.format(Locale.US, "Mana Reg per turn:%.2f",
+				(float) player.manaRegenRate() / 1000);
+
+		terminal.write(hpreg, 71, 11);
+		terminal.write(manareg, 71, 12);
+
+		terminal.write("============================", 71, 13);
+
+		terminal.write("Effects:", 71, 14);
+		int x = 15;
+		//TODO DISPLAY EFFECTS
+		// for (Effect effect : player.effects()) {
+		// terminal.write(effect.);
+		// }
 
 		displayHelp(terminal);
 
@@ -128,6 +168,20 @@ public class PlayScreen implements Screen {
 			return "Fine";
 	}
 
+	private String getArmorName() {
+		if (player.armor() == null)
+			return "None";
+		else
+			return player.armor().name();
+	}
+
+	private String getWeaponName() {
+		if (player.weapon() == null)
+			return "None";
+		else
+			return player.weapon().name();
+	}
+
 	private void displayMessages(AsciiPanel terminal, List<String> messages) {
 		int top = 42 - messages.size();
 		for (int i = 0; i < messages.size(); i++) {
@@ -138,9 +192,10 @@ public class PlayScreen implements Screen {
 	}
 
 	private void displayHelp(AsciiPanel terminal) {
-		int y = 30;
+		int y = 29;
 		terminal.write("============================", 71, y++);
 		terminal.write("Controls:", 71, y++);
+		terminal.write("[>][<] to move down and up", 71, y++);
 		terminal.write("[g] to pick up", 71, y++);
 		terminal.write("[d] to drop", 71, y++);
 		terminal.write("[e] to eat", 71, y++);

@@ -154,6 +154,10 @@ public class Creature {
 		regenHpPer1000 += amount;
 	}
 
+	public int hpRegenerationRate(){
+		return regenHpPer1000;
+	}
+	
 	private List<Effect> effects;
 
 	public List<Effect> effects() {
@@ -185,6 +189,10 @@ public class Creature {
 
 	public void modifyRegenManaPer1000(int amount) {
 		regenManaPer1000 += amount;
+	}
+	
+	public int manaRegenRate(){
+		return regenManaPer1000;
 	}
 
 	private String causeOfDeath;
